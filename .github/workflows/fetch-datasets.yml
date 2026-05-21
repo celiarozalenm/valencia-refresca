@@ -1,0 +1,47 @@
+name: Fetch dataset snapshots
+
+# Corre el script de descarga en un runner de GitHub (EU/US, conexión estable
+# con el geoportal de València) y commitea los snapshots actualizados al repo.
+# Útil porque desde Taiwán el geoportal da timeout y la VPN es inestable.
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Re-descargar aunque ya exista snapshot válido"
+        type: boolean
+        default: false
+  schedule:
+    # Lunes a las 06:00 UTC — refresco semanal automático
+    - cron: "0 6 * * 1"
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - run: npm ci
+
+      - name: Fetch snapshots
+        run: npm run fetch-data${{ inputs.force && ' -- --force' || '' }}
+
+      - name: Commit updated snapshots
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/snapshots/
+          if git diff --staged --quiet; then
+            echo "No snapshot changes."
+          else
+            git commit -m "data: refresh dataset snapshots"
+            git push
+          fi
