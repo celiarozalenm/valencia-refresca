@@ -1,10 +1,78 @@
 {
-  "generated_at": "2026-05-21T18:16:40.507Z",
-  "datasets": [],
-  "failures": [
+  "generated_at": "2026-05-21T18:36:49.992Z",
+  "datasets": [
+    {
+      "id": "urinaris-urinarios",
+      "title": "Urinaris",
+      "last_updated": "2026-02-25",
+      "feature_count": 230,
+      "bytes": 54418,
+      "source_url": "https://geoportal.valencia.es/server/rest/services/OPENDATA/Turismo/MapServer/217/query?where=1=1&outFields=*&f=geojson",
+      "fetched_at": "2026-05-21T18:32:39.922Z"
+    },
+    {
+      "id": "fonts-daigua-publica-fuentes-de-agua-publica",
+      "title": "Fonts d'aigua pública",
+      "last_updated": "2026-02-18",
+      "feature_count": 832,
+      "bytes": 226199,
+      "source_url": "https://geoportal.valencia.es/server/rest/services/OPENDATA/MedioAmbiente/MapServer/158/query?where=1=1&outFields=*&f=geojson",
+      "fetched_at": "2026-05-21T18:32:40.835Z"
+    },
+    {
+      "id": "arbratge-arbolado",
+      "title": "Arbratge",
+      "last_updated": "2026-02-12",
+      "feature_count": 186820,
+      "bytes": 82360042,
+      "source_url": "https://geoportal.valencia.es/server/rest/services/OPENDATA/MedioAmbiente/MapServer/151/query?where=1=1&outFields=*&f=geojson",
+      "fetched_at": "2026-05-21T18:36:32.204Z"
+    },
+    {
+      "id": "espais-verds-espacios-verdes",
+      "title": "Espais Verds",
+      "last_updated": "2026-02-17",
+      "feature_count": 807,
+      "bytes": 6078066,
+      "source_url": "https://geoportal.valencia.es/server/rest/services/OPENDATA/MedioAmbiente/MapServer/8/query?where=1=1&outFields=*&f=geojson",
+      "fetched_at": "2026-05-21T18:36:46.620Z"
+    },
     {
       "id": "dutxes-platja-duchas-playa",
-      "error": "fetch failed"
+      "title": "Dutxes platja",
+      "last_updated": "2026-02-17",
+      "feature_count": 71,
+      "bytes": 13934,
+      "source_url": "https://geoportal.valencia.es/server/rest/services/OPENDATA/MedioAmbiente/MapServer/155/query?where=1=1&outFields=*&f=geojson",
+      "fetched_at": "2026-05-21T18:36:47.645Z"
+    },
+    {
+      "id": "llavapeus-platges-lavapies-playas",
+      "title": "Llavapeus platges",
+      "last_updated": "2026-02-23",
+      "feature_count": 55,
+      "bytes": 10648,
+      "source_url": "https://geoportal.valencia.es/server/rest/services/OPENDATA/Turismo/MapServer/204/query?where=1=1&outFields=*&f=geojson",
+      "fetched_at": "2026-05-21T18:36:47.990Z"
+    },
+    {
+      "id": "barris-barrios",
+      "title": "Barris",
+      "last_updated": "2026-02-13",
+      "feature_count": 88,
+      "bytes": 325921,
+      "source_url": "https://geoportal.valencia.es/server/rest/services/OPENDATA/UrbanismoEInfraestructuras/MapServer/224/query?where=1=1&outFields=*&f=geojson",
+      "fetched_at": "2026-05-21T18:36:49.022Z"
+    },
+    {
+      "id": "districtes-distritos",
+      "title": "Districtes",
+      "last_updated": "2026-02-17",
+      "feature_count": 22,
+      "bytes": 246578,
+      "source_url": "https://geoportal.valencia.es/server/rest/services/OPENDATA/UrbanismoEInfraestructuras/MapServer/225/query?where=1=1&outFields=*&f=geojson",
+      "fetched_at": "2026-05-21T18:36:49.992Z"
     }
-  ]
+  ],
+  "failures": []
 }
