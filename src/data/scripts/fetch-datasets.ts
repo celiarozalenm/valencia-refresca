@@ -33,6 +33,8 @@ const DATASETS = [
   "districtes-distritos",
   // Capa demográfica
   "illa-de-cases-cadastrals-amb-dades-de-poblacio",
+  "illes-amb-dades-de-poblacio-manzanas-con-datos-de-poblacion",
+  "seccions-censals-secciones-censales",
   "vulnerabilidad-por-barrios",
 ] as const;
 
