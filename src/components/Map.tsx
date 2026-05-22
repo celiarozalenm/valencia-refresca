@@ -105,7 +105,7 @@ export default function Map({ lang = "es" }: MapProps) {
     );
 
     map.on("load", async () => {
-      // Sombra (densidad de arbolado por barrio) — debajo de todo.
+      // Sombra (densidad de arbolado por barrio): debajo de todo.
       const sombraRes = await fetch("/data/barrios-sombra.geojson");
       const sombraData = await sombraRes.json();
       map.addSource("sombra", { type: "geojson", data: sombraData });
@@ -132,7 +132,7 @@ export default function Map({ lang = "es" }: MapProps) {
         layout: { visibility: "none" },
       });
 
-      // Vulnerabilidad — al fondo, así los puntos quedan encima.
+      // Vulnerabilidad: al fondo, así los puntos quedan encima.
       const vulnRes = await fetch("/data/vulnerabilidad-por-barrios.geojson");
       const vulnData = await vulnRes.json();
       map.addSource("vulnerabilidad", { type: "geojson", data: vulnData });
@@ -207,9 +207,9 @@ export default function Map({ lang = "es" }: MapProps) {
       // Popups en clic
       const popupHtml = {
         fuentes: (p: Record<string, unknown>) =>
-          `<strong>Fuente</strong><br/>${p.calle ?? "—"}<br/><span style="color:#6b7280">Código ${p.codigo ?? "?"}</span>`,
+          `<strong>Fuente</strong><br/>${p.calle ?? "Sin dirección"}<br/><span style="color:#6b7280">Código ${p.codigo ?? "?"}</span>`,
         urinarios: (p: Record<string, unknown>) =>
-          `<strong>Urinario</strong><br/>${p.direccion ?? "—"}<br/><span style="color:#6b7280">${p.cabina_nor ?? 0} cabinas · ${p.cabina_min ?? 0} reducida movilidad</span>`,
+          `<strong>Urinario</strong><br/>${p.direccion ?? "Sin dirección"}<br/><span style="color:#6b7280">${p.cabina_nor ?? 0} cabinas · ${p.cabina_min ?? 0} reducida movilidad</span>`,
         duchas: () => `<strong>Ducha de playa</strong>`,
         sombra: (p: Record<string, unknown>) =>
           `<strong>${p.nombre ?? ""}</strong><br/>${Number(p.arboles ?? 0).toLocaleString("es-ES")} árboles<br/><span style="color:#6b7280">${p.arboles_per_km2 ?? "?"} árboles/km²</span>`,

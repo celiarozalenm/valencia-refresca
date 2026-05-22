@@ -23,9 +23,11 @@ const otherLabel = lang === 'va' ? sw.es : sw.va;
       </span>
     </a>
 
-    <ul class="hidden items-center gap-10 text-sm font-medium text-(--color-ink-soft) md:flex">
+    <ul class="hidden items-center gap-8 text-sm font-medium text-(--color-ink-soft) md:flex">
       <li><a href="#inicio" class="text-(--color-agua-deep) transition hover:text-(--color-ink)">{s.inicio}</a></li>
       <li><a href="#capas" class="transition hover:text-(--color-ink)">{s.capas}</a></li>
+      <li><a href="#mapa" class="transition hover:text-(--color-ink)">{s.elMapa}</a></li>
+      <li><a href="#hallazgos" class="transition hover:text-(--color-ink)">{lang === 'va' ? 'Troballes' : 'Hallazgos'}</a></li>
       <li><a href="#colabora" class="transition hover:text-(--color-ink)">{s.colabora}</a></li>
       <li><a href="#faq" class="transition hover:text-(--color-ink)">{s.faq}</a></li>
     </ul>
@@ -34,8 +36,22 @@ const otherLabel = lang === 'va' ? sw.es : sw.va;
       <a
         href={otherHref}
         aria-label={sw.aria}
-        class="hidden md:inline-flex items-center justify-center rounded-full border border-(--color-ink)/15 px-3 py-1.5 text-xs font-semibold tracking-wider uppercase text-(--color-ink-soft) transition hover:border-(--color-ink) hover:text-(--color-ink)"
+        class="hidden md:inline-flex items-center gap-1.5 rounded-full border border-(--color-ink)/15 px-3 py-1.5 text-xs font-semibold tracking-wider uppercase text-(--color-ink-soft) transition hover:border-(--color-ink) hover:text-(--color-ink)"
       >
+        <svg
+          class="h-3.5 w-3.5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="9" />
+          <ellipse cx="12" cy="12" rx="4" ry="9" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+        </svg>
         {otherLabel}
       </a>
 

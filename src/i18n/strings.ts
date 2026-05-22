@@ -43,18 +43,18 @@ export const STRINGS = {
       steps: [
         { title: "Activa las capas", desc: "Fuentes, urinarios y arbolado, sobre el plano de València." },
         { title: "Cruza los datos", desc: "Añade la vulnerabilidad de cada barrio según el padrón 2021." },
-        { title: "Lee la ciudad", desc: "Descubre dónde València se cuida — y dónde quedan zonas sin agua, sin sombra y sin urinarios." },
+        { title: "Lee la ciudad", desc: "Descubre dónde València se cuida, y dónde quedan zonas sin agua, sin sombra y sin urinarios." },
       ],
     },
     banner: {
       eyebrow: "VALÈNCIA ARDE",
       titleLine1: "Dónde la",
       titleLine2: "ciudad se cuida",
-      titleLine3: "— y dónde no.",
+      titleLine3: ", y dónde no.",
     },
     map: {
       eyebrow: "El mapa",
-      heading: "Activa las capas y verás dónde València se cuida — y dónde no.",
+      heading: "Activa las capas y verás dónde València se cuida, y dónde no.",
       description:
         "Los puntos azules son las 832 fuentes. Los naranjas, los 230 urinarios. El tinte de los barrios es la vulnerabilidad demográfica del padrón 2021.",
       panelTitle: "Capas",
@@ -110,7 +110,7 @@ export const STRINGS = {
         { q: "¿Es gratuita?", a: "Sí. Sin anuncios, sin tracking. Funciona con datos abiertos del Ajuntament de València." },
         {
           q: "¿De dónde salen los datos?",
-          a: 'Del <a href="https://opendata.vlci.valencia.es" class="underline decoration-(--color-agua-deep) decoration-2 underline-offset-4">Portal de Datos Abiertos del Ajuntament de València</a>. Se actualizan semanalmente vía un script público.',
+          a: 'Del <a href="https://opendata.vlci.valencia.es" class="underline decoration-(--color-agua-deep) decoration-2 underline-offset-4">Portal de Datos Abiertos del Ajuntament de València</a>. Se sincronizan automáticamente vía un script público cuando el Ajuntament publica una nueva versión.',
         },
         {
           q: "¿Quién está detrás?",
@@ -168,18 +168,18 @@ export const STRINGS = {
       steps: [
         { title: "Activa les capes", desc: "Fonts, urinaris i arbratge, sobre el plànol de València." },
         { title: "Creua les dades", desc: "Afegeix la vulnerabilitat de cada barri segons el padró 2021." },
-        { title: "Llig la ciutat", desc: "Descobreix on València es cuida — i on queden zones sense aigua, sense ombra i sense urinaris." },
+        { title: "Llig la ciutat", desc: "Descobreix on València es cuida, i on queden zones sense aigua, sense ombra i sense urinaris." },
       ],
     },
     banner: {
       eyebrow: "VALÈNCIA CREMA",
       titleLine1: "On la",
       titleLine2: "ciutat es cuida",
-      titleLine3: "— i on no.",
+      titleLine3: ", i on no.",
     },
     map: {
       eyebrow: "El mapa",
-      heading: "Activa les capes i veuràs on València es cuida — i on no.",
+      heading: "Activa les capes i veuràs on València es cuida, i on no.",
       description:
         "Els punts blaus són les 832 fonts. Els taronges, els 230 urinaris. El tint dels barris és la vulnerabilitat demogràfica del padró 2021.",
       panelTitle: "Capes",
@@ -235,7 +235,7 @@ export const STRINGS = {
         { q: "És gratuïta?", a: "Sí. Sense anuncis, sense tracking. Funciona amb dades obertes de l'Ajuntament de València." },
         {
           q: "D'on ixen les dades?",
-          a: 'Del <a href="https://opendata.vlci.valencia.es" class="underline decoration-(--color-agua-deep) decoration-2 underline-offset-4">Portal de Dades Obertes de l\'Ajuntament de València</a>. S\'actualitzen setmanalment via un script públic.',
+          a: 'Del <a href="https://opendata.vlci.valencia.es" class="underline decoration-(--color-agua-deep) decoration-2 underline-offset-4">Portal de Dades Obertes de l\'Ajuntament de València</a>. Se sincronitzen automàticament via un script públic quan l\'Ajuntament publica una nova versió.',
         },
         {
           q: "Qui està darrere?",

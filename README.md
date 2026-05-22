@@ -5,7 +5,7 @@
 
 🌐 **[valencia-refresca.vercel.app](https://valencia-refresca.vercel.app)**
 
-Mapa interactivo que cruza los servicios públicos de alivio térmico de València — fuentes de agua, urinarios, sombra de arbolado, espacios verdes, duchas de playa — con la **vulnerabilidad demográfica de cada barrio**.
+Mapa interactivo que cruza los servicios públicos de alivio térmico de València · fuentes de agua, urinarios, sombra de arbolado, espacios verdes, duchas de playa · con la **vulnerabilidad demográfica de cada barrio**.
 
 Pieza candidata a los [Premios Datos Abiertos València 2026](https://www.valencia.es/cas/campa%C3%B1as-municipales/-/content/premios-proyectos-datos-abiertos-periodismo-datos-2025) (categoría Datos Abiertos).
 
@@ -17,7 +17,7 @@ Pieza candidata a los [Premios Datos Abiertos València 2026](https://www.valenc
 
 Y un dato anti-intuitivo que apareció al cruzar los datos:
 
-> **Los barrios oficialmente vulnerables NO son los peor servidos.** El verdadero déficit está en el cinturón de pedanías rurales — Mahuella, El Saler, El Palmar, Borboto, Benifaraig.
+> **Los barrios oficialmente vulnerables NO son los peor servidos.** El verdadero déficit está en el cinturón de pedanías rurales · Mahuella, El Saler, El Palmar, Borboto, Benifaraig.
 
 Detalles en [`docs/08-exploration-v2.md`](./docs/08-exploration-v2.md).
 
@@ -29,7 +29,7 @@ València Refresca es esa herramienta. Útil para vecinas, mayores, familias con
 
 ## Datos utilizados
 
-Todos del [Portal de Datos Abiertos del Ajuntament de València](https://opendata.vlci.valencia.es) — 12 datasets:
+Todos del [Portal de Datos Abiertos del Ajuntament de València](https://opendata.vlci.valencia.es) · 12 datasets:
 
 | Dataset | Features |
 |---|---|
@@ -49,13 +49,13 @@ Los snapshots se refrescan **automáticamente cada lunes** vía GitHub Actions (
 
 ## Stack
 
-- **[Astro](https://astro.build)** — framework
-- **[React](https://react.dev) 19** — islas interactivas (mapa)
-- **[Tailwind CSS](https://tailwindcss.com) v4** — estilos
-- **[MapLibre GL JS](https://maplibre.org)** — mapa (open source, sin API key)
-- **[CartoDB Positron](https://carto.com/basemaps)** — tiles base
-- **Python + geopandas + shapely** — análisis geoespacial
-- **Vercel** — hosting
+- **[Astro](https://astro.build)** · framework
+- **[React](https://react.dev) 19** · islas interactivas (mapa)
+- **[Tailwind CSS](https://tailwindcss.com) v4** · estilos
+- **[MapLibre GL JS](https://maplibre.org)** · mapa (open source, sin API key)
+- **[CartoDB Positron](https://carto.com/basemaps)** · tiles base
+- **Python + geopandas + shapely** · análisis geoespacial
+- **Vercel** · hosting
 
 Toda la cadena es **open source y sin coste operativo** (0 €/año).
 
@@ -103,11 +103,11 @@ npm run fetch-data            # baja los snapshots desde el Portal
 python3 src/data/scripts/explore_v2.py   # re-corre el análisis
 ```
 
-> Nota: el geoportal del Ajuntament puede dar timeout desde fuera de la UE. En ese caso, dispara el workflow de GitHub Actions desde la pestaña Actions del repo — corre en infraestructura europea y commitea los snapshots al repo.
+> Nota: el geoportal del Ajuntament puede dar timeout desde fuera de la UE. En ese caso, dispara el workflow de GitHub Actions desde la pestaña Actions del repo · corre en infraestructura europea y commitea los snapshots al repo.
 
 ## Hallazgos clave
 
-- **832 fuentes** vs **230 urinarios** — asimetría 3,6× en una infraestructura igual de necesaria con calor extremo.
+- **832 fuentes** vs **230 urinarios** · asimetría 3,6× en una infraestructura igual de necesaria con calor extremo.
 - **El 96% de las manzanas** tiene una fuente a menos de 5 min. **Solo el 74%** tiene un urinario.
 - **Brecha 2.000×** entre el barrio más arbolado (Trinitat, 11.273 árboles/km²) y el menos (El Palmar, 5/km²).
 - La cobertura de servicios **NO se correlaciona con vulnerabilidad demográfica**. Los servicios están concentrados en el centro histórico-turístico; el cinturón rural queda fuera.
