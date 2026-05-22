@@ -15,10 +15,21 @@ if (!url) {
 
 const metaUrl = `${url.split("/query")[0]}?f=json`;
 const res = await fetch(metaUrl);
-const meta = (await res.json()) as { name?: string; fields?: { name: string; type: string; alias?: string }[] };
+const meta = (await res.json()) as {
+  name?: string;
+  fields?: { name: string; type: string; alias?: string }[];
+  layers?: { id: number; name: string }[];
+};
 
-console.log(`Layer: ${meta.name}`);
-console.log(`Fields (${meta.fields?.length ?? 0}):`);
-for (const f of meta.fields ?? []) {
-  console.log(`  · ${f.name} (${f.type}) ${f.alias ? `— ${f.alias}` : ""}`);
+if (meta.layers) {
+  console.log(`MapServer with ${meta.layers.length} layers:`);
+  for (const l of meta.layers) {
+    console.log(`  [${l.id}] ${l.name}`);
+  }
+} else {
+  console.log(`Layer: ${meta.name}`);
+  console.log(`Fields (${meta.fields?.length ?? 0}):`);
+  for (const f of meta.fields ?? []) {
+    console.log(`  · ${f.name} (${f.type}) ${f.alias ? `— ${f.alias}` : ""}`);
+  }
 }
