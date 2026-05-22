@@ -86,7 +86,7 @@ export default function Map({ lang = "es" }: MapProps) {
     barrios: true,
   });
   const [loaded, setLoaded] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   // Paseo de la sombra state
   const [address, setAddress] = useState("");
@@ -95,11 +95,6 @@ export default function Map({ lang = "es" }: MapProps) {
   const [walkError, setWalkError] = useState<string | null>(null);
   const [walkResult, setWalkResult] = useState<ShadowWalkResult | null>(null);
   const [walkOrigin, setWalkOrigin] = useState<[number, number] | null>(null);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)");
-    setSidebarOpen(mq.matches);
-  }, []);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -209,7 +204,6 @@ export default function Map({ lang = "es" }: MapProps) {
         layout: { visibility: "none" },
       });
 
-      // Capa para la ruta del paseo fresco (vacía al principio)
       map.addSource("walk-route", {
         type: "geojson",
         data: { type: "FeatureCollection", features: [] },
@@ -283,7 +277,6 @@ export default function Map({ lang = "es" }: MapProps) {
     apply("vulnerabilidad-line", active.barrios);
   }, [active, loaded]);
 
-  // Render walk route on the map
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !loaded) return;
@@ -307,6 +300,14 @@ export default function Map({ lang = "es" }: MapProps) {
       map.fitBounds(bounds, { padding: 80, duration: 800 });
     }
   }, [walkResult, loaded]);
+
+  // El mapa necesita "resize" cuando aparece/desaparece el panel overlay grande
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const t = setTimeout(() => map.resize(), 350);
+    return () => clearTimeout(t);
+  }, [view, walkResult]);
 
   async function handleGenerateWalk(e?: React.FormEvent) {
     e?.preventDefault();
@@ -436,78 +437,120 @@ export default function Map({ lang = "es" }: MapProps) {
     },
   ];
 
+  const SidebarNav = (
+    <>
+      <div className="border-b border-slate-100 px-5 py-4">
+        <a href={homeHref} className="flex items-center gap-2.5 text-(--color-ink) transition hover:opacity-80" onClick={() => setMobileNavOpen(false)}>
+          <svg width="32" height="32" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+            <g transform="translate(48 30)">
+              <g fill="#f97316">
+                <circle cx="0" cy="0" r="11" />
+                <rect x="-1.2" y="-19" width="2.4" height="5" rx="1.2" />
+                <rect x="-1.2" y="14" width="2.4" height="5" rx="1.2" />
+                <rect x="14" y="-1.2" width="5" height="2.4" rx="1.2" />
+                <rect x="-19" y="-1.2" width="5" height="2.4" rx="1.2" />
+                <rect x="-1.2" y="-19" width="2.4" height="5" rx="1.2" transform="rotate(45)" />
+                <rect x="-1.2" y="-19" width="2.4" height="5" rx="1.2" transform="rotate(135)" />
+                <rect x="-1.2" y="-19" width="2.4" height="5" rx="1.2" transform="rotate(-45)" />
+                <rect x="-1.2" y="-19" width="2.4" height="5" rx="1.2" transform="rotate(-135)" />
+              </g>
+            </g>
+            <path d="M30 12 C 38 26, 48 38, 48 50 C 48 60, 40 67, 30 67 C 20 67, 12 60, 12 50 C 12 38, 22 26, 30 12 Z" fill="#3b82f6" />
+          </svg>
+          <span className="font-display text-base leading-tight font-semibold">
+            València<br /><span className="font-medium">Refresca</span>
+          </span>
+        </a>
+      </div>
+      <nav className="flex-1 px-2 py-3">
+        <ul className="flex flex-col gap-0.5">
+          {tabs.map((tab) => {
+            const isActive = view === tab.key;
+            return (
+              <li key={tab.key}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setView(tab.key);
+                    setMobileNavOpen(false);
+                  }}
+                  className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition ${
+                    isActive
+                      ? "bg-(--color-agua-soft) text-(--color-agua-deep)"
+                      : "text-slate-700 hover:bg-slate-100"
+                  }`}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  <span className={isActive ? "text-(--color-agua-deep)" : "text-slate-500"}>{tab.icon}</span>
+                  {tab.label}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </>
+  );
+
+  const showMap = view === "capas" || (view === "paseo" && walkResult !== null);
+
   return (
     <div className="relative flex h-full w-full overflow-hidden bg-slate-100">
-      {/* Sidebar */}
-      <aside className="z-20 hidden h-full w-80 shrink-0 flex-col border-r border-slate-200 bg-white shadow-sm md:flex">
-        {/* Header: Logo + V Refresca */}
-        <div className="border-b border-slate-100 px-5 py-4">
-          <a href={homeHref} className="flex items-center gap-2.5 text-(--color-ink) transition hover:opacity-80">
-            <svg width="32" height="32" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-              <g transform="translate(48 30)">
-                <g fill="#f97316">
-                  <circle cx="0" cy="0" r="11" />
-                  <rect x="-1.2" y="-19" width="2.4" height="5" rx="1.2" />
-                  <rect x="-1.2" y="14" width="2.4" height="5" rx="1.2" />
-                  <rect x="14" y="-1.2" width="5" height="2.4" rx="1.2" />
-                  <rect x="-19" y="-1.2" width="5" height="2.4" rx="1.2" />
-                  <rect x="-1.2" y="-19" width="2.4" height="5" rx="1.2" transform="rotate(45)" />
-                  <rect x="-1.2" y="-19" width="2.4" height="5" rx="1.2" transform="rotate(135)" />
-                  <rect x="-1.2" y="-19" width="2.4" height="5" rx="1.2" transform="rotate(-45)" />
-                  <rect x="-1.2" y="-19" width="2.4" height="5" rx="1.2" transform="rotate(-135)" />
-                </g>
-              </g>
-              <path d="M30 12 C 38 26, 48 38, 48 50 C 48 60, 40 67, 30 67 C 20 67, 12 60, 12 50 C 12 38, 22 26, 30 12 Z" fill="#3b82f6" />
-            </svg>
-            <span className="font-display text-lg leading-tight font-semibold">
-              València<br /><span className="font-medium">Refresca</span>
-            </span>
-          </a>
+      {/* Sidebar (escritorio) */}
+      <aside className="z-20 hidden h-full w-56 shrink-0 flex-col border-r border-slate-200 bg-white shadow-sm md:flex">
+        {SidebarNav}
+      </aside>
+
+      {/* Sidebar móvil */}
+      {mobileNavOpen && (
+        <div className="fixed inset-0 z-40 md:hidden">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setMobileNavOpen(false)} aria-hidden />
+          <aside className="absolute top-0 left-0 flex h-full w-64 max-w-[85vw] flex-col bg-white shadow-xl">
+            {SidebarNav}
+          </aside>
         </div>
+      )}
 
-        {/* Section tabs */}
-        <nav className="border-b border-slate-100 px-2 py-2">
-          <ul className="flex flex-col gap-0.5">
-            {tabs.map((tab) => {
-              const isActive = view === tab.key;
-              return (
-                <li key={tab.key}>
-                  <button
-                    type="button"
-                    onClick={() => setView(tab.key)}
-                    className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm font-medium transition ${
-                      isActive
-                        ? "bg-(--color-agua-soft) text-(--color-agua-deep)"
-                        : "text-slate-700 hover:bg-slate-100"
-                    }`}
-                    aria-current={isActive ? "page" : undefined}
-                  >
-                    <span className={isActive ? "text-(--color-agua-deep)" : "text-slate-500"}>{tab.icon}</span>
-                    {tab.label}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
+      {/* Main area */}
+      <div className="relative flex-1">
+        {/* El mapa está siempre montado, sólo se oculta visualmente */}
+        <div
+          ref={containerRef}
+          style={{ position: "absolute", inset: 0 }}
+          className={showMap ? "block" : "invisible"}
+        />
 
-        {/* Section body */}
-        <div className="flex-1 overflow-y-auto">
-          {view === "capas" && (
-            <div className="px-5 pt-5 pb-6">
-              <p className="font-display text-base leading-tight font-semibold text-slate-900">{tr.panelTitle}</p>
-              <p className="mt-1 text-xs text-slate-500">{tr.panelHelp}</p>
-              <ul className="mt-4 space-y-1">
+        {/* Botón de menú móvil */}
+        <button
+          type="button"
+          onClick={() => setMobileNavOpen(true)}
+          className="absolute top-3 left-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-slate-900 shadow-md backdrop-blur md:hidden"
+          aria-label="Abrir navegación"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+
+        {/* Overlay panel: Capas (sobre el mapa) */}
+        {view === "capas" && (
+          <div className="pointer-events-none absolute top-4 left-4 z-10 max-w-xs md:top-6 md:left-6">
+            <div className="pointer-events-auto rounded-2xl bg-white/95 p-4 shadow-lg backdrop-blur">
+              <p className="font-display text-sm leading-tight font-semibold text-slate-900">{tr.panelTitle}</p>
+              <p className="mt-0.5 text-xs text-slate-500">{tr.panelHelp}</p>
+              <ul className="mt-3 space-y-1.5">
                 {(Object.keys(layerNames) as LayerKey[]).map((k) => {
                   const meta = layerNames[k];
                   return (
                     <li key={k}>
-                      <label className="flex cursor-pointer items-start gap-3 rounded-lg px-2 py-2 transition hover:bg-slate-50">
+                      <label className="flex cursor-pointer items-start gap-2.5 rounded-lg px-1.5 py-1 transition hover:bg-slate-50">
                         <input
                           type="checkbox"
                           checked={active[k]}
                           onChange={(e) => setActive((s) => ({ ...s, [k]: e.target.checked }))}
-                          className="mt-1 h-4 w-4 accent-slate-900"
+                          className="mt-0.5 h-4 w-4 accent-slate-900"
                         />
                         <span className="flex-1">
                           <span className="flex items-center gap-2 text-sm font-medium text-slate-900">
@@ -522,260 +565,187 @@ export default function Map({ lang = "es" }: MapProps) {
                 })}
               </ul>
             </div>
-          )}
+          </div>
+        )}
 
-          {view === "paseo" && (
-            <div className="px-5 pt-5 pb-6">
-              <p className="font-display text-base leading-tight font-semibold text-slate-900">{sw.title}</p>
-              <p className="mt-1 text-xs text-slate-500">{sw.subtitle}</p>
+        {/* Paseo fresco: pantalla form (cuando NO hay resultado) */}
+        {view === "paseo" && !walkResult && (
+          <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone)">
+            <div className="mx-auto max-w-3xl px-6 py-12 md:px-10 md:py-16">
+              <p className="font-sans text-sm font-semibold tracking-[0.18em] uppercase text-(--color-agua-deep)">
+                {sectionsT.paseo}
+              </p>
+              <h1 className="mt-2 font-display text-4xl leading-tight text-(--color-ink) md:text-5xl">
+                {sw.title}
+              </h1>
+              <p className="mt-3 max-w-xl text-(--color-ink-soft) md:text-lg">{sw.subtitle}</p>
 
-              {!walkResult && !walkPending && (
-                <div className="mt-5 space-y-3">
-                  <p className="text-xs font-semibold tracking-wider uppercase text-slate-500">{sw.howTitle}</p>
-                  {sw.steps.map((s) => (
-                    <div key={s.title} className="rounded-xl bg-(--color-agua-soft)/40 px-3 py-2.5">
-                      <p className="text-sm font-semibold text-slate-900">{s.title}</p>
-                      <p className="mt-0.5 text-xs text-slate-600">{s.desc}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {!walkResult && (
-                <form className="mt-5 space-y-4" onSubmit={handleGenerateWalk}>
-                  <div>
-                    <label className="text-xs font-semibold tracking-wider uppercase text-slate-500">
-                      {sw.addressLabel}
-                    </label>
-                    <input
-                      type="text"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      placeholder={sw.addressPlaceholder}
-                      className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-(--color-agua-deep) focus:ring-2 focus:ring-(--color-agua-soft)"
-                      disabled={walkPending}
-                    />
-                    <button
-                      type="button"
-                      onClick={handleUseMyLocation}
-                      className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-(--color-agua-deep) hover:underline"
-                      disabled={walkPending}
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="12" y1="2" x2="12" y2="22" />
-                        <line x1="2" y1="12" x2="22" y2="12" />
-                      </svg>
-                      {sw.useMyLocation}
-                    </button>
+              <div className="mt-10 grid gap-4 md:grid-cols-3">
+                {sw.steps.map((s) => (
+                  <div key={s.title} className="rounded-2xl bg-white p-5 ring-1 ring-(--color-ink)/8">
+                    <p className="font-display text-base font-semibold text-(--color-ink)">{s.title}</p>
+                    <p className="mt-1.5 text-sm leading-relaxed text-(--color-ink-soft)">{s.desc}</p>
                   </div>
+                ))}
+              </div>
 
-                  <div>
-                    <label className="text-xs font-semibold tracking-wider uppercase text-slate-500">
-                      {sw.durationLabel}
-                    </label>
-                    <div className="mt-2 grid grid-cols-4 gap-1.5">
-                      {sw.durationOptions.map((opt) => {
-                        const isActive = duration === opt.value;
-                        return (
-                          <button
-                            key={opt.value}
-                            type="button"
-                            onClick={() => setDuration(opt.value)}
-                            className={`rounded-lg px-2 py-2 text-sm font-medium transition ${
-                              isActive
-                                ? "bg-(--color-agua-deep) text-white"
-                                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                            }`}
-                          >
-                            {opt.label}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
+              <form className="mt-10 space-y-6 rounded-2xl bg-white p-6 ring-1 ring-(--color-ink)/8 md:p-8" onSubmit={handleGenerateWalk}>
+                <div>
+                  <label className="text-xs font-semibold tracking-wider uppercase text-(--color-ink-soft)">
+                    {sw.addressLabel}
+                  </label>
+                  <input
+                    type="text"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    placeholder={sw.addressPlaceholder}
+                    className="mt-2 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-base text-slate-900 placeholder-slate-400 outline-none transition focus:border-(--color-agua-deep) focus:ring-2 focus:ring-(--color-agua-soft)"
+                    disabled={walkPending}
+                  />
                   <button
-                    type="submit"
-                    disabled={walkPending || !address.trim()}
-                    className="w-full rounded-full bg-(--color-agua-deep) px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+                    type="button"
+                    onClick={handleUseMyLocation}
+                    className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-(--color-agua-deep) hover:underline"
+                    disabled={walkPending}
                   >
-                    {walkPending ? sw.generating : sw.generate}
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="12" y1="2" x2="12" y2="22" />
+                      <line x1="2" y1="12" x2="22" y2="12" />
+                    </svg>
+                    {sw.useMyLocation}
                   </button>
+                </div>
 
-                  {walkError && (
-                    <p className="text-xs text-red-600">{walkError}</p>
-                  )}
-                </form>
-              )}
-
-              {walkResult && (
-                <div className="mt-5 space-y-4">
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="rounded-xl bg-slate-50 px-3 py-3">
-                      <p className="text-[10px] tracking-wider uppercase text-slate-500">{sw.resultDistance}</p>
-                      <p className="mt-1 font-display text-lg font-semibold text-slate-900">
-                        {(walkResult.route.distanceMeters / 1000).toFixed(2)} <span className="text-xs font-medium text-slate-500">km</span>
-                      </p>
-                    </div>
-                    <div className="rounded-xl bg-slate-50 px-3 py-3">
-                      <p className="text-[10px] tracking-wider uppercase text-slate-500">{sw.resultTime}</p>
-                      <p className="mt-1 font-display text-lg font-semibold text-slate-900">
-                        {Math.round(walkResult.route.durationSeconds / 60)} <span className="text-xs font-medium text-slate-500">min</span>
-                      </p>
-                    </div>
-                    <div className="rounded-xl bg-(--color-sombra-soft) px-3 py-3">
-                      <p className="text-[10px] tracking-wider uppercase text-slate-500">{sw.resultShade}</p>
-                      <p className="mt-1 font-display text-lg font-semibold text-(--color-sombra-deep)">
-                        {walkResult.shadePercent}<span className="text-xs font-medium text-slate-500">%</span>
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <button
-                      type="button"
-                      onClick={handleOpenInGoogleMaps}
-                      className="flex w-full items-center justify-center gap-2 rounded-full bg-(--color-agua-deep) px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-900"
-                    >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                        <circle cx="12" cy="10" r="3" />
-                      </svg>
-                      {sw.openInMaps}
-                    </button>
-                    <div className="grid grid-cols-2 gap-2">
-                      <button
-                        type="button"
-                        onClick={handleShare}
-                        className="flex items-center justify-center gap-1.5 rounded-full border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
-                      >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                          <circle cx="18" cy="5" r="3" />
-                          <circle cx="6" cy="12" r="3" />
-                          <circle cx="18" cy="19" r="3" />
-                          <line x1="8.6" y1="13.5" x2="15.4" y2="17.5" />
-                          <line x1="15.4" y1="6.5" x2="8.6" y2="10.5" />
-                        </svg>
-                        {sw.share}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleDownloadGpx}
-                        className="flex items-center justify-center gap-1.5 rounded-full border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
-                      >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                          <polyline points="7 10 12 15 17 10" />
-                          <line x1="12" y1="15" x2="12" y2="3" />
-                        </svg>
-                        GPX
-                      </button>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleResetWalk}
-                      className="w-full rounded-full text-center text-xs font-medium text-slate-500 transition hover:text-slate-900"
-                    >
-                      {sw.reset}
-                    </button>
+                <div>
+                  <label className="text-xs font-semibold tracking-wider uppercase text-(--color-ink-soft)">
+                    {sw.durationLabel}
+                  </label>
+                  <div className="mt-2 grid grid-cols-4 gap-2">
+                    {sw.durationOptions.map((opt) => {
+                      const isActive = duration === opt.value;
+                      return (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() => setDuration(opt.value)}
+                          className={`rounded-lg px-2 py-2.5 text-sm font-medium transition ${
+                            isActive
+                              ? "bg-(--color-agua-deep) text-white"
+                              : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
-              )}
-            </div>
-          )}
 
-          {view === "frescos" && (
-            <div className="px-5 pt-5 pb-6">
-              <p className="font-display text-base leading-tight font-semibold text-slate-900">{freshestT.title}</p>
-              <p className="mt-1 text-xs text-slate-500">{freshestT.subtitle}</p>
-              <div className="mt-6 rounded-xl bg-slate-50 p-4 text-sm text-slate-500">
+                <button
+                  type="submit"
+                  disabled={walkPending || !address.trim()}
+                  className="w-full rounded-full bg-(--color-agua-deep) px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {walkPending ? sw.generating : sw.generate}
+                </button>
+
+                {walkError && <p className="text-sm text-red-600">{walkError}</p>}
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Paseo fresco: resultado (panel flotante sobre mapa) */}
+        {view === "paseo" && walkResult && (
+          <div className="pointer-events-none absolute top-4 left-4 z-10 max-w-xs md:top-6 md:left-6">
+            <div className="pointer-events-auto rounded-2xl bg-white/95 p-4 shadow-lg backdrop-blur md:w-80 md:p-5">
+              <p className="font-display text-sm font-semibold text-slate-900">{sw.title}</p>
+              <p className="mt-0.5 text-xs text-slate-500">{walkOrigin ? address : ""}</p>
+
+              <div className="mt-4 grid grid-cols-3 gap-2">
+                <div className="rounded-xl bg-slate-50 px-2 py-2.5 text-center">
+                  <p className="text-[10px] tracking-wider uppercase text-slate-500">{sw.resultDistance}</p>
+                  <p className="mt-0.5 font-display text-base font-semibold text-slate-900">
+                    {(walkResult.route.distanceMeters / 1000).toFixed(1)}<span className="ml-0.5 text-[10px] font-medium text-slate-500">km</span>
+                  </p>
+                </div>
+                <div className="rounded-xl bg-slate-50 px-2 py-2.5 text-center">
+                  <p className="text-[10px] tracking-wider uppercase text-slate-500">{sw.resultTime}</p>
+                  <p className="mt-0.5 font-display text-base font-semibold text-slate-900">
+                    {Math.round(walkResult.route.durationSeconds / 60)}<span className="ml-0.5 text-[10px] font-medium text-slate-500">min</span>
+                  </p>
+                </div>
+                <div className="rounded-xl bg-(--color-sombra-soft) px-2 py-2.5 text-center">
+                  <p className="text-[10px] tracking-wider uppercase text-slate-500">{sw.resultShade}</p>
+                  <p className="mt-0.5 font-display text-base font-semibold text-(--color-sombra-deep)">
+                    {walkResult.shadePercent}<span className="ml-0.5 text-[10px] font-medium text-slate-500">%</span>
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-4 space-y-2">
+                <button
+                  type="button"
+                  onClick={handleOpenInGoogleMaps}
+                  className="flex w-full items-center justify-center gap-2 rounded-full bg-(--color-agua-deep) px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-900"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                  {sw.openInMaps}
+                </button>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={handleShare}
+                    className="flex items-center justify-center gap-1.5 rounded-full border border-slate-300 px-2 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+                  >
+                    {sw.share}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleDownloadGpx}
+                    className="flex items-center justify-center gap-1.5 rounded-full border border-slate-300 px-2 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+                  >
+                    GPX
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleResetWalk}
+                  className="w-full text-center text-xs font-medium text-slate-500 transition hover:text-slate-900"
+                >
+                  {sw.reset}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Barrios frescos: pantalla de contenido */}
+        {view === "frescos" && (
+          <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone)">
+            <div className="mx-auto max-w-4xl px-6 py-12 md:px-10 md:py-16">
+              <p className="font-sans text-sm font-semibold tracking-[0.18em] uppercase text-(--color-calor-deep)">
+                {sectionsT.frescos}
+              </p>
+              <h1 className="mt-2 font-display text-4xl leading-tight text-(--color-ink) md:text-5xl">{freshestT.title}</h1>
+              <p className="mt-3 max-w-2xl text-(--color-ink-soft) md:text-lg">{freshestT.subtitle}</p>
+              <div className="mt-10 rounded-2xl bg-white p-8 text-sm text-slate-500 ring-1 ring-(--color-ink)/8">
                 {freshestT.soon}
               </div>
             </div>
-          )}
-        </div>
-      </aside>
+          </div>
+        )}
 
-      {/* Map container */}
-      <div className="relative flex-1">
-        <div ref={containerRef} style={{ position: "absolute", inset: 0 }} />
-
-        {/* Mobile sidebar trigger */}
-        <button
-          type="button"
-          onClick={() => setSidebarOpen(true)}
-          className="absolute top-3 left-3 z-10 flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-sm font-medium text-slate-900 shadow-md backdrop-blur md:hidden"
-          aria-label={tr.openPanel}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="18" x2="21" y2="18" />
-          </svg>
-          {tr.pillLabel}
-        </button>
-
-        {!loaded && (
+        {!loaded && showMap && (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white/40 text-sm text-slate-500 backdrop-blur-sm">
             {tr.loading}
           </div>
         )}
       </div>
-
-      {/* Mobile sidebar overlay */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-30 md:hidden">
-          <div className="absolute inset-0 bg-black/40" onClick={() => setSidebarOpen(false)} aria-hidden />
-          <aside className="absolute top-0 left-0 h-full w-80 max-w-[85vw] overflow-y-auto bg-white shadow-xl">
-            {/* Cierre */}
-            <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-              <a href={homeHref} className="flex items-center gap-2.5 text-(--color-ink)">
-                <span className="font-display text-lg font-semibold">València Refresca</span>
-              </a>
-              <button
-                type="button"
-                onClick={() => setSidebarOpen(false)}
-                className="text-slate-500 hover:text-slate-900"
-                aria-label={tr.closePanel}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                </svg>
-              </button>
-            </div>
-            {/* Aquí podrían reusarse las tabs y secciones; por simplicidad,
-                en móvil mostramos solo las capas (la versión completa va en escritorio) */}
-            <div className="px-5 pt-5 pb-6">
-              <ul className="space-y-1">
-                {(Object.keys(layerNames) as LayerKey[]).map((k) => {
-                  const meta = layerNames[k];
-                  return (
-                    <li key={k}>
-                      <label className="flex cursor-pointer items-start gap-3 rounded-lg px-2 py-2 transition hover:bg-slate-50">
-                        <input
-                          type="checkbox"
-                          checked={active[k]}
-                          onChange={(e) => setActive((s) => ({ ...s, [k]: e.target.checked }))}
-                          className="mt-1 h-4 w-4 accent-slate-900"
-                        />
-                        <span className="flex-1">
-                          <span className="flex items-center gap-2 text-sm font-medium text-slate-900">
-                            <span className="h-2.5 w-2.5 rounded-full" style={{ background: LAYER_COLORS[k] }} aria-hidden />
-                            {meta.label}
-                          </span>
-                          <span className="text-xs text-slate-500">{meta.description}</span>
-                        </span>
-                      </label>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          </aside>
-        </div>
-      )}
     </div>
   );
 }
