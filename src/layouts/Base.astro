@@ -12,6 +12,9 @@ const {
   title = 'València Refresca · agua, sombra y alivio frente al calor',
   description = 'La app que te ayuda a encontrar agua, sombra y alivio frente al calor en València. Mapa de fuentes, urinarios y zonas de sombra.',
 } = Astro.props;
+
+const siteUrl = 'https://valencia-refresca.vercel.app';
+const ogImageUrl = `${siteUrl}/og.png`;
 ---
 
 <!doctype html>
@@ -29,6 +32,17 @@ const {
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_ES" />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:site_name" content="València Refresca" />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="València Refresca — agua, sombra y alivio frente al calor" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

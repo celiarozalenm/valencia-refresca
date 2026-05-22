@@ -28,3 +28,4 @@ pnpm-debug.log*
 *.playwright-screenshot.png
 hero-desktop.png
 
+.vercel
