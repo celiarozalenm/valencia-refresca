@@ -3,10 +3,13 @@
 @theme {
   --color-agua: #3b82f6;
   --color-agua-soft: #dbeafe;
+  --color-agua-deep: #1d4ed8;   /* AA-safe text + button bg on bone */
   --color-calor: #f97316;
   --color-calor-soft: #ffedd5;
+  --color-calor-deep: #c2410c;  /* AA-safe text on bone */
   --color-sombra: #22c55e;
   --color-sombra-soft: #dcfce7;
+  --color-sombra-deep: #15803d; /* AA-safe text on bone */
   --color-bone: #f7f7f5;
   --color-bone-soft: #fafaf9;
   --color-ink: #1f2937;

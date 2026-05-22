@@ -54,7 +54,7 @@ export default function MapLazy() {
       className="relative w-full overflow-hidden rounded-3xl bg-slate-100 ring-1 ring-slate-200/60"
       style={{ height: "min(78vh, 720px)", minHeight: 520 }}
     >
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-slate-500">
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-slate-600">
         <div className="h-8 w-8 animate-pulse rounded-full bg-slate-300" aria-hidden />
         <p className="text-sm">El mapa se cargará al acercarte…</p>
       </div>

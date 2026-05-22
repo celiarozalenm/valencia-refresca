@@ -12,7 +12,7 @@ import Logo from './Logo.astro';
     </a>
 
     <ul class="hidden items-center gap-10 text-sm font-medium text-(--color-ink-soft) md:flex">
-      <li><a href="#inicio" class="text-(--color-agua) transition hover:text-(--color-ink)">Inicio</a></li>
+      <li><a href="#inicio" class="text-(--color-agua-deep) transition hover:text-(--color-ink)">Inicio</a></li>
       <li><a href="#capas" class="transition hover:text-(--color-ink)">Las capas</a></li>
       <li><a href="#colabora" class="transition hover:text-(--color-ink)">Colabora</a></li>
       <li><a href="#faq" class="transition hover:text-(--color-ink)">Preguntas frecuentes</a></li>
@@ -21,7 +21,7 @@ import Logo from './Logo.astro';
     <div class="flex items-center gap-2">
       <a
         href="#mapa"
-        class="hidden md:inline-flex items-center rounded-full bg-(--color-agua) px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-(--color-ink)"
+        class="hidden md:inline-flex items-center rounded-full bg-(--color-agua-deep) px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-(--color-ink)"
       >
         Ver el mapa
       </a>
@@ -72,7 +72,7 @@ import Logo from './Logo.astro';
   >
     <ul class="mx-auto flex max-w-7xl flex-col gap-1 px-6 py-4 text-base font-medium text-(--color-ink)">
       <li>
-        <a href="#inicio" data-mobile-link class="block rounded-xl px-3 py-3 text-(--color-agua) transition hover:bg-(--color-ink)/5">Inicio</a>
+        <a href="#inicio" data-mobile-link class="block rounded-xl px-3 py-3 text-(--color-agua-deep) transition hover:bg-(--color-ink)/5">Inicio</a>
       </li>
       <li>
         <a href="#capas" data-mobile-link class="block rounded-xl px-3 py-3 transition hover:bg-(--color-ink)/5">Las capas</a>
@@ -108,7 +108,7 @@ import Logo from './Logo.astro';
     };
 
     toggle.addEventListener('click', () => {
-      setOpen(panel.hidden);
+      setOpen(panel.hidden === true);
     });
 
     panel.querySelectorAll('a[data-mobile-link]').forEach((link) => {
