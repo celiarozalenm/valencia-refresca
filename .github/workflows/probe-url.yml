@@ -1,0 +1,23 @@
+name: Probe URL
+
+# Descarga la cabecera/inicio de una URL desde un runner de GitHub para
+# inspeccionar contenido al que no llegamos desde local.
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "URL completa"
+        required: true
+        type: string
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Curl the URL
+        run: |
+          echo "GET $URL"
+          curl -sSL --max-time 60 "$URL" | head -c 4000
+        env:
+          URL: ${{ inputs.url }}
