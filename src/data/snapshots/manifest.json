@@ -1,13 +1,22 @@
 {
-  "generated_at": "2026-05-22T07:55:02.143Z",
+  "generated_at": "2026-05-22T08:32:24.242Z",
   "datasets": [
     {
-      "id": "illa-de-cases-cadastrals-amb-dades-de-poblacio",
-      "title": "Illa de cases cadastrals amb dades de població",
-      "feature_count": 4913,
-      "bytes": 8508294,
-      "source_url": "https://geoportal.valencia.es/apps/OpenData/UrbanismoEInfraestructuras/MANZANAS.json",
-      "fetched_at": "2026-05-22T07:55:02.141Z"
+      "id": "illes-amb-dades-de-poblacio-manzanas-con-datos-de-poblacion",
+      "title": "Illes",
+      "last_updated": "2026-02-19",
+      "feature_count": 4923,
+      "bytes": 11609458,
+      "source_url": "https://geoportal.valencia.es/server/rest/services/OPENDATA/UrbanismoEInfraestructuras/MapServer/215/query?where=1=1&outFields=*&f=geojson",
+      "fetched_at": "2026-05-22T08:32:21.633Z"
+    },
+    {
+      "id": "seccions-censals-secciones-censales",
+      "title": "Seccions censals",
+      "feature_count": 593,
+      "bytes": 587346,
+      "source_url": "https://geoportal.valencia.es/server/rest/services/OPENDATA/UrbanismoEInfraestructuras/MapServer/210/query?where=1=1&outFields=*&f=geojson",
+      "fetched_at": "2026-05-22T08:32:24.239Z"
     }
   ],
   "failures": []
