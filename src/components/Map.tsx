@@ -4,6 +4,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { STRINGS, type Lang } from "../i18n/strings";
 import { geocode } from "../services/nominatim";
 import { generateShadowWalk, googleMapsUrl, routeToGpx, type ShadowWalkResult } from "../services/shadowWalk";
+import FreshestRanking from "./FreshestRanking";
 
 const VALENCIA_CENTER: LngLatLike = [-0.376, 39.467];
 
@@ -572,10 +573,7 @@ export default function Map({ lang = "es" }: MapProps) {
         {view === "paseo" && !walkResult && (
           <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone)">
             <div className="mx-auto max-w-3xl px-6 py-12 md:px-10 md:py-16">
-              <p className="font-sans text-sm font-semibold tracking-[0.18em] uppercase text-(--color-agua-deep)">
-                {sectionsT.paseo}
-              </p>
-              <h1 className="mt-2 font-display text-4xl leading-tight text-(--color-ink) md:text-5xl">
+              <h1 className="font-display text-4xl leading-tight text-(--color-agua-deep) md:text-5xl">
                 {sw.title}
               </h1>
               <p className="mt-3 max-w-xl text-(--color-ink-soft) md:text-lg">{sw.subtitle}</p>
@@ -727,14 +725,11 @@ export default function Map({ lang = "es" }: MapProps) {
         {/* Barrios frescos: pantalla de contenido */}
         {view === "frescos" && (
           <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone)">
-            <div className="mx-auto max-w-4xl px-6 py-12 md:px-10 md:py-16">
-              <p className="font-sans text-sm font-semibold tracking-[0.18em] uppercase text-(--color-calor-deep)">
-                {sectionsT.frescos}
-              </p>
-              <h1 className="mt-2 font-display text-4xl leading-tight text-(--color-ink) md:text-5xl">{freshestT.title}</h1>
+            <div className="mx-auto max-w-5xl px-6 py-12 md:px-10 md:py-16">
+              <h1 className="font-display text-4xl leading-tight text-(--color-agua-deep) md:text-5xl">{freshestT.title}</h1>
               <p className="mt-3 max-w-2xl text-(--color-ink-soft) md:text-lg">{freshestT.subtitle}</p>
-              <div className="mt-10 rounded-2xl bg-white p-8 text-sm text-slate-500 ring-1 ring-(--color-ink)/8">
-                {freshestT.soon}
+              <div className="mt-10">
+                <FreshestRanking lang={lang} />
               </div>
             </div>
           </div>
