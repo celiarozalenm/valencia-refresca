@@ -6,7 +6,6 @@ import Banner from './Banner.astro';
 import CollaborateBox from './CollaborateBox.astro';
 import FAQ from './FAQ.astro';
 import Findings from './Findings.astro';
-import MapLazy from './MapLazy.tsx';
 import { t, type Lang } from '../i18n/strings';
 
 interface Props {
@@ -15,6 +14,7 @@ interface Props {
 
 const { lang = 'es' } = Astro.props;
 const m = t(lang).map;
+const mapaHref = lang === 'va' ? '/val/mapa/' : '/mapa/';
 ---
 
 <Hero lang={lang} />
@@ -24,7 +24,7 @@ const m = t(lang).map;
 
 <section id="mapa" class="border-t border-(--color-ink)/8">
   <div class="mx-auto max-w-7xl px-6 py-20 md:px-10">
-    <div class="mb-10 max-w-3xl">
+    <div class="max-w-3xl">
       <p class="font-sans text-sm font-medium tracking-[0.18em] uppercase text-(--color-agua-deep)">{m.eyebrow}</p>
       <h2 class="mt-3 font-display text-3xl leading-tight text-(--color-ink) md:text-5xl">
         {m.heading}
@@ -32,9 +32,15 @@ const m = t(lang).map;
       <p class="mt-4 max-w-2xl text-(--color-ink-soft) md:text-lg">
         {m.description}
       </p>
-    </div>
 
-    <MapLazy client:only="react" lang={lang} />
+      <a
+        href={mapaHref}
+        class="mt-8 inline-flex items-center gap-2 rounded-full bg-(--color-agua-deep) px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-(--color-ink)"
+      >
+        {m.ctaButton}
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
   </div>
 </section>
 
