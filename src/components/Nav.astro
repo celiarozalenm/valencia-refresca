@@ -13,16 +13,106 @@ import Logo from './Logo.astro';
 
     <ul class="hidden items-center gap-10 text-sm font-medium text-(--color-ink-soft) md:flex">
       <li><a href="#inicio" class="text-(--color-agua) transition hover:text-(--color-ink)">Inicio</a></li>
-      <li><a href="#app" class="transition hover:text-(--color-ink)">La app</a></li>
+      <li><a href="#capas" class="transition hover:text-(--color-ink)">Las capas</a></li>
       <li><a href="#colabora" class="transition hover:text-(--color-ink)">Colabora</a></li>
       <li><a href="#faq" class="transition hover:text-(--color-ink)">Preguntas frecuentes</a></li>
     </ul>
 
-    <a
-      href="#descargar"
-      class="inline-flex items-center rounded-full bg-(--color-agua) px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-(--color-ink)"
-    >
-      Descargar
-    </a>
+    <div class="flex items-center gap-2">
+      <a
+        href="#mapa"
+        class="hidden md:inline-flex items-center rounded-full bg-(--color-agua) px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-(--color-ink)"
+      >
+        Ver el mapa
+      </a>
+
+      <button
+        type="button"
+        id="mobile-nav-toggle"
+        aria-label="Abrir menú"
+        aria-controls="mobile-nav"
+        aria-expanded="false"
+        class="flex h-10 w-10 items-center justify-center rounded-full text-(--color-ink) transition hover:bg-(--color-ink)/5 md:hidden"
+      >
+        <svg
+          class="block h-5 w-5"
+          data-icon="open"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <line x1="4" y1="7" x2="20" y2="7" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="17" x2="20" y2="17" />
+        </svg>
+        <svg
+          class="hidden h-5 w-5"
+          data-icon="close"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <line x1="6" y1="6" x2="18" y2="18" />
+          <line x1="18" y1="6" x2="6" y2="18" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div
+    id="mobile-nav"
+    hidden
+    class="border-t border-(--color-ink)/8 bg-(--color-bone)/95 backdrop-blur md:hidden"
+  >
+    <ul class="mx-auto flex max-w-7xl flex-col gap-1 px-6 py-4 text-base font-medium text-(--color-ink)">
+      <li>
+        <a href="#inicio" data-mobile-link class="block rounded-xl px-3 py-3 text-(--color-agua) transition hover:bg-(--color-ink)/5">Inicio</a>
+      </li>
+      <li>
+        <a href="#capas" data-mobile-link class="block rounded-xl px-3 py-3 transition hover:bg-(--color-ink)/5">Las capas</a>
+      </li>
+      <li>
+        <a href="#mapa" data-mobile-link class="block rounded-xl px-3 py-3 transition hover:bg-(--color-ink)/5">El mapa</a>
+      </li>
+      <li>
+        <a href="#colabora" data-mobile-link class="block rounded-xl px-3 py-3 transition hover:bg-(--color-ink)/5">Colabora</a>
+      </li>
+      <li>
+        <a href="#faq" data-mobile-link class="block rounded-xl px-3 py-3 transition hover:bg-(--color-ink)/5">Preguntas frecuentes</a>
+      </li>
+    </ul>
   </div>
 </nav>
+
+<script>
+  const toggle = document.getElementById('mobile-nav-toggle');
+  const panel = document.getElementById('mobile-nav');
+  if (toggle && panel) {
+    const openIcon = toggle.querySelector('[data-icon="open"]');
+    const closeIcon = toggle.querySelector('[data-icon="close"]');
+
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+      panel.hidden = !open;
+      openIcon?.classList.toggle('hidden', open);
+      openIcon?.classList.toggle('block', !open);
+      closeIcon?.classList.toggle('hidden', !open);
+      closeIcon?.classList.toggle('block', open);
+    };
+
+    toggle.addEventListener('click', () => {
+      setOpen(panel.hidden);
+    });
+
+    panel.querySelectorAll('a[data-mobile-link]').forEach((link) => {
+      link.addEventListener('click', () => setOpen(false));
+    });
+  }
+</script>

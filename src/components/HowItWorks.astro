@@ -2,157 +2,38 @@
 const steps = [
   {
     n: 1,
-    title: 'Abre la app',
-    desc: 'Es rápida, ligera y fácil de usar.',
-    illustration: 'open',
+    title: 'Carga el mapa',
+    desc: 'Las 832 fuentes, 230 urinarios y la capa de arbolado, en una sola vista.',
   },
   {
     n: 2,
-    title: 'Busca cerca de ti',
-    desc: 'Encuentra fuentes, urinarios y sombra a tu alrededor.',
-    illustration: 'search',
+    title: 'Cruza las capas',
+    desc: 'Superpón la vulnerabilidad demográfica del padrón 2021 con los servicios de alivio térmico.',
   },
   {
     n: 3,
-    title: 'Llega refrescado',
-    desc: 'Hidrátate, descansa y cuida de ti y de los demás.',
-    illustration: 'refreshed',
+    title: 'Lee la ciudad',
+    desc: 'Descubre dónde València se cuida — y dónde quedan zonas sin agua, sin sombra y sin urinarios.',
   },
 ];
 ---
 
 <section class="mx-auto max-w-6xl px-6 py-20 md:px-10 md:py-24">
-  <h2 class="text-center font-display text-3xl text-(--color-ink) md:text-4xl">Cómo funciona</h2>
+  <h2 class="text-center font-display text-3xl text-(--color-ink) md:text-4xl">Cómo se lee</h2>
 
   <div class="mt-12 grid items-start gap-12 md:grid-cols-[1fr_auto_1fr_auto_1fr] md:gap-6">
     {steps.map((step, i) => (
       <>
         <div class="flex flex-col items-center text-center">
-          <div class="aspect-square w-full max-w-[220px] overflow-hidden rounded-2xl">
-            {step.illustration === 'open' && (
-              <svg viewBox="0 0 220 220" class="h-full w-full" aria-hidden="true">
-                <rect width="220" height="220" fill="#eaf1f8" />
-                <!-- Skyline siluetas detrás -->
-                <g fill="#7ea8c8" opacity="0.6">
-                  <rect x="20" y="120" width="20" height="50" />
-                  <rect x="50" y="110" width="14" height="60" />
-                  <path d="M170 170 Q 180 130 190 170 Z" />
-                  <path d="M150 170 L 160 130 L 170 170 Z" />
-                </g>
-                <!-- Palmera -->
-                <g>
-                  <rect x="178" y="100" width="3" height="50" fill="#2d4a3a" />
-                  <g fill="#1a5638">
-                    <path d="M179 100 Q 165 92 158 96 Q 170 100 180 105 Z" />
-                    <path d="M179 100 Q 193 92 200 96 Q 188 100 180 105 Z" />
-                    <path d="M179 100 Q 175 85 170 80 Q 180 95 182 102 Z" />
-                  </g>
-                </g>
-                <!-- Persona viendo el móvil -->
-                <g>
-                  <!-- Camiseta -->
-                  <path d="M55 220 L 60 150 Q 90 130 130 145 L 138 220 Z" fill="#4a78a8" />
-                  <!-- Cuello -->
-                  <ellipse cx="92" cy="135" rx="13" ry="6" fill="#c79b7a" />
-                  <!-- Cabeza -->
-                  <circle cx="95" cy="115" r="22" fill="#d8a37e" />
-                  <!-- Pelo -->
-                  <path d="M75 110 Q 78 88 95 86 Q 115 86 117 110 Q 112 95 95 95 Q 80 96 75 110 Z" fill="#2d2418" />
-                  <!-- Oreja -->
-                  <circle cx="116" cy="118" r="3.5" fill="#c79b7a" />
-                  <!-- Brazo -->
-                  <path d="M120 150 Q 145 165 155 180 L 148 192 Q 130 175 115 162 Z" fill="#4a78a8" />
-                  <!-- Mano -->
-                  <ellipse cx="152" cy="186" rx="7" ry="5" fill="#d8a37e" />
-                  <!-- Móvil -->
-                  <rect x="145" y="148" width="30" height="48" rx="4" fill="#1f2937" />
-                  <rect x="148" y="152" width="24" height="40" rx="2" fill="#cfe4f3" />
-                  <circle cx="160" cy="172" r="4" fill="#f5c11e" />
-                  <g stroke="#f5c11e" stroke-width="1.5" fill="none">
-                    <line x1="160" y1="162" x2="160" y2="166" />
-                    <line x1="160" y1="178" x2="160" y2="182" />
-                    <line x1="150" y1="172" x2="154" y2="172" />
-                    <line x1="166" y1="172" x2="170" y2="172" />
-                  </g>
-                </g>
-              </svg>
-            )}
-
-            {step.illustration === 'search' && (
-              <svg viewBox="0 0 220 220" class="h-full w-full" aria-hidden="true">
-                <rect width="220" height="220" fill="#eaf1f8" />
-                <!-- Skyline -->
-                <g fill="#7ea8c8" opacity="0.55">
-                  <rect x="10" y="115" width="22" height="55" />
-                  <path d="M40 170 L 55 100 L 70 170 Z" />
-                  <path d="M75 170 Q 92 120 110 170 Z" />
-                  <rect x="170" y="110" width="16" height="60" />
-                  <rect x="195" y="125" width="14" height="45" />
-                </g>
-                <!-- Manos sujetando móvil grande -->
-                <g>
-                  <!-- Móvil -->
-                  <rect x="55" y="60" width="110" height="170" rx="14" fill="#1f2937" />
-                  <rect x="62" y="68" width="96" height="155" rx="8" fill="#eef4f9" />
-                  <!-- Mini-mapa dentro -->
-                  <rect x="62" y="68" width="96" height="155" fill="#dbe6ee" />
-                  <g stroke="#ffffff" stroke-width="3" fill="none">
-                    <path d="M62 110 Q 100 100 158 115" />
-                    <path d="M62 165 Q 110 155 158 170" />
-                    <line x1="90" y1="68" x2="100" y2="223" />
-                    <line x1="130" y1="68" x2="120" y2="223" />
-                  </g>
-                  <!-- Marcadores -->
-                  <circle cx="85" cy="100" r="9" fill="#3b82f6" stroke="white" stroke-width="2" />
-                  <circle cx="135" cy="125" r="9" fill="#f97316" stroke="white" stroke-width="2" />
-                  <circle cx="100" cy="155" r="9" fill="#22c55e" stroke="white" stroke-width="2" />
-                  <circle cx="135" cy="185" r="9" fill="#3b82f6" stroke="white" stroke-width="2" />
-                  <!-- Manos -->
-                  <ellipse cx="55" cy="195" rx="18" ry="22" fill="#d8a37e" />
-                  <ellipse cx="165" cy="195" rx="18" ry="22" fill="#d8a37e" />
-                </g>
-              </svg>
-            )}
-
-            {step.illustration === 'refreshed' && (
-              <svg viewBox="0 0 220 220" class="h-full w-full" aria-hidden="true">
-                <rect width="220" height="220" fill="#eaf1f8" />
-                <!-- Árbol detrás -->
-                <g>
-                  <rect x="155" y="100" width="8" height="80" fill="#3d2916" />
-                  <circle cx="159" cy="85" r="40" fill="#1a5638" />
-                  <circle cx="180" cy="95" r="28" fill="#1f6a44" />
-                  <circle cx="140" cy="98" r="25" fill="#1f6a44" />
-                </g>
-                <!-- Fuente -->
-                <g>
-                  <rect x="90" y="135" width="40" height="55" rx="3" fill="#5a7898" />
-                  <rect x="98" y="135" width="24" height="6" fill="#3a5878" />
-                  <rect x="105" y="115" width="10" height="22" rx="2" fill="#3a5878" />
-                  <circle cx="110" cy="115" r="6" fill="#7aaecf" />
-                  <!-- Chorro -->
-                  <path d="M108 113 Q 100 100 95 95" stroke="#3b82f6" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.85" />
-                  <circle cx="93" cy="93" r="2" fill="#3b82f6" opacity="0.85" />
-                  <circle cx="90" cy="98" r="1.5" fill="#3b82f6" opacity="0.8" />
-                </g>
-                <!-- Persona bebiendo -->
-                <g>
-                  <!-- Espalda inclinada -->
-                  <path d="M28 220 L 38 130 Q 60 100 95 110 L 85 130 Q 70 150 60 220 Z" fill="#4a78a8" />
-                  <!-- Cabeza inclinada -->
-                  <circle cx="80" cy="105" r="20" fill="#d8a37e" />
-                  <!-- Pelo -->
-                  <path d="M62 102 Q 65 82 82 80 Q 100 82 100 102 Q 95 88 80 88 Q 68 90 62 102 Z" fill="#2d2418" />
-                </g>
-              </svg>
-            )}
+          <div class="flex aspect-square w-full max-w-[220px] items-center justify-center rounded-2xl bg-(--color-agua-soft) text-xs font-medium tracking-wide text-(--color-agua)">
+            Ilustración {step.n}
           </div>
 
           <div class="mt-5 flex items-center gap-2">
             <span class="flex h-7 w-7 items-center justify-center rounded-full bg-(--color-agua) text-xs font-semibold text-white">{step.n}</span>
             <h3 class="font-display text-xl font-semibold text-(--color-ink)">{step.title}</h3>
           </div>
-          <p class="mt-2 max-w-[16rem] text-sm text-(--color-ink-soft)">{step.desc}</p>
+          <p class="mt-2 max-w-[18rem] text-sm text-(--color-ink-soft)">{step.desc}</p>
         </div>
 
         {i < steps.length - 1 && (
