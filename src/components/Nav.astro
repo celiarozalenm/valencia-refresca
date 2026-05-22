@@ -1,0 +1,28 @@
+---
+import Logo from './Logo.astro';
+---
+
+<nav class="sticky top-0 z-50 w-full bg-(--color-bone)/85 backdrop-blur-md">
+  <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 md:px-10">
+    <a href="/" class="flex items-center gap-2.5 text-(--color-ink) transition hover:opacity-80">
+      <Logo size={36} />
+      <span class="font-display text-xl leading-none font-semibold">
+        València<br /><span class="font-medium">Refresca</span>
+      </span>
+    </a>
+
+    <ul class="hidden items-center gap-10 text-sm font-medium text-(--color-ink-soft) md:flex">
+      <li><a href="#inicio" class="text-(--color-agua) transition hover:text-(--color-ink)">Inicio</a></li>
+      <li><a href="#app" class="transition hover:text-(--color-ink)">La app</a></li>
+      <li><a href="#colabora" class="transition hover:text-(--color-ink)">Colabora</a></li>
+      <li><a href="#faq" class="transition hover:text-(--color-ink)">Preguntas frecuentes</a></li>
+    </ul>
+
+    <a
+      href="#descargar"
+      class="inline-flex items-center rounded-full bg-(--color-agua) px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-(--color-ink)"
+    >
+      Descargar
+    </a>
+  </div>
+</nav>

@@ -1,81 +1,65 @@
 ---
-// El hero: cifra estrella + nombre + CTA al mapa.
-// Cifra estrella derivada del análisis (ver docs/08-exploration-v2.md)
-const stat = {
-  pct: 26,
-  totalManzanas: 4923,
-  thresholdMin: 5,
-  datasetsUsed: 12,
-};
+import PhoneMockup from './PhoneMockup.astro';
 ---
 
-<section class="relative isolate overflow-hidden bg-(--color-bone)">
-  <div
-    class="absolute inset-0 -z-10 opacity-60"
-    style="background: radial-gradient(ellipse at top left, var(--color-agua-soft), transparent 55%), radial-gradient(ellipse at bottom right, var(--color-calor-soft), transparent 60%);"
-    aria-hidden="true"
-  ></div>
-
-  <div class="mx-auto flex max-w-6xl flex-col gap-16 px-6 pt-20 pb-28 md:gap-24 md:px-10 md:pt-28">
-    <header class="flex items-center justify-between text-sm tracking-wide text-(--color-ink-soft)">
-      <span class="font-medium">València Refresca</span>
-      <span class="hidden sm:inline">
-        Premios Datos Abiertos València <span class="font-medium">2026</span>
-      </span>
-    </header>
-
-    <div class="flex flex-col gap-10">
-      <p class="font-sans text-sm font-medium tracking-[0.18em] uppercase text-(--color-agua)">
-        Agua · Sombra · Respiramos
-      </p>
-
-      <h1 class="font-display text-5xl leading-[0.95] font-medium tracking-tight text-(--color-ink) sm:text-7xl md:text-[8rem]">
-        1 de cada 4
+<section id="inicio" class="relative isolate overflow-hidden">
+  <div class="mx-auto grid max-w-7xl items-center gap-12 px-6 pt-12 pb-20 md:grid-cols-2 md:gap-8 md:px-10 md:pt-20 md:pb-28">
+    <div class="flex flex-col gap-8">
+      <h1 class="font-display text-6xl leading-[0.95] font-medium tracking-tight text-(--color-ink) sm:text-7xl md:text-[7.5rem]">
+        València<br />Refresca
       </h1>
 
-      <p class="font-display max-w-3xl text-2xl leading-tight text-(--color-ink) sm:text-3xl md:text-4xl">
-        manzanas de València está a más de <span class="text-(--color-calor) font-medium">5 minutos caminando</span> del urinario público más cercano.
+      <div>
+        <p class="font-sans text-lg font-semibold tracking-[0.16em] uppercase text-(--color-agua)">
+          Agua. Sombra. Respiramos.
+        </p>
+        <div class="mt-3 h-[3px] w-20 bg-(--color-calor)"></div>
+      </div>
+
+      <p class="max-w-md text-lg text-(--color-ink-soft)">
+        La app que te ayuda a encontrar agua, sombra y alivio frente al calor.
       </p>
 
-      <p class="max-w-xl text-base text-(--color-ink-soft) sm:text-lg">
-        Una pieza para los <strong class="font-medium text-(--color-ink)">Premios Datos Abiertos València 2026</strong>.
-        Cartografía y cruces sobre {stat.datasetsUsed} datasets públicos del Ajuntament.
-      </p>
-
-      <div class="flex flex-wrap items-center gap-4 pt-2">
+      <div id="descargar" class="flex flex-wrap gap-3 pt-2">
         <a
-          href="#mapa"
-          class="inline-flex items-center gap-2 rounded-full bg-(--color-ink) px-6 py-3 text-sm font-medium text-white transition hover:bg-(--color-agua)"
+          href="#app"
+          class="inline-flex items-center gap-3 rounded-2xl bg-(--color-agua) px-5 py-3 text-white shadow-sm transition hover:bg-(--color-ink)"
         >
-          Explora el mapa
-          <span aria-hidden="true">→</span>
+          <svg width="26" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M17.05 12.04c-.03-3.21 2.62-4.75 2.74-4.83-1.49-2.18-3.81-2.48-4.64-2.51-1.97-.2-3.85 1.16-4.85 1.16-1.02 0-2.55-1.13-4.2-1.1-2.15.03-4.15 1.25-5.27 3.18-2.25 3.9-.57 9.65 1.61 12.81 1.07 1.55 2.34 3.29 4 3.22 1.62-.06 2.23-1.04 4.18-1.04 1.94 0 2.5 1.04 4.21 1.01 1.74-.03 2.84-1.57 3.9-3.13 1.23-1.79 1.74-3.55 1.77-3.64-.04-.02-3.4-1.31-3.45-5.13zM13.93 3.5c.88-1.07 1.48-2.55 1.31-4.03-1.27.05-2.81.85-3.72 1.91-.82.95-1.54 2.46-1.35 3.91 1.42.11 2.87-.72 3.76-1.79z" transform="translate(2 2)"/>
+          </svg>
+          <span class="flex flex-col text-left leading-none">
+            <span class="text-[10px] tracking-wide uppercase opacity-90">Descargar en</span>
+            <span class="mt-0.5 text-base font-semibold">App Store</span>
+          </span>
         </a>
+
         <a
-          href="#metodologia"
-          class="inline-flex items-center gap-2 rounded-full border border-(--color-ink) px-6 py-3 text-sm font-medium text-(--color-ink) transition hover:bg-(--color-ink) hover:text-white"
+          href="#app"
+          class="inline-flex items-center gap-3 rounded-2xl bg-white px-5 py-3 text-(--color-ink) ring-1 ring-(--color-ink)/15 transition hover:ring-(--color-ink)"
         >
-          ¿Cómo se hizo?
+          <svg width="22" height="24" viewBox="0 0 24 24" aria-hidden="true">
+            <defs>
+              <linearGradient id="gp1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00C8E2"/><stop offset="1" stop-color="#00A1FF"/></linearGradient>
+              <linearGradient id="gp2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFE000"/><stop offset="1" stop-color="#FFBD00"/></linearGradient>
+              <linearGradient id="gp3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF3A44"/><stop offset="1" stop-color="#C31162"/></linearGradient>
+              <linearGradient id="gp4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#32A071"/><stop offset="1" stop-color="#2DA771"/></linearGradient>
+            </defs>
+            <path d="M3 2.5 L14.5 12 L3 21.5 Z" fill="url(#gp1)"/>
+            <path d="M14.5 12 L19 9.5 L21 10.7 L21 13.3 L19 14.5 Z" fill="url(#gp2)"/>
+            <path d="M3 2.5 L14.5 12 L19 9.5 Z" fill="url(#gp4)"/>
+            <path d="M3 21.5 L14.5 12 L19 14.5 Z" fill="url(#gp3)"/>
+          </svg>
+          <span class="flex flex-col text-left leading-none">
+            <span class="text-[10px] tracking-wide uppercase opacity-70">Descargar en</span>
+            <span class="mt-0.5 text-base font-semibold">Google Play</span>
+          </span>
         </a>
       </div>
     </div>
 
-    <dl class="grid grid-cols-2 gap-x-8 gap-y-6 border-t border-(--color-ink)/15 pt-10 sm:grid-cols-4">
-      <div>
-        <dt class="text-xs font-medium tracking-wide uppercase text-(--color-ink-soft)">Fuentes</dt>
-        <dd class="font-display text-3xl text-(--color-agua) md:text-4xl">832</dd>
-      </div>
-      <div>
-        <dt class="text-xs font-medium tracking-wide uppercase text-(--color-ink-soft)">Urinarios</dt>
-        <dd class="font-display text-3xl text-(--color-calor) md:text-4xl">230</dd>
-      </div>
-      <div>
-        <dt class="text-xs font-medium tracking-wide uppercase text-(--color-ink-soft)">Árboles</dt>
-        <dd class="font-display text-3xl text-(--color-sombra) md:text-4xl">186.820</dd>
-      </div>
-      <div>
-        <dt class="text-xs font-medium tracking-wide uppercase text-(--color-ink-soft)">Manzanas</dt>
-        <dd class="font-display text-3xl text-(--color-ink) md:text-4xl">{stat.totalManzanas.toLocaleString('es-ES')}</dd>
-      </div>
-    </dl>
+    <div class="flex justify-center md:justify-end">
+      <PhoneMockup />
+    </div>
   </div>
 </section>

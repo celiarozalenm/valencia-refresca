@@ -1,0 +1,149 @@
+---
+// Mockup de iPhone con un preview del mapa de la app.
+// Todo CSS + SVG, sin imágenes externas.
+---
+
+<div class="relative mx-auto w-[300px] sm:w-[340px] md:w-[380px]">
+  <!-- Cuerpo del iPhone -->
+  <div class="relative aspect-[9/19] rounded-[3rem] bg-[#1a1a1a] p-[10px] shadow-2xl shadow-black/25">
+    <!-- Pantalla -->
+    <div class="relative h-full w-full overflow-hidden rounded-[2.5rem] bg-white">
+      <!-- Notch / Dynamic Island -->
+      <div class="absolute top-2 left-1/2 z-30 h-6 w-24 -translate-x-1/2 rounded-full bg-black"></div>
+
+      <!-- Status bar -->
+      <div class="absolute top-0 right-0 left-0 z-20 flex items-center justify-between px-7 pt-3 text-[11px] font-semibold text-(--color-ink)">
+        <span>9:41</span>
+        <span class="flex items-center gap-1">
+          <svg width="14" height="10" viewBox="0 0 14 10" fill="currentColor"><rect x="0" y="6" width="2" height="4" rx="0.5"/><rect x="3" y="4" width="2" height="6" rx="0.5"/><rect x="6" y="2" width="2" height="8" rx="0.5"/><rect x="9" y="0" width="2" height="10" rx="0.5"/></svg>
+          <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M1 5a6 6 0 0 1 12 0"/><path d="M3.5 6.5a3 3 0 0 1 7 0"/><circle cx="7" cy="8.5" r="0.8" fill="currentColor"/></svg>
+          <span class="ml-0.5 inline-block h-2.5 w-5 rounded-[2px] border border-current">
+            <span class="block h-full w-4/5 rounded-[1px] bg-current"></span>
+          </span>
+        </span>
+      </div>
+
+      <!-- App header -->
+      <div class="absolute top-9 right-0 left-0 z-10 flex items-center justify-between px-6 pt-3 pb-3">
+        <span class="font-display text-sm font-semibold text-(--color-ink)">València Refresca</span>
+        <svg width="18" height="14" viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.5" class="text-(--color-ink)">
+          <line x1="2" y1="2" x2="16" y2="2"/>
+          <line x1="2" y1="7" x2="16" y2="7"/>
+          <line x1="2" y1="12" x2="16" y2="12"/>
+        </svg>
+      </div>
+
+      <!-- Mapa fake -->
+      <div class="absolute inset-0 top-[78px] bottom-[140px] overflow-hidden">
+        <div
+          class="absolute inset-0"
+          style="background:
+            linear-gradient(135deg, #e8eef5 0%, #dfe7f0 100%);"
+        ></div>
+
+        <!-- Carreteras -->
+        <svg viewBox="0 0 380 500" class="absolute inset-0 h-full w-full" preserveAspectRatio="none">
+          <g stroke="#ffffff" stroke-width="6" fill="none" stroke-linecap="round">
+            <path d="M-20 120 Q 100 100 200 140 T 400 130" />
+            <path d="M-20 260 Q 120 240 220 280 T 400 270" />
+            <path d="M40 -20 Q 60 100 100 200 T 140 520" />
+            <path d="M240 -20 Q 260 120 280 220 T 320 520" />
+          </g>
+          <g stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7">
+            <path d="M0 60 L 380 80" />
+            <path d="M0 180 L 380 200" />
+            <path d="M0 340 L 380 360" />
+            <path d="M0 420 L 380 440" />
+            <path d="M120 0 L 100 500" />
+            <path d="M200 0 L 220 500" />
+            <path d="M340 0 L 360 500" />
+          </g>
+          <!-- Río Turia (verde) -->
+          <path
+            d="M-10 50 Q 100 80 180 120 T 400 200"
+            stroke="#cfead4"
+            stroke-width="22"
+            fill="none"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <!-- Marcadores -->
+        <!-- Sombra (verde) -->
+        <div class="absolute top-[18%] left-[22%] flex h-8 w-8 items-center justify-center rounded-full bg-(--color-sombra) shadow-lg ring-2 ring-white">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M12 2 L15 9 L22 10 L17 15 L18 22 L12 18 L6 22 L7 15 L2 10 L9 9 Z"/></svg>
+        </div>
+        <div class="absolute top-[42%] left-[58%] flex h-8 w-8 items-center justify-center rounded-full bg-(--color-sombra) shadow-lg ring-2 ring-white">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M12 2 L15 9 L22 10 L17 15 L18 22 L12 18 L6 22 L7 15 L2 10 L9 9 Z"/></svg>
+        </div>
+        <div class="absolute top-[60%] left-[32%] flex h-8 w-8 items-center justify-center rounded-full bg-(--color-sombra) shadow-lg ring-2 ring-white">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M12 2 L15 9 L22 10 L17 15 L18 22 L12 18 L6 22 L7 15 L2 10 L9 9 Z"/></svg>
+        </div>
+
+        <!-- Urinarios (naranja) -->
+        <div class="absolute top-[22%] left-[60%] flex h-8 w-8 items-center justify-center rounded-full bg-(--color-calor) shadow-lg ring-2 ring-white">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><rect x="6" y="4" width="12" height="14" rx="2"/><rect x="10" y="18" width="4" height="3"/></svg>
+        </div>
+
+        <!-- Fuentes (azul) -->
+        <div class="absolute top-[34%] left-[28%] flex h-8 w-8 items-center justify-center rounded-full bg-(--color-agua) shadow-lg ring-2 ring-white">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M12 2 C 16 9, 20 13, 20 17 A 8 8 0 0 1 4 17 C 4 13, 8 9, 12 2 Z"/></svg>
+        </div>
+        <div class="absolute top-[68%] left-[18%] flex h-8 w-8 items-center justify-center rounded-full bg-(--color-agua) shadow-lg ring-2 ring-white">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M12 2 C 16 9, 20 13, 20 17 A 8 8 0 0 1 4 17 C 4 13, 8 9, 12 2 Z"/></svg>
+        </div>
+
+        <!-- Punto azul "tú estás aquí" -->
+        <div class="absolute top-[48%] left-[42%]">
+          <div class="absolute h-12 w-12 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full bg-(--color-agua) opacity-30"></div>
+          <div class="relative h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--color-agua) ring-4 ring-white"></div>
+        </div>
+
+        <!-- Botones flotantes -->
+        <div class="absolute top-4 right-3 flex flex-col gap-2">
+          <button class="flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-md">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M4 12h16M4 18h10"/><circle cx="18" cy="6" r="2" fill="currentColor" stroke="none"/><circle cx="6" cy="18" r="2" fill="currentColor" stroke="none"/></svg>
+          </button>
+          <button class="flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-md">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tarjeta de la fuente -->
+      <div class="absolute right-3 bottom-[52px] left-3 flex items-center gap-3 rounded-2xl bg-white p-3 shadow-lg ring-1 ring-black/5">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-(--color-agua)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2 C 16 9, 20 13, 20 17 A 8 8 0 0 1 4 17 C 4 13, 8 9, 12 2 Z"/></svg>
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="text-[13px] font-semibold text-(--color-ink)">Fuente</p>
+          <p class="truncate text-[11px] text-(--color-ink-soft)">Plaza de la Virgen</p>
+          <p class="text-[10px] text-(--color-ink-soft)">A 120 m · Abierta</p>
+        </div>
+        <button class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full ring-1 ring-(--color-agua)/40 text-(--color-agua)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+
+      <!-- Tab bar -->
+      <div class="absolute right-0 bottom-0 left-0 flex items-center justify-around border-t border-black/5 bg-white pt-2 pb-4">
+        <div class="flex flex-col items-center gap-0.5 text-(--color-agua)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-4v-7h-6v7H5a2 2 0 0 1-2-2z"/></svg>
+          <span class="text-[9px] font-semibold">Mapa</span>
+        </div>
+        <div class="flex flex-col items-center gap-0.5 text-(--color-ink-soft)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+          <span class="text-[9px]">Lista</span>
+        </div>
+        <div class="flex flex-col items-center gap-0.5 text-(--color-ink-soft)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="text-[9px]">Favoritos</span>
+        </div>
+        <div class="flex flex-col items-center gap-0.5 text-(--color-ink-soft)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span class="text-[9px]">Ajustes</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

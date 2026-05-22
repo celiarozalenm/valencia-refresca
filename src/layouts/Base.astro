@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
 
 interface Props {
   title?: string;
@@ -7,8 +9,8 @@ interface Props {
 }
 
 const {
-  title = 'València Refresca · dónde refrescarte cuando València arde',
-  description = 'Mapa interactivo de fuentes, urinarios, sombra y servicios públicos de alivio térmico en València. 1 de cada 4 manzanas está a más de 5 minutos del urinario público más cercano.',
+  title = 'València Refresca · agua, sombra y alivio frente al calor',
+  description = 'La app que te ayuda a encontrar agua, sombra y alivio frente al calor en València. Mapa de fuentes, urinarios y zonas de sombra.',
 } = Astro.props;
 ---
 
@@ -36,6 +38,8 @@ const {
     />
   </head>
   <body>
+    <Nav />
     <slot />
+    <Footer />
   </body>
 </html>
