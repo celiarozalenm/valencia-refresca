@@ -1,0 +1,21 @@
+name: Probe ArcGIS layer
+
+on:
+  workflow_dispatch:
+    inputs:
+      layer_url:
+        description: "ArcGIS MapServer layer URL (sin /query)"
+        required: true
+        type: string
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+      - run: npm ci
+      - run: npx tsx src/data/scripts/probe-layer.ts "${{ inputs.layer_url }}"
