@@ -57,6 +57,12 @@ export default function Map() {
     barrios: true,
   });
   const [loaded, setLoaded] = useState(false);
+  const [panelOpen, setPanelOpen] = useState<boolean>(true);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    setPanelOpen(mq.matches);
+  }, []);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -215,35 +221,77 @@ export default function Map() {
     >
       <div ref={containerRef} style={{ position: "absolute", inset: 0 }} />
 
-      <div className="pointer-events-none absolute top-4 left-4 z-10 max-w-xs space-y-3">
-        <div className="pointer-events-auto rounded-2xl bg-white/95 p-4 shadow-sm backdrop-blur">
-          <p className="font-display text-sm leading-tight font-medium text-slate-900">Capas</p>
-          <p className="mt-0.5 text-xs text-slate-500">Activa lo que quieras ver.</p>
-          <ul className="mt-3 space-y-2">
-            {(Object.keys(LAYER_META) as LayerKey[]).map((k) => {
-              const meta = LAYER_META[k];
-              return (
-                <li key={k}>
-                  <label className="flex cursor-pointer items-start gap-3 rounded-lg px-2 py-1.5 transition hover:bg-slate-50">
-                    <input
-                      type="checkbox"
-                      checked={active[k]}
-                      onChange={(e) => setActive((s) => ({ ...s, [k]: e.target.checked }))}
-                      className="mt-1 h-4 w-4 accent-slate-900"
-                    />
-                    <span className="flex-1">
-                      <span className="flex items-center gap-2 text-sm font-medium text-slate-900">
-                        <span className="h-2.5 w-2.5 rounded-full" style={{ background: meta.color }} aria-hidden />
-                        {meta.label}
+      <div className="pointer-events-none absolute top-4 left-4 z-10 max-w-xs">
+        {panelOpen ? (
+          <div className="pointer-events-auto rounded-2xl bg-white/95 p-4 shadow-sm backdrop-blur">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="font-display text-sm leading-tight font-medium text-slate-900">Capas</p>
+                <p className="mt-0.5 text-xs text-slate-500">Activa lo que quieras ver.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPanelOpen(false)}
+                aria-label="Cerrar panel de capas"
+                className="-mt-1 -mr-1 flex h-7 w-7 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                </svg>
+              </button>
+            </div>
+            <ul className="mt-3 space-y-2">
+              {(Object.keys(LAYER_META) as LayerKey[]).map((k) => {
+                const meta = LAYER_META[k];
+                return (
+                  <li key={k}>
+                    <label className="flex cursor-pointer items-start gap-3 rounded-lg px-2 py-1.5 transition hover:bg-slate-50">
+                      <input
+                        type="checkbox"
+                        checked={active[k]}
+                        onChange={(e) => setActive((s) => ({ ...s, [k]: e.target.checked }))}
+                        className="mt-1 h-4 w-4 accent-slate-900"
+                      />
+                      <span className="flex-1">
+                        <span className="flex items-center gap-2 text-sm font-medium text-slate-900">
+                          <span className="h-2.5 w-2.5 rounded-full" style={{ background: meta.color }} aria-hidden />
+                          {meta.label}
+                        </span>
+                        <span className="text-xs text-slate-500">{meta.description}</span>
                       </span>
-                      <span className="text-xs text-slate-500">{meta.description}</span>
-                    </span>
-                  </label>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+                    </label>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setPanelOpen(true)}
+            className="pointer-events-auto flex items-center gap-2.5 rounded-full bg-white/95 px-4 py-2.5 text-sm font-medium text-slate-900 shadow-sm backdrop-blur transition hover:bg-white"
+            aria-label="Abrir panel de capas"
+          >
+            <span className="flex -space-x-1.5">
+              {(Object.keys(LAYER_META) as LayerKey[])
+                .filter((k) => active[k])
+                .slice(0, 4)
+                .map((k) => (
+                  <span
+                    key={k}
+                    className="h-3.5 w-3.5 rounded-full ring-2 ring-white"
+                    style={{ background: LAYER_META[k].color }}
+                    aria-hidden
+                  />
+                ))}
+            </span>
+            Capas
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+        )}
       </div>
 
       {!loaded && (
