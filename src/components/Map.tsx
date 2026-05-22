@@ -71,7 +71,13 @@ export default function Map({ lang = "es" }: MapProps) {
   const sectionsT = tr.sections;
   const freshestT = tr.freshest;
 
-  const [view, setView] = useState<View>("capas");
+  const initialView = ((): View => {
+    if (typeof window === "undefined") return "capas";
+    const hash = window.location.hash.replace("#", "");
+    if (hash === "paseo" || hash === "frescos") return hash;
+    return "capas";
+  })();
+  const [view, setView] = useState<View>(initialView);
   const [active, setActive] = useState<Record<LayerKey, boolean>>({
     fuentes: true,
     urinarios: true,

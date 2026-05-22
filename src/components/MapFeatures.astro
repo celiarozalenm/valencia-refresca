@@ -1,0 +1,113 @@
+---
+import { t, type Lang } from '../i18n/strings';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const m = t(lang).map;
+const baseHref = lang === 'va' ? '/val/mapa/' : '/mapa/';
+
+const features = [
+  {
+    eyebrow: m.sections.capas,
+    title: lang === 'va'
+      ? 'Activa les capes i navega per València.'
+      : 'Activa las capas y navega por València.',
+    desc: m.description,
+    href: `${baseHref}#capas`,
+    cta: m.ctaButton,
+    accentVar: '--color-agua-deep',
+    bgVar: '--color-agua-soft',
+    icon: 'layers',
+  },
+  {
+    eyebrow: m.sections.paseo,
+    title: m.shadowWalk.title,
+    desc: m.shadowWalk.subtitle,
+    href: `${baseHref}#paseo`,
+    cta: lang === 'va' ? 'Generar paseo' : 'Generar paseo',
+    accentVar: '--color-sombra-deep',
+    bgVar: '--color-sombra-soft',
+    icon: 'walk',
+  },
+  {
+    eyebrow: m.sections.frescos,
+    title: m.freshest.title,
+    desc: m.freshest.subtitle,
+    href: `${baseHref}#frescos`,
+    cta: lang === 'va' ? 'Veure rànquing' : 'Ver ranking',
+    accentVar: '--color-calor-deep',
+    bgVar: '--color-calor-soft',
+    icon: 'chart',
+  },
+];
+---
+
+<section id="mapa" class="border-t border-(--color-ink)/8">
+  <div class="mx-auto max-w-7xl px-6 py-20 md:px-10 md:py-24">
+    <div class="max-w-3xl">
+      <p class="font-sans text-sm font-medium tracking-[0.18em] uppercase text-(--color-agua-deep)">
+        {lang === 'va' ? 'L\'eina' : 'La herramienta'}
+      </p>
+      <h2 class="mt-3 font-display text-3xl leading-tight text-(--color-ink) md:text-5xl">
+        {lang === 'va' ? 'Tres formes de llegir la ciutat.' : 'Tres formas de leer la ciudad.'}
+      </h2>
+      <p class="mt-4 max-w-2xl text-(--color-ink-soft) md:text-lg">
+        {lang === 'va'
+          ? 'Capes, paseos en bucle per la sombra i rànquing de barris frescos. Tot dins del mapa.'
+          : 'Capas, paseos en bucle por la sombra y ranking de barrios frescos. Todo dentro del mapa.'}
+      </p>
+    </div>
+
+    <div class="mt-12 grid items-start gap-6 md:grid-cols-3">
+      {features.map((f) => (
+        <a
+          href={f.href}
+          class="group flex h-full flex-col rounded-2xl bg-white p-6 ring-1 ring-(--color-ink)/8 transition hover:-translate-y-0.5 hover:shadow-lg hover:ring-(--color-ink)/15 md:p-7"
+        >
+          <div
+            class="flex h-12 w-12 items-center justify-center rounded-full"
+            style={`background: var(${f.bgVar}); color: var(${f.accentVar});`}
+          >
+            {f.icon === 'layers' && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                <polyline points="2 17 12 22 22 17" />
+                <polyline points="2 12 12 17 22 12" />
+              </svg>
+            )}
+            {f.icon === 'walk' && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="13" cy="4" r="2" />
+                <path d="M5 22 L9 16 L9 11 L13 13 L16 18 L20 17" />
+                <path d="M9 11 L7 8" />
+              </svg>
+            )}
+            {f.icon === 'chart' && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="3" y1="20" x2="21" y2="20" />
+                <rect x="5" y="11" width="3" height="9" />
+                <rect x="11" y="7" width="3" height="13" />
+                <rect x="17" y="14" width="3" height="6" />
+              </svg>
+            )}
+          </div>
+
+          <p class="mt-6 text-xs font-semibold tracking-wider uppercase text-(--color-ink-soft)">{f.eyebrow}</p>
+          <h3 class="mt-2 font-display text-2xl leading-tight text-(--color-ink)">{f.title}</h3>
+          <p class="mt-3 text-sm leading-relaxed text-(--color-ink-soft)">{f.desc}</p>
+
+          <span
+            class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold transition group-hover:gap-2.5"
+            style={`color: var(${f.accentVar});`}
+          >
+            {f.cta}
+            <span aria-hidden="true">→</span>
+          </span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
