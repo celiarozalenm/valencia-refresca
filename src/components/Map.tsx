@@ -11,13 +11,22 @@ const BRAND = {
   ink: "#1f2937",
 } as const;
 
-type LayerKey = "fuentes" | "urinarios" | "duchas" | "barrios";
+type LayerKey = "fuentes" | "urinarios" | "duchas" | "sombra" | "barrios";
 
 const LAYER_META: Record<LayerKey, { label: string; color: string; description: string }> = {
   fuentes: { label: "Fuentes", color: BRAND.agua, description: "832 puntos de agua potable" },
   urinarios: { label: "Urinarios", color: BRAND.calor, description: "230 baños públicos" },
   duchas: { label: "Duchas de playa", color: "#0ea5e9", description: "71 puntos · playas urbanas" },
+  sombra: { label: "Sombra", color: BRAND.sombra, description: "Densidad de arbolado por barrio" },
   barrios: { label: "Vulnerabilidad", color: BRAND.ink, description: "Tinte por vulnerabilidad demográfica" },
+};
+
+const SOMBRA_COLORS: Record<string, string> = {
+  muy_alta: "#166534",
+  alta: "#22c55e",
+  media: "#86efac",
+  baja: "#dcfce7",
+  muy_baja: "#fef3c7",
 };
 
 // CartoDB Positron: tiles claros, sin API key, atribución a OSM + CARTO requerida.
@@ -54,6 +63,7 @@ export default function Map() {
     fuentes: true,
     urinarios: true,
     duchas: false,
+    sombra: false,
     barrios: true,
   });
   const [loaded, setLoaded] = useState(false);
@@ -88,6 +98,33 @@ export default function Map() {
     );
 
     map.on("load", async () => {
+      // Sombra (densidad de arbolado por barrio) — debajo de todo.
+      const sombraRes = await fetch("/data/barrios-sombra.geojson");
+      const sombraData = await sombraRes.json();
+      map.addSource("sombra", { type: "geojson", data: sombraData });
+      map.addLayer({
+        id: "sombra-fill",
+        type: "fill",
+        source: "sombra",
+        paint: {
+          "fill-color": [
+            "match",
+            ["get", "sombra_bucket"],
+            ...Object.entries(SOMBRA_COLORS).flat(),
+            "#e5e7eb",
+          ],
+          "fill-opacity": 0.45,
+        },
+        layout: { visibility: "none" },
+      });
+      map.addLayer({
+        id: "sombra-line",
+        type: "line",
+        source: "sombra",
+        paint: { "line-color": BRAND.sombra, "line-width": 0.5, "line-opacity": 0.5 },
+        layout: { visibility: "none" },
+      });
+
       // Vulnerabilidad — al fondo, así los puntos quedan encima.
       const vulnRes = await fetch("/data/vulnerabilidad-por-barrios.geojson");
       const vulnData = await vulnRes.json();
@@ -167,6 +204,8 @@ export default function Map() {
         urinarios: (p: Record<string, unknown>) =>
           `<strong>Urinario</strong><br/>${p.direccion ?? "—"}<br/><span style="color:#6b7280">${p.cabina_nor ?? 0} cabinas · ${p.cabina_min ?? 0} reducida movilidad</span>`,
         duchas: () => `<strong>Ducha de playa</strong>`,
+        sombra: (p: Record<string, unknown>) =>
+          `<strong>${p.nombre ?? ""}</strong><br/>${Number(p.arboles ?? 0).toLocaleString("es-ES")} árboles<br/><span style="color:#6b7280">${p.arboles_per_km2 ?? "?"} árboles/km²</span>`,
         vulnerabilidad: (p: Record<string, unknown>) =>
           `<strong>${p.nombre ?? ""}</strong><br/>${p.vul_global ?? ""}<br/><span style="color:#6b7280">Índice global ${p.ind_global ?? "?"}</span>`,
       } as const;
@@ -175,6 +214,7 @@ export default function Map() {
         ["fuentes-dot", "fuentes"],
         ["urinarios-dot", "urinarios"],
         ["duchas-dot", "duchas"],
+        ["sombra-fill", "sombra"],
         ["vulnerabilidad-fill", "vulnerabilidad"],
       ];
       pointLayers.forEach(([layerId, kind]) => {
@@ -210,6 +250,8 @@ export default function Map() {
     apply("fuentes-dot", active.fuentes);
     apply("urinarios-dot", active.urinarios);
     apply("duchas-dot", active.duchas);
+    apply("sombra-fill", active.sombra);
+    apply("sombra-line", active.sombra);
     apply("vulnerabilidad-fill", active.barrios);
     apply("vulnerabilidad-line", active.barrios);
   }, [active, loaded]);
