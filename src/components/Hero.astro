@@ -1,0 +1,81 @@
+---
+// El hero: cifra estrella + nombre + CTA al mapa.
+// Cifra estrella derivada del análisis (ver docs/08-exploration-v2.md)
+const stat = {
+  pct: 26,
+  totalManzanas: 4923,
+  thresholdMin: 5,
+  datasetsUsed: 12,
+};
+---
+
+<section class="relative isolate overflow-hidden bg-(--color-bone)">
+  <div
+    class="absolute inset-0 -z-10 opacity-60"
+    style="background: radial-gradient(ellipse at top left, var(--color-agua-soft), transparent 55%), radial-gradient(ellipse at bottom right, var(--color-calor-soft), transparent 60%);"
+    aria-hidden="true"
+  ></div>
+
+  <div class="mx-auto flex max-w-6xl flex-col gap-16 px-6 pt-20 pb-28 md:gap-24 md:px-10 md:pt-28">
+    <header class="flex items-center justify-between text-sm tracking-wide text-(--color-ink-soft)">
+      <span class="font-medium">València Refresca</span>
+      <span class="hidden sm:inline">
+        Premios Datos Abiertos València <span class="font-medium">2026</span>
+      </span>
+    </header>
+
+    <div class="flex flex-col gap-10">
+      <p class="font-sans text-sm font-medium tracking-[0.18em] uppercase text-(--color-agua)">
+        Agua · Sombra · Respiramos
+      </p>
+
+      <h1 class="font-display text-5xl leading-[0.95] font-medium tracking-tight text-(--color-ink) sm:text-7xl md:text-[8rem]">
+        1 de cada 4
+      </h1>
+
+      <p class="font-display max-w-3xl text-2xl leading-tight text-(--color-ink) sm:text-3xl md:text-4xl">
+        manzanas de València está a más de <span class="text-(--color-calor) font-medium">5 minutos caminando</span> del urinario público más cercano.
+      </p>
+
+      <p class="max-w-xl text-base text-(--color-ink-soft) sm:text-lg">
+        Una pieza para los <strong class="font-medium text-(--color-ink)">Premios Datos Abiertos València 2026</strong>.
+        Cartografía y cruces sobre {stat.datasetsUsed} datasets públicos del Ajuntament.
+      </p>
+
+      <div class="flex flex-wrap items-center gap-4 pt-2">
+        <a
+          href="#mapa"
+          class="inline-flex items-center gap-2 rounded-full bg-(--color-ink) px-6 py-3 text-sm font-medium text-white transition hover:bg-(--color-agua)"
+        >
+          Explora el mapa
+          <span aria-hidden="true">→</span>
+        </a>
+        <a
+          href="#metodologia"
+          class="inline-flex items-center gap-2 rounded-full border border-(--color-ink) px-6 py-3 text-sm font-medium text-(--color-ink) transition hover:bg-(--color-ink) hover:text-white"
+        >
+          ¿Cómo se hizo?
+        </a>
+      </div>
+    </div>
+
+    <dl class="grid grid-cols-2 gap-x-8 gap-y-6 border-t border-(--color-ink)/15 pt-10 sm:grid-cols-4">
+      <div>
+        <dt class="text-xs font-medium tracking-wide uppercase text-(--color-ink-soft)">Fuentes</dt>
+        <dd class="font-display text-3xl text-(--color-agua) md:text-4xl">832</dd>
+      </div>
+      <div>
+        <dt class="text-xs font-medium tracking-wide uppercase text-(--color-ink-soft)">Urinarios</dt>
+        <dd class="font-display text-3xl text-(--color-calor) md:text-4xl">230</dd>
+      </div>
+      <div>
+        <dt class="text-xs font-medium tracking-wide uppercase text-(--color-ink-soft)">Árboles</dt>
+        <dd class="font-display text-3xl text-(--color-sombra) md:text-4xl">186.820</dd>
+      </div>
+      <div>
+        <dt class="text-xs font-medium tracking-wide uppercase text-(--color-ink-soft)">Manzanas</dt>
+        <dd class="font-display text-3xl text-(--color-ink) md:text-4xl">{stat.totalManzanas.toLocaleString('es-ES')}</dd>
+      </div>
+    </dl>
+  </div>
+</section>
