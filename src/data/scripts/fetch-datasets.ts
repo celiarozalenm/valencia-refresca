@@ -31,6 +31,9 @@ const DATASETS = [
   // Capa contexto urbano
   "barris-barrios",
   "districtes-distritos",
+  // Capa demográfica
+  "illa-de-cases-cadastrals-amb-dades-de-poblacio",
+  "vulnerabilidad-por-barrios",
 ] as const;
 
 const FETCH_TIMEOUT_MS = 90_000;
@@ -88,7 +91,22 @@ function arcgisQueryUrl(base: string, offset: number, limit: number): string {
   return url.toString();
 }
 
+function isArcgisQuery(url: string): boolean {
+  return url.includes("/MapServer/") && url.includes("/query");
+}
+
 async function fetchPaginated(baseUrl: string): Promise<{ type: "FeatureCollection"; features: unknown[] }> {
+  // Static GeoJSON file: one shot, no pagination.
+  if (!isArcgisQuery(baseUrl)) {
+    const res = await fetchWithRetry(baseUrl);
+    const json = (await res.json()) as { type?: string; features?: unknown[] };
+    if (json.type !== "FeatureCollection" || !Array.isArray(json.features)) {
+      throw new Error(`Response not a FeatureCollection`);
+    }
+    process.stdout.write(`+${json.features.length} `);
+    return { type: "FeatureCollection", features: json.features };
+  }
+
   const features: unknown[] = [];
   let offset = 0;
   while (true) {
