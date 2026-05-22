@@ -2,37 +2,42 @@
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import { t, type Lang } from '../i18n/strings';
 
 interface Props {
-  title?: string;
-  description?: string;
+  lang?: Lang;
 }
 
-const {
-  title = 'València Refresca · agua, sombra y alivio frente al calor',
-  description = 'La app que te ayuda a encontrar agua, sombra y alivio frente al calor en València. Mapa de fuentes, urinarios y zonas de sombra.',
-} = Astro.props;
+const { lang = 'es' } = Astro.props;
+const s = t(lang);
 
 const siteUrl = 'https://valencia-refresca.vercel.app';
+const canonical = lang === 'va' ? `${siteUrl}/val/` : `${siteUrl}/`;
+const alt = lang === 'va' ? `${siteUrl}/` : `${siteUrl}/val/`;
 const ogImageUrl = `${siteUrl}/og.png`;
+const ogLocale = lang === 'va' ? 'ca_ES' : 'es_ES';
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={s.htmlLang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
 
-    <title>{title}</title>
-    <meta name="description" content={description} />
+    <title>{s.siteTitle}</title>
+    <meta name="description" content={s.siteDescription} />
 
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang={lang === 'va' ? 'es' : 'ca-valencia'} href={alt} />
+    <link rel="alternate" hreflang="x-default" href={`${siteUrl}/`} />
+
+    <meta property="og:title" content={s.siteTitle} />
+    <meta property="og:description" content={s.siteDescription} />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="es_ES" />
-    <meta property="og:url" content={siteUrl} />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content="València Refresca" />
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />
@@ -40,8 +45,8 @@ const ogImageUrl = `${siteUrl}/og.png`;
     <meta property="og:image:alt" content="València Refresca — agua, sombra y alivio frente al calor" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:title" content={s.siteTitle} />
+    <meta name="twitter:description" content={s.siteDescription} />
     <meta name="twitter:image" content={ogImageUrl} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -52,8 +57,8 @@ const ogImageUrl = `${siteUrl}/og.png`;
     />
   </head>
   <body>
-    <Nav />
+    <Nav lang={lang} />
     <slot />
-    <Footer />
+    <Footer lang={lang} />
   </body>
 </html>

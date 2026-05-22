@@ -1,31 +1,30 @@
 ---
-const steps = [
-  {
-    n: 1,
-    title: 'Activa las capas',
-    desc: 'Fuentes, urinarios y arbolado, sobre el plano de València.',
-    bgVar: '--color-agua-soft',
-    fgVar: '--color-agua',
-  },
-  {
-    n: 2,
-    title: 'Cruza los datos',
-    desc: 'Añade la vulnerabilidad de cada barrio según el padrón 2021.',
-    bgVar: '--color-calor-soft',
-    fgVar: '--color-calor',
-  },
-  {
-    n: 3,
-    title: 'Lee la ciudad',
-    desc: 'Descubre dónde València se cuida — y dónde quedan zonas sin agua, sin sombra y sin urinarios.',
-    bgVar: '--color-sombra-soft',
-    fgVar: '--color-sombra',
-  },
+import { t, type Lang } from '../i18n/strings';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const tr = t(lang).howItWorks;
+
+const palettes = [
+  { bgVar: '--color-agua-soft', fgVar: '--color-agua' },
+  { bgVar: '--color-calor-soft', fgVar: '--color-calor' },
+  { bgVar: '--color-sombra-soft', fgVar: '--color-sombra' },
 ];
+
+const steps = tr.steps.map((step, i) => ({
+  n: i + 1,
+  title: step.title,
+  desc: step.desc,
+  bgVar: palettes[i].bgVar,
+  fgVar: palettes[i].fgVar,
+}));
 ---
 
 <section class="mx-auto max-w-6xl px-6 py-20 md:px-10 md:py-24">
-  <h2 class="text-center font-display text-3xl text-(--color-ink) md:text-4xl">Cómo se lee</h2>
+  <h2 class="text-center font-display text-3xl text-(--color-ink) md:text-4xl">{tr.heading}</h2>
 
   <div class="mt-12 grid items-start gap-12 md:grid-cols-[1fr_auto_1fr_auto_1fr] md:gap-6">
     {steps.map((step, i) => (

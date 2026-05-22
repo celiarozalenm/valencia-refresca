@@ -1,10 +1,22 @@
 ---
 import Logo from './Logo.astro';
+import { t, type Lang } from '../i18n/strings';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const s = t(lang).nav;
+const sw = t(lang).langSwitch;
+const homeHref = lang === 'va' ? '/val/' : '/';
+const otherHref = lang === 'va' ? '/' : '/val/';
+const otherLabel = lang === 'va' ? sw.es : sw.va;
 ---
 
 <nav class="sticky top-0 z-50 w-full bg-(--color-bone)/85 backdrop-blur-md">
   <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 md:px-10">
-    <a href="/" class="flex items-center gap-2.5 text-(--color-ink) transition hover:opacity-80">
+    <a href={homeHref} class="flex items-center gap-2.5 text-(--color-ink) transition hover:opacity-80">
       <Logo size={36} />
       <span class="font-display text-xl leading-none font-semibold">
         València<br /><span class="font-medium">Refresca</span>
@@ -12,26 +24,36 @@ import Logo from './Logo.astro';
     </a>
 
     <ul class="hidden items-center gap-10 text-sm font-medium text-(--color-ink-soft) md:flex">
-      <li><a href="#inicio" class="text-(--color-agua-deep) transition hover:text-(--color-ink)">Inicio</a></li>
-      <li><a href="#capas" class="transition hover:text-(--color-ink)">Las capas</a></li>
-      <li><a href="#colabora" class="transition hover:text-(--color-ink)">Colabora</a></li>
-      <li><a href="#faq" class="transition hover:text-(--color-ink)">Preguntas frecuentes</a></li>
+      <li><a href="#inicio" class="text-(--color-agua-deep) transition hover:text-(--color-ink)">{s.inicio}</a></li>
+      <li><a href="#capas" class="transition hover:text-(--color-ink)">{s.capas}</a></li>
+      <li><a href="#colabora" class="transition hover:text-(--color-ink)">{s.colabora}</a></li>
+      <li><a href="#faq" class="transition hover:text-(--color-ink)">{s.faq}</a></li>
     </ul>
 
     <div class="flex items-center gap-2">
       <a
+        href={otherHref}
+        aria-label={sw.aria}
+        class="hidden md:inline-flex items-center justify-center rounded-full border border-(--color-ink)/15 px-3 py-1.5 text-xs font-semibold tracking-wider uppercase text-(--color-ink-soft) transition hover:border-(--color-ink) hover:text-(--color-ink)"
+      >
+        {otherLabel}
+      </a>
+
+      <a
         href="#mapa"
         class="hidden md:inline-flex items-center rounded-full bg-(--color-agua-deep) px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-(--color-ink)"
       >
-        Ver el mapa
+        {s.verMapa}
       </a>
 
       <button
         type="button"
         id="mobile-nav-toggle"
-        aria-label="Abrir menú"
+        aria-label={s.abrirMenu}
         aria-controls="mobile-nav"
         aria-expanded="false"
+        data-label-open={s.abrirMenu}
+        data-label-close={s.cerrarMenu}
         class="flex h-10 w-10 items-center justify-center rounded-full text-(--color-ink) transition hover:bg-(--color-ink)/5 md:hidden"
       >
         <svg
@@ -72,19 +94,24 @@ import Logo from './Logo.astro';
   >
     <ul class="mx-auto flex max-w-7xl flex-col gap-1 px-6 py-4 text-base font-medium text-(--color-ink)">
       <li>
-        <a href="#inicio" data-mobile-link class="block rounded-xl px-3 py-3 text-(--color-agua-deep) transition hover:bg-(--color-ink)/5">Inicio</a>
+        <a href="#inicio" data-mobile-link class="block rounded-xl px-3 py-3 text-(--color-agua-deep) transition hover:bg-(--color-ink)/5">{s.inicio}</a>
       </li>
       <li>
-        <a href="#capas" data-mobile-link class="block rounded-xl px-3 py-3 transition hover:bg-(--color-ink)/5">Las capas</a>
+        <a href="#capas" data-mobile-link class="block rounded-xl px-3 py-3 transition hover:bg-(--color-ink)/5">{s.capas}</a>
       </li>
       <li>
-        <a href="#mapa" data-mobile-link class="block rounded-xl px-3 py-3 transition hover:bg-(--color-ink)/5">El mapa</a>
+        <a href="#mapa" data-mobile-link class="block rounded-xl px-3 py-3 transition hover:bg-(--color-ink)/5">{s.elMapa}</a>
       </li>
       <li>
-        <a href="#colabora" data-mobile-link class="block rounded-xl px-3 py-3 transition hover:bg-(--color-ink)/5">Colabora</a>
+        <a href="#colabora" data-mobile-link class="block rounded-xl px-3 py-3 transition hover:bg-(--color-ink)/5">{s.colabora}</a>
       </li>
       <li>
-        <a href="#faq" data-mobile-link class="block rounded-xl px-3 py-3 transition hover:bg-(--color-ink)/5">Preguntas frecuentes</a>
+        <a href="#faq" data-mobile-link class="block rounded-xl px-3 py-3 transition hover:bg-(--color-ink)/5">{s.faq}</a>
+      </li>
+      <li class="mt-2 border-t border-(--color-ink)/8 pt-3">
+        <a href={otherHref} class="block rounded-xl px-3 py-3 text-sm font-semibold tracking-wider uppercase text-(--color-ink-soft) transition hover:bg-(--color-ink)/5 hover:text-(--color-ink)">
+          {otherLabel}
+        </a>
       </li>
     </ul>
   </div>
@@ -96,10 +123,12 @@ import Logo from './Logo.astro';
   if (toggle && panel) {
     const openIcon = toggle.querySelector('[data-icon="open"]');
     const closeIcon = toggle.querySelector('[data-icon="close"]');
+    const openLabel = toggle.dataset.labelOpen ?? 'Abrir menú';
+    const closeLabel = toggle.dataset.labelClose ?? 'Cerrar menú';
 
     const setOpen = (open: boolean) => {
       toggle.setAttribute('aria-expanded', String(open));
-      toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+      toggle.setAttribute('aria-label', open ? closeLabel : openLabel);
       panel.hidden = !open;
       openIcon?.classList.toggle('hidden', open);
       openIcon?.classList.toggle('block', !open);

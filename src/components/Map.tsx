@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import maplibregl, { type Map as MapLibre, type StyleSpecification, type LngLatLike } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+import { STRINGS, type Lang } from "../i18n/strings";
 
 const VALENCIA_CENTER: LngLatLike = [-0.376, 39.467];
 
@@ -13,12 +14,12 @@ const BRAND = {
 
 type LayerKey = "fuentes" | "urinarios" | "duchas" | "sombra" | "barrios";
 
-const LAYER_META: Record<LayerKey, { label: string; color: string; description: string }> = {
-  fuentes: { label: "Fuentes", color: BRAND.agua, description: "832 puntos de agua potable" },
-  urinarios: { label: "Urinarios", color: BRAND.calor, description: "230 baños públicos" },
-  duchas: { label: "Duchas de playa", color: "#0ea5e9", description: "71 puntos · playas urbanas" },
-  sombra: { label: "Sombra", color: BRAND.sombra, description: "Densidad de arbolado por barrio" },
-  barrios: { label: "Vulnerabilidad", color: BRAND.ink, description: "Tinte por vulnerabilidad demográfica" },
+const LAYER_COLORS: Record<LayerKey, string> = {
+  fuentes: BRAND.agua,
+  urinarios: BRAND.calor,
+  duchas: "#0ea5e9",
+  sombra: BRAND.sombra,
+  barrios: BRAND.ink,
 };
 
 const SOMBRA_COLORS: Record<string, string> = {
@@ -56,9 +57,15 @@ const VUL_COLORS: Record<string, string> = {
   "Vulnerabilidad Baja": "#bbf7d0",
 };
 
-export default function Map() {
+interface MapProps {
+  lang?: Lang;
+}
+
+export default function Map({ lang = "es" }: MapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibre | null>(null);
+  const tr = STRINGS[lang].map;
+  const layerNames = tr.layers;
   const [active, setActive] = useState<Record<LayerKey, boolean>>({
     fuentes: true,
     urinarios: true,
@@ -268,13 +275,13 @@ export default function Map() {
           <div className="pointer-events-auto rounded-2xl bg-white/95 p-4 shadow-sm backdrop-blur">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="font-display text-sm leading-tight font-medium text-slate-900">Capas</p>
-                <p className="mt-0.5 text-xs text-slate-500">Activa lo que quieras ver.</p>
+                <p className="font-display text-sm leading-tight font-medium text-slate-900">{tr.panelTitle}</p>
+                <p className="mt-0.5 text-xs text-slate-500">{tr.panelHelp}</p>
               </div>
               <button
                 type="button"
                 onClick={() => setPanelOpen(false)}
-                aria-label="Cerrar panel de capas"
+                aria-label={tr.closePanel}
                 className="-mt-1 -mr-1 flex h-7 w-7 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
@@ -284,8 +291,8 @@ export default function Map() {
               </button>
             </div>
             <ul className="mt-3 space-y-2">
-              {(Object.keys(LAYER_META) as LayerKey[]).map((k) => {
-                const meta = LAYER_META[k];
+              {(Object.keys(layerNames) as LayerKey[]).map((k) => {
+                const meta = layerNames[k];
                 return (
                   <li key={k}>
                     <label className="flex cursor-pointer items-start gap-3 rounded-lg px-2 py-1.5 transition hover:bg-slate-50">
@@ -297,7 +304,7 @@ export default function Map() {
                       />
                       <span className="flex-1">
                         <span className="flex items-center gap-2 text-sm font-medium text-slate-900">
-                          <span className="h-2.5 w-2.5 rounded-full" style={{ background: meta.color }} aria-hidden />
+                          <span className="h-2.5 w-2.5 rounded-full" style={{ background: LAYER_COLORS[k] }} aria-hidden />
                           {meta.label}
                         </span>
                         <span className="text-xs text-slate-500">{meta.description}</span>
@@ -313,22 +320,22 @@ export default function Map() {
             type="button"
             onClick={() => setPanelOpen(true)}
             className="pointer-events-auto flex items-center gap-2.5 rounded-full bg-white/95 px-4 py-2.5 text-sm font-medium text-slate-900 shadow-sm backdrop-blur transition hover:bg-white"
-            aria-label="Abrir panel de capas"
+            aria-label={tr.openPanel}
           >
             <span className="flex -space-x-1.5">
-              {(Object.keys(LAYER_META) as LayerKey[])
+              {(Object.keys(layerNames) as LayerKey[])
                 .filter((k) => active[k])
                 .slice(0, 4)
                 .map((k) => (
                   <span
                     key={k}
                     className="h-3.5 w-3.5 rounded-full ring-2 ring-white"
-                    style={{ background: LAYER_META[k].color }}
+                    style={{ background: LAYER_COLORS[k] }}
                     aria-hidden
                   />
                 ))}
             </span>
-            Capas
+            {tr.pillLabel}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
               <polyline points="6 9 12 15 18 9" />
             </svg>
@@ -338,7 +345,7 @@ export default function Map() {
 
       {!loaded && (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white/40 text-sm text-slate-500 backdrop-blur-sm">
-          Cargando datos…
+          {tr.loading}
         </div>
       )}
     </div>

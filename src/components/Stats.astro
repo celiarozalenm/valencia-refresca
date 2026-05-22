@@ -1,9 +1,18 @@
 ---
+import { t, type Lang } from '../i18n/strings';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const s = t(lang).stats;
+
 const stats = [
-  { label: 'Fuentes', value: '832', colorVar: '--color-agua-deep' },
-  { label: 'Urinarios', value: '230', colorVar: '--color-calor-deep' },
-  { label: 'Árboles', value: '186.820', colorVar: '--color-sombra-deep' },
-  { label: 'Manzanas', value: '4.923', colorVar: '--color-ink' },
+  { label: s.fuentes, value: '832', colorVar: '--color-agua-deep' },
+  { label: s.urinarios, value: '230', colorVar: '--color-calor-deep' },
+  { label: s.arboles, value: '186.820', colorVar: '--color-sombra-deep' },
+  { label: s.manzanas, value: '4.923', colorVar: '--color-ink' },
 ];
 ---
 

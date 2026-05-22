@@ -1,4 +1,12 @@
 ---
+import { t, type Lang } from '../i18n/strings';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const c = t(lang).colabora;
 ---
 
 <section id="colabora" class="mx-auto max-w-6xl px-6 pt-24 pb-12 md:px-10 md:pt-32 md:pb-16">
@@ -11,21 +19,20 @@
 
     <div>
       <h3 class="font-display text-2xl leading-tight text-(--color-ink) sm:text-3xl">
-        Una ciudad más fresca<br />la construimos entre todas.
+        {c.title1}<br />{c.title2}
       </h3>
     </div>
 
     <div class="max-w-sm">
       <p class="text-sm text-(--color-ink-soft)">
-        ¿Conoces una fuente, una sombra o un urinario que falta en los datos? Escríbeme y lo añadimos. Todo el código está
-        abierto en
-        <a href="https://github.com/celiarozalenm/valencia-refresca" class="text-(--color-ink) underline decoration-(--color-agua) decoration-2 underline-offset-4 hover:text-(--color-agua)">github.com/celiarozalenm/valencia-refresca</a>.
+        {c.body}
+        <a href="https://github.com/celiarozalenm/valencia-refresca" class="text-(--color-ink) underline decoration-(--color-agua-deep) decoration-2 underline-offset-4 hover:text-(--color-agua-deep)">github.com/celiarozalenm/valencia-refresca</a>.
       </p>
       <a
         href="mailto:hello@celiarozalenm.com?subject=València%20Refresca"
         class="mt-4 inline-flex items-center rounded-full bg-(--color-agua-deep) px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-(--color-ink)"
       >
-        Escríbeme
+        {c.cta}
       </a>
     </div>
   </div>

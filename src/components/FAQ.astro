@@ -1,29 +1,19 @@
 ---
-const faqs = [
-  {
-    q: '¿Es gratuita?',
-    a: 'Sí. Sin anuncios, sin tracking. Funciona con datos abiertos del Ajuntament de València.',
-  },
-  {
-    q: '¿De dónde salen los datos?',
-    a: 'Del Portal de Datos Abiertos del Ajuntament de València. Se actualizan vía un script público y reproducible.',
-  },
-  {
-    q: '¿Cómo se hizo?',
-    a: 'Análisis en Python con geopandas sobre los 12 datasets. Cartografía con MapLibre. Todo el código abierto en github.com/celiarozalenm/valencia-refresca.',
-  },
-  {
-    q: '¿Quién está detrás?',
-    a: 'Celia Rozalén, como pieza candidata a los Premios Datos Abiertos València 2026.',
-  },
-];
+import { t, type Lang } from '../i18n/strings';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const faq = t(lang).faq;
 ---
 
 <section id="faq" class="mx-auto max-w-6xl px-6 py-16 md:px-10 md:py-20">
-  <h2 class="text-center font-display text-3xl text-(--color-ink) md:text-4xl">Preguntas frecuentes</h2>
+  <h2 class="text-center font-display text-3xl text-(--color-ink) md:text-4xl">{faq.heading}</h2>
 
   <div class="mt-10 grid gap-3 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-3">
-    {faqs.map((f) => (
+    {faq.questions.map((f) => (
       <details class="group rounded-xl bg-(--color-agua-soft)/40 px-5 py-4 ring-1 ring-(--color-ink)/8 transition open:bg-(--color-agua-soft)/70">
         <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-medium text-(--color-ink)">
           <span>{f.q}</span>
@@ -38,7 +28,7 @@ const faqs = [
             <path d="M6 9l6 6 6-6" />
           </svg>
         </summary>
-        <p class="mt-3 text-sm leading-relaxed text-(--color-ink-soft)">{f.a}</p>
+        <p class="mt-3 text-sm leading-relaxed text-(--color-ink-soft)" set:html={f.a}></p>
       </details>
     ))}
   </div>

@@ -1,0 +1,262 @@
+/**
+ * Diccionario de strings para la versión bilingüe (castellano · valencià).
+ * Cada componente recibe un `lang` prop y selecciona el bloque correspondiente.
+ */
+
+export type Lang = "es" | "va";
+
+export const STRINGS = {
+  es: {
+    htmlLang: "es",
+    siteTitle: "València Refresca · agua, sombra y alivio frente al calor",
+    siteDescription:
+      "La app que te ayuda a encontrar agua, sombra y alivio frente al calor en València. Mapa de fuentes, urinarios y zonas de sombra.",
+    nav: {
+      inicio: "Inicio",
+      capas: "Las capas",
+      colabora: "Colabora",
+      faq: "Preguntas frecuentes",
+      verMapa: "Ver el mapa",
+      abrirMenu: "Abrir menú",
+      cerrarMenu: "Cerrar menú",
+      elMapa: "El mapa",
+    },
+    hero: {
+      eyebrow: "Agua · Sombra · Respiramos",
+      titleLine1: "València",
+      titleLine2: "Refresca",
+      claim: 'manzanas de València está a más de 5 minutos del urinario público más cercano.',
+      claimHighlight: "1 de cada 4",
+      lead: "Cartografía y cruces sobre 12 datasets públicos del Ajuntament. Pieza candidata a los",
+      leadStrong: "Premios Datos Abiertos València 2026",
+      ctaPrimary: "Explora el mapa",
+      ctaSecondary: "¿Cómo se hizo?",
+    },
+    stats: {
+      fuentes: "Fuentes",
+      urinarios: "Urinarios",
+      arboles: "Árboles",
+      manzanas: "Manzanas",
+    },
+    howItWorks: {
+      heading: "Cómo se lee",
+      steps: [
+        { title: "Activa las capas", desc: "Fuentes, urinarios y arbolado, sobre el plano de València." },
+        { title: "Cruza los datos", desc: "Añade la vulnerabilidad de cada barrio según el padrón 2021." },
+        { title: "Lee la ciudad", desc: "Descubre dónde València se cuida — y dónde quedan zonas sin agua, sin sombra y sin urinarios." },
+      ],
+    },
+    banner: {
+      eyebrow: "VALÈNCIA ARDE",
+      titleLine1: "Dónde la",
+      titleLine2: "ciudad se cuida",
+      titleLine3: "— y dónde no.",
+    },
+    map: {
+      eyebrow: "El mapa",
+      heading: "Activa las capas y verás dónde València se cuida — y dónde no.",
+      description:
+        "Los puntos azules son las 832 fuentes. Los naranjas, los 230 urinarios. El tinte de los barrios es la vulnerabilidad demográfica del padrón 2021.",
+      panelTitle: "Capas",
+      panelHelp: "Activa lo que quieras ver.",
+      openPanel: "Abrir panel de capas",
+      closePanel: "Cerrar panel de capas",
+      pillLabel: "Capas",
+      loading: "El mapa se cargará al acercarte…",
+      layers: {
+        fuentes: { label: "Fuentes", description: "832 puntos de agua potable" },
+        urinarios: { label: "Urinarios", description: "230 baños públicos" },
+        duchas: { label: "Duchas de playa", description: "71 puntos · playas urbanas" },
+        sombra: { label: "Sombra", description: "Densidad de arbolado por barrio" },
+        barrios: { label: "Vulnerabilidad", description: "Tinte por vulnerabilidad demográfica" },
+      },
+    },
+    findings: {
+      eyebrow: "Lo que encontramos",
+      heading: "Tres patrones que dibujan una València de dos velocidades.",
+      card1: {
+        eyebrow: "Asimetría",
+        title: "Hay agua, falta baño.",
+        rowFuente: "Manzanas con fuente a <5 min",
+        rowUrinario: "Manzanas con urinario a <5 min",
+        body: "València tiene <strong>832 fuentes</strong> distribuidas con buena cobertura. Pero solo <strong>230 urinarios públicos</strong>, y muchos están concentrados en barrios turísticos.",
+      },
+      card2: {
+        eyebrow: "Geografía del olvido",
+        title: "Las pedanías quedan fuera.",
+        manzanaLejana: "Manzana más lejana",
+        manzanaLejanaDesc: 'En <strong>Mahuella-Tauladella</strong>. Casi 50 min caminando al urinario más cercano.',
+        list: ["El Saler", "El Palmar", "Borboto · Benifaraig · Poble Nou"],
+        body: "Las <strong>10 manzanas más lejanas</strong> del urinario público están en pedanías. La ciudad densa está bien servida.",
+      },
+      card3: {
+        eyebrow: "Brecha de sombra",
+        title: "2.000× entre barrios.",
+        masSombreado: "Más sombreado",
+        menosSombreado: "Menos sombreado",
+        body: "València tiene <strong>186.820 árboles</strong> registrados. Concentrados en el centro y el ensanche; las pedanías quedan al sol.",
+      },
+      footer: "Análisis completo, datos crudos y metodología en",
+    },
+    colabora: {
+      title1: "Una ciudad más fresca",
+      title2: "la construimos entre todas.",
+      body: "¿Conoces una fuente, una sombra o un urinario que falta en los datos? Escríbeme y lo añadimos. Todo el código está abierto en",
+      cta: "Escríbeme",
+    },
+    faq: {
+      heading: "Preguntas frecuentes",
+      questions: [
+        { q: "¿Es gratuita?", a: "Sí. Sin anuncios, sin tracking. Funciona con datos abiertos del Ajuntament de València." },
+        {
+          q: "¿De dónde salen los datos?",
+          a: 'Del <a href="https://opendata.vlci.valencia.es" class="underline decoration-(--color-agua-deep) decoration-2 underline-offset-4">Portal de Datos Abiertos del Ajuntament de València</a>. Se actualizan semanalmente vía un script público.',
+        },
+        {
+          q: "¿Quién está detrás?",
+          a: '<a href="https://celiarozalenm.com" class="underline decoration-(--color-agua-deep) decoration-2 underline-offset-4">Celia Rozalén</a>, como pieza candidata a los Premios Datos Abiertos València 2026.',
+        },
+        { q: "¿Cuándo sale la app?", a: "La app móvil está en desarrollo. Mientras, todas las capas son interactivas en el mapa de arriba." },
+      ],
+    },
+    footer: {
+      tagline: "Agua. Sombra. Respiramos.",
+      datos: "Datos del Portal de Datos Abiertos del Ajuntament de València",
+      navHeading: "Navegación",
+      socialHeading: "Síguenos",
+      legal: "Legal",
+      legalLinks: ["Privacidad", "Contacto"],
+      author: "Hecho por",
+    },
+    langSwitch: { es: "ES", va: "VAL", aria: "Cambiar idioma" },
+  },
+
+  va: {
+    htmlLang: "ca-valencia",
+    siteTitle: "València Refresca · aigua, ombra i alleujament davant la calor",
+    siteDescription:
+      "L'app que t'ajuda a trobar aigua, ombra i alleujament davant la calor a València. Mapa de fonts, urinaris i zones d'ombra.",
+    nav: {
+      inicio: "Inici",
+      capas: "Les capes",
+      colabora: "Col·labora",
+      faq: "Preguntes freqüents",
+      verMapa: "Veure el mapa",
+      abrirMenu: "Obrir menú",
+      cerrarMenu: "Tancar menú",
+      elMapa: "El mapa",
+    },
+    hero: {
+      eyebrow: "Aigua · Ombra · Respirem",
+      titleLine1: "València",
+      titleLine2: "Refresca",
+      claim: "illes de cases de València està a més de 5 minuts de l'urinari públic més pròxim.",
+      claimHighlight: "1 de cada 4",
+      lead: "Cartografia i creuaments sobre 12 datasets públics de l'Ajuntament. Peça candidata als",
+      leadStrong: "Premis Dades Obertes València 2026",
+      ctaPrimary: "Explora el mapa",
+      ctaSecondary: "Com es va fer?",
+    },
+    stats: {
+      fuentes: "Fonts",
+      urinarios: "Urinaris",
+      arboles: "Arbres",
+      manzanas: "Illes de cases",
+    },
+    howItWorks: {
+      heading: "Com es llig",
+      steps: [
+        { title: "Activa les capes", desc: "Fonts, urinaris i arbratge, sobre el plànol de València." },
+        { title: "Creua les dades", desc: "Afegeix la vulnerabilitat de cada barri segons el padró 2021." },
+        { title: "Llig la ciutat", desc: "Descobreix on València es cuida — i on queden zones sense aigua, sense ombra i sense urinaris." },
+      ],
+    },
+    banner: {
+      eyebrow: "VALÈNCIA CREMA",
+      titleLine1: "On la",
+      titleLine2: "ciutat es cuida",
+      titleLine3: "— i on no.",
+    },
+    map: {
+      eyebrow: "El mapa",
+      heading: "Activa les capes i veuràs on València es cuida — i on no.",
+      description:
+        "Els punts blaus són les 832 fonts. Els taronges, els 230 urinaris. El tint dels barris és la vulnerabilitat demogràfica del padró 2021.",
+      panelTitle: "Capes",
+      panelHelp: "Activa el que vulgues veure.",
+      openPanel: "Obrir panell de capes",
+      closePanel: "Tancar panell de capes",
+      pillLabel: "Capes",
+      loading: "El mapa es carregarà quan t'acostes…",
+      layers: {
+        fuentes: { label: "Fonts", description: "832 punts d'aigua potable" },
+        urinarios: { label: "Urinaris", description: "230 banys públics" },
+        duchas: { label: "Dutxes de platja", description: "71 punts · platges urbanes" },
+        sombra: { label: "Ombra", description: "Densitat d'arbratge per barri" },
+        barrios: { label: "Vulnerabilitat", description: "Tint per vulnerabilitat demogràfica" },
+      },
+    },
+    findings: {
+      eyebrow: "El que vam trobar",
+      heading: "Tres patrons que dibuixen una València de dues velocitats.",
+      card1: {
+        eyebrow: "Asimetria",
+        title: "Hi ha aigua, falta bany.",
+        rowFuente: "Illes amb font a <5 min",
+        rowUrinario: "Illes amb urinari a <5 min",
+        body: "València té <strong>832 fonts</strong> distribuïdes amb bona cobertura. Però només <strong>230 urinaris públics</strong>, i molts estan concentrats en barris turístics.",
+      },
+      card2: {
+        eyebrow: "Geografia de l'oblit",
+        title: "Les pedanies queden fora.",
+        manzanaLejana: "Illa més llunyana",
+        manzanaLejanaDesc: "A <strong>Mahuella-Tauladella</strong>. Quasi 50 min caminant a l'urinari més pròxim.",
+        list: ["El Saler", "El Palmar", "Borbotó · Benifaraig · Poble Nou"],
+        body: "Les <strong>10 illes més llunyanes</strong> de l'urinari públic estan en pedanies. La ciutat densa està ben servida.",
+      },
+      card3: {
+        eyebrow: "Bretxa d'ombra",
+        title: "2.000× entre barris.",
+        masSombreado: "Més ombrejat",
+        menosSombreado: "Menys ombrejat",
+        body: "València té <strong>186.820 arbres</strong> registrats. Concentrats al centre i a l'eixample; les pedanies queden al sol.",
+      },
+      footer: "Anàlisi completa, dades crues i metodologia en",
+    },
+    colabora: {
+      title1: "Una ciutat més fresca",
+      title2: "la construïm entre totes.",
+      body: "Coneixes una font, una ombra o un urinari que falta en les dades? Escriu-me i l'afegim. Tot el codi està obert en",
+      cta: "Escriu-me",
+    },
+    faq: {
+      heading: "Preguntes freqüents",
+      questions: [
+        { q: "És gratuïta?", a: "Sí. Sense anuncis, sense tracking. Funciona amb dades obertes de l'Ajuntament de València." },
+        {
+          q: "D'on ixen les dades?",
+          a: 'Del <a href="https://opendata.vlci.valencia.es" class="underline decoration-(--color-agua-deep) decoration-2 underline-offset-4">Portal de Dades Obertes de l\'Ajuntament de València</a>. S\'actualitzen setmanalment via un script públic.',
+        },
+        {
+          q: "Qui està darrere?",
+          a: '<a href="https://celiarozalenm.com" class="underline decoration-(--color-agua-deep) decoration-2 underline-offset-4">Celia Rozalén</a>, com a peça candidata als Premis Dades Obertes València 2026.',
+        },
+        { q: "Quan ix l'app?", a: "L'app mòbil està en desenvolupament. Mentrestant, totes les capes són interactives en el mapa de dalt." },
+      ],
+    },
+    footer: {
+      tagline: "Aigua. Ombra. Respirem.",
+      datos: "Dades del Portal de Dades Obertes de l'Ajuntament de València",
+      navHeading: "Navegació",
+      socialHeading: "Segueix-nos",
+      legal: "Legal",
+      legalLinks: ["Privacitat", "Contacte"],
+      author: "Fet per",
+    },
+    langSwitch: { es: "ES", va: "VAL", aria: "Canviar idioma" },
+  },
+} as const;
+
+export function t(lang: Lang) {
+  return STRINGS[lang];
+}

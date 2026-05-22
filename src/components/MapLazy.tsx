@@ -1,11 +1,16 @@
 import { useEffect, useRef, useState, type ComponentType } from "react";
+import { STRINGS, type Lang } from "../i18n/strings";
 
 // Carga el componente Map solo cuando entra (o se acerca a) el viewport.
 // MapLibre + GeoJSONs (~600 KB) no entran en el bundle inicial.
 
-export default function MapLazy() {
+interface Props {
+  lang?: Lang;
+}
+
+export default function MapLazy({ lang = "es" }: Props) {
   const sentinelRef = useRef<HTMLDivElement>(null);
-  const [MapComponent, setMapComponent] = useState<ComponentType | null>(null);
+  const [MapComponent, setMapComponent] = useState<ComponentType<{ lang: Lang }> | null>(null);
 
   useEffect(() => {
     const node = sentinelRef.current;
@@ -46,7 +51,7 @@ export default function MapLazy() {
     };
   }, []);
 
-  if (MapComponent) return <MapComponent />;
+  if (MapComponent) return <MapComponent lang={lang} />;
 
   return (
     <div
@@ -56,7 +61,7 @@ export default function MapLazy() {
     >
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-slate-600">
         <div className="h-8 w-8 animate-pulse rounded-full bg-slate-300" aria-hidden />
-        <p className="text-sm">El mapa se cargará al acercarte…</p>
+        <p className="text-sm">{STRINGS[lang].map.loading}</p>
       </div>
     </div>
   );
