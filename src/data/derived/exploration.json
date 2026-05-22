@@ -1,0 +1,76 @@
+{
+  "totals": {
+    "fuentes": 832,
+    "urinarios": 230,
+    "duchas": 71,
+    "arbolado": 186820,
+    "espais_verds": 807,
+    "barrios": 88,
+    "distritos": 22,
+    "vuln_polygons": 70
+  },
+  "barrios_sin_fuente": 3,
+  "barrios_sin_urinario": 25,
+  "by_vulnerability": [
+    {
+      "vul_global": "Vulnerabilidad Alta",
+      "n_barrios": 7,
+      "fuentes_mean": 5.86,
+      "urinarios_mean": 1.71,
+      "fuentes_per_km2_mean": 14.82,
+      "sin_fuente": 1,
+      "sin_urinario": 2
+    },
+    {
+      "vul_global": "Vulnerabilidad Baja",
+      "n_barrios": 49,
+      "fuentes_mean": 11.88,
+      "urinarios_mean": 3.86,
+      "fuentes_per_km2_mean": 15.05,
+      "sin_fuente": 1,
+      "sin_urinario": 11
+    },
+    {
+      "vul_global": "Vulnerabilidad Media",
+      "n_barrios": 14,
+      "fuentes_mean": 7.29,
+      "urinarios_mean": 1.0,
+      "fuentes_per_km2_mean": 20.82,
+      "sin_fuente": 0,
+      "sin_urinario": 5
+    }
+  ],
+  "top_underserved": [
+    {
+      "nombre": "EL CALVARI",
+      "vul_global": "Vulnerabilidad Alta",
+      "ind_global": 1.9,
+      "fuentes": 0,
+      "urinarios": 0
+    }
+  ],
+  "distance_to_nearest_fuente_m": [
+    {
+      "vul_global": "Vulnerabilidad Alta",
+      "mean": 128.0,
+      "median": 135.4,
+      "max": 187.3
+    },
+    {
+      "vul_global": "Vulnerabilidad Baja",
+      "mean": 188.4,
+      "median": 163.2,
+      "max": 768.3
+    },
+    {
+      "vul_global": "Vulnerabilidad Media",
+      "mean": 99.4,
+      "median": 79.2,
+      "max": 284.6
+    }
+  ],
+  "headline_candidates": [
+    "1 de 7 barrios con vulnerabilidad alta o muy alta no tienen ninguna fuente pública.",
+    "25 de los 88 barrios de València no tienen ningún urinario público."
+  ]
+}
