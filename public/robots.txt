@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://valencia-refresca.vercel.app/sitemap.xml
