@@ -1,0 +1,64 @@
+name: Fetch paperwork (Ayuntamiento templates)
+
+# Descarga los 4 modelos oficiales del Ayuntamiento de València
+# (memoria, solicitud, declaración, autorización) desde infraestructura
+# europea y los commitea al repo en paperwork/. Útil porque sede.valencia.es
+# está bloqueado desde algunas regiones (Taiwán).
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create paperwork folder
+        run: mkdir -p paperwork
+
+      - name: Download Memoria oficial
+        run: |
+          curl -sL --max-time 60 \
+            "https://sede.valencia.es/sede/descarga/doc/DOCUMENT_1_20260009999819" \
+            -o paperwork/01-memoria-modelo.pdf
+          ls -lh paperwork/01-memoria-modelo.pdf
+
+      - name: Download Solicitud
+        run: |
+          curl -sL --max-time 60 \
+            "https://sede.valencia.es/sede/descarga/doc/DOCUMENT_1_20230005314292" \
+            -o paperwork/02-solicitud-modelo.pdf
+          ls -lh paperwork/02-solicitud-modelo.pdf
+
+      - name: Download Declaración Responsable
+        run: |
+          curl -sL --max-time 60 \
+            "https://sede.valencia.es/sede/descarga/doc/DOCUMENT_1_20240007668181" \
+            -o paperwork/03-declaracion-modelo.pdf
+          ls -lh paperwork/03-declaracion-modelo.pdf
+
+      - name: Download Autorización tratamiento de datos
+        run: |
+          curl -sL --max-time 60 \
+            "https://sede.valencia.es/sede/descarga/doc/DOCUMENT_1_20240007668167" \
+            -o paperwork/04-autorizacion-datos-modelo.pdf
+          ls -lh paperwork/04-autorizacion-datos-modelo.pdf
+
+      - name: Verify all are PDF
+        run: file paperwork/*.pdf
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add paperwork/
+          if git diff --staged --quiet; then
+            echo "No changes."
+          else
+            git commit -m "paperwork: download official Ayuntamiento templates"
+            git push
+          fi
