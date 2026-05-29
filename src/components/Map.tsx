@@ -475,7 +475,7 @@ export default function Map({ lang = "es" }: MapProps) {
                     setView(tab.key);
                     setMobileNavOpen(false);
                   }}
-                  className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition ${
+                  className={`flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition ${
                     isActive
                       ? "bg-(--color-agua-soft) text-(--color-agua-deep)"
                       : "text-slate-700 hover:bg-slate-100"
@@ -572,7 +572,7 @@ export default function Map({ lang = "es" }: MapProps) {
         {/* Paseo fresco: pantalla form (cuando NO hay resultado) */}
         {view === "paseo" && !walkResult && (
           <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone)">
-            <div className="mx-auto max-w-3xl px-6 py-12 md:px-10 md:py-16">
+            <div className="mx-auto max-w-3xl px-6 pt-4 pb-12 md:px-10 md:pt-6 md:pb-16">
               <h1 className="font-display text-4xl leading-tight text-(--color-agua-deep) md:text-5xl">
                 {sw.title}
               </h1>
@@ -725,7 +725,7 @@ export default function Map({ lang = "es" }: MapProps) {
         {/* Barrios frescos: pantalla de contenido */}
         {view === "frescos" && (
           <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone)">
-            <div className="mx-auto max-w-5xl px-6 py-12 md:px-10 md:py-16">
+            <div className="mx-auto max-w-5xl px-6 pt-4 pb-12 md:px-10 md:pt-6 md:pb-16">
               <h1 className="font-display text-4xl leading-tight text-(--color-agua-deep) md:text-5xl">{freshestT.title}</h1>
               <p className="mt-3 max-w-2xl text-(--color-ink-soft) md:text-lg">{freshestT.subtitle}</p>
               <div className="mt-10">
