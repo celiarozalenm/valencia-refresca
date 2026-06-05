@@ -7,6 +7,7 @@ import MapFeatures from './MapFeatures.astro';
 import CollaborateBox from './CollaborateBox.astro';
 import FAQ from './FAQ.astro';
 import Findings from './Findings.astro';
+import ProjectInfo from './ProjectInfo.astro';
 import { type Lang } from '../i18n/strings';
 
 interface Props {
@@ -24,3 +25,4 @@ const { lang = 'es' } = Astro.props;
 <Findings lang={lang} />
 <CollaborateBox lang={lang} />
 <FAQ lang={lang} />
+<ProjectInfo lang={lang} />
