@@ -25,8 +25,9 @@ export const STRINGS = {
       eyebrow: "Agua · Sombra · Respiramos",
       titleLine1: "València",
       titleLine2: "Refresca",
-      claim: 'manzanas de València está a más de 5 minutos del urinario público más cercano.',
-      claimHighlight: "1 de cada 4",
+      claimPre: "La plataforma que te ayuda a encontrar",
+      claimHighlight: "agua, sombra y alivio",
+      claimPost: "frente al calor.",
       lead: "Cartografía y cruces sobre 12 datasets públicos del Ajuntament. Pieza candidata a los",
       leadStrong: "Premios Datos Abiertos València 2026",
       ctaPrimary: "Explora el mapa",
@@ -38,8 +39,14 @@ export const STRINGS = {
       arboles: "Árboles",
       manzanas: "Manzanas",
     },
+    features: {
+      saberMas: "Saber más",
+      fuentes: { title: "Fuentes", desc: "Mapa de fuentes públicas de agua potable." },
+      urinarios: { title: "Urinarios", desc: "Puntos de alivio para refrescarte." },
+      sombra: { title: "Sombra", desc: "Zonas de sombra para descansar del sol." },
+    },
     howItWorks: {
-      heading: "Cómo se lee",
+      heading: "Cómo funciona",
       steps: [
         { title: "Activa las capas", desc: "Fuentes, urinarios y arbolado, sobre el plano de València." },
         { title: "Cruza los datos", desc: "Añade la vulnerabilidad de cada barrio según el padrón 2021." },
@@ -47,10 +54,10 @@ export const STRINGS = {
       ],
     },
     banner: {
-      eyebrow: "VALÈNCIA ARDE",
-      titleLine1: "Dónde la",
-      titleLine2: "ciudad se cuida",
-      titleLine3: ", y dónde no.",
+      eyebrow: "VALÈNCIA SE CUIDA",
+      titleLine1: "Información útil",
+      titleLine2: "para vivir el",
+      titleLine3: "verano mejor.",
     },
     map: {
       eyebrow: "El mapa",
@@ -146,8 +153,8 @@ export const STRINGS = {
       },
     },
     findings: {
-      eyebrow: "Lo que encontramos",
-      heading: "Tres patrones que dibujan una València de dos velocidades.",
+      eyebrow: "Hallazgos",
+      heading: "Tres patrones de cómo València refresca — y dónde se queda al calor.",
       card1: {
         eyebrow: "Asimetría",
         title: "Hay agua, falta baño.",
@@ -254,8 +261,9 @@ export const STRINGS = {
       eyebrow: "Aigua · Ombra · Respirem",
       titleLine1: "València",
       titleLine2: "Refresca",
-      claim: "illes de cases de València està a més de 5 minuts de l'urinari públic més pròxim.",
-      claimHighlight: "1 de cada 4",
+      claimPre: "La plataforma que t'ajuda a trobar",
+      claimHighlight: "aigua, ombra i alleujament",
+      claimPost: "davant la calor.",
       lead: "Cartografia i creuaments sobre 12 datasets públics de l'Ajuntament. Peça candidata als",
       leadStrong: "Premis Dades Obertes València 2026",
       ctaPrimary: "Explora el mapa",
@@ -267,8 +275,14 @@ export const STRINGS = {
       arboles: "Arbres",
       manzanas: "Illes de cases",
     },
+    features: {
+      saberMas: "Saber més",
+      fuentes: { title: "Fonts", desc: "Mapa de fonts públiques d'aigua potable." },
+      urinarios: { title: "Urinaris", desc: "Punts d'alleujament per a refrescar-te." },
+      sombra: { title: "Ombra", desc: "Zones d'ombra per a descansar del sol." },
+    },
     howItWorks: {
-      heading: "Com es llig",
+      heading: "Com funciona",
       steps: [
         { title: "Activa les capes", desc: "Fonts, urinaris i arbratge, sobre el plànol de València." },
         { title: "Creua les dades", desc: "Afegeix la vulnerabilitat de cada barri segons el padró 2021." },
@@ -276,10 +290,10 @@ export const STRINGS = {
       ],
     },
     banner: {
-      eyebrow: "VALÈNCIA CREMA",
-      titleLine1: "On la",
-      titleLine2: "ciutat es cuida",
-      titleLine3: ", i on no.",
+      eyebrow: "VALÈNCIA ES CUIDA",
+      titleLine1: "Informació útil",
+      titleLine2: "per a viure",
+      titleLine3: "millor l'estiu.",
     },
     map: {
       eyebrow: "El mapa",
@@ -375,8 +389,8 @@ export const STRINGS = {
       },
     },
     findings: {
-      eyebrow: "El que vam trobar",
-      heading: "Tres patrons que dibuixen una València de dues velocitats.",
+      eyebrow: "Troballes",
+      heading: "Tres patrons de com València refresca — i on es queda a la calor.",
       card1: {
         eyebrow: "Asimetria",
         title: "Hi ha aigua, falta bany.",
