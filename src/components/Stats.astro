@@ -12,13 +12,12 @@ const stats = [
   { label: s.fuentes, value: '832', colorVar: '--color-agua-deep' },
   { label: s.urinarios, value: '230', colorVar: '--color-calor-deep' },
   { label: s.arboles, value: '186.820', colorVar: '--color-sombra-deep' },
-  { label: s.manzanas, value: '4.923', colorVar: '--color-ink' },
 ];
 ---
 
 <section id="capas" class="border-y border-(--color-ink)/8 bg-(--color-bone-soft)">
   <div class="mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-    <dl class="grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-4">
+    <dl class="grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-3">
       {stats.map((s) => (
         <div>
           <dt class="text-xs font-medium tracking-wide uppercase text-(--color-ink-soft)">{s.label}</dt>
