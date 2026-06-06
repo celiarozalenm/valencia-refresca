@@ -19,7 +19,7 @@ Y un dato anti-intuitivo que apareció al cruzar los datos:
 
 > **Los barrios oficialmente vulnerables NO son los peor servidos.** El verdadero déficit está en el cinturón de pedanías rurales · Mahuella, El Saler, El Palmar, Borboto, Benifaraig.
 
-Análisis reproducible en [`src/data/scripts/`](./src/data/scripts/).
+Detalles en [`docs/08-exploration-v2.md`](./docs/08-exploration-v2.md).
 
 ## Por qué importa
 
@@ -103,7 +103,7 @@ python3 src/data/scripts/explore_v2.py   # re-corre el análisis
 - **Brecha 2.000×** entre el barrio más arbolado (Trinitat, 11.273 árboles/km²) y el menos (El Palmar, 5/km²).
 - La cobertura de servicios **NO se correlaciona con vulnerabilidad demográfica**. Los servicios están concentrados en el centro histórico-turístico; el cinturón rural queda fuera.
 
-Datos y metodología reproducibles en [`src/data/scripts/`](./src/data/scripts/).
+Detalles, datos y metodología en [`docs/08-exploration-v2.md`](./docs/08-exploration-v2.md).
 
 ## Roadmap
 
