@@ -109,6 +109,11 @@ export default function Map({ lang = "es" }: MapProps) {
   const verdesLoadedRef = useRef(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
+  // Capas overlay panel: empieza expandido en escritorio, plegado en móvil
+  const [layersExpanded, setLayersExpanded] = useState<boolean>(() => {
+    if (typeof window === "undefined") return true;
+    return window.matchMedia("(min-width: 768px)").matches;
+  });
 
   // Paseo de la sombra state
   const [address, setAddress] = useState("");
@@ -309,6 +314,10 @@ export default function Map({ lang = "es" }: MapProps) {
         return null;
       };
 
+      // Prioridad al hacer clic: los puntos "reportables" (fuente, urinario,
+      // ducha) ganan SIEMPRE a los polígonos que los cubren. Vulnerabilidad y
+      // sombra cubren toda la ciudad y, con handlers por capa, robaban el clic
+      // y abrían su popup en vez del de feedback con 👍/👎.
       const pointLayers: Array<[string, keyof typeof popupHtml]> = [
         ["fuentes-dot", "fuentes"],
         ["urinarios-dot", "urinarios"],
@@ -318,28 +327,36 @@ export default function Map({ lang = "es" }: MapProps) {
         ["sombra-fill", "sombra"],
         ["vulnerabilidad-fill", "vulnerabilidad"],
       ];
-      // A single shared popup so clicking another marker replaces the open one
-      // instead of stacking overlapping cards.
+      // Un único popup compartido: clicar otro punto reemplaza el abierto.
       let activePopup: maplibregl.Popup | null = null;
-      pointLayers.forEach(([layerId, kind]) => {
-        map.on("click", layerId, (e) => {
-          const f = e.features?.[0];
-          if (!f) return;
-          const props = f.properties ?? {};
-          const fb = feedbackArgs(kind, props);
-          activePopup?.remove();
-          const popup = new maplibregl.Popup({ closeButton: true, offset: 10, maxWidth: "320px" }).setLngLat(e.lngLat);
-          if (fb) {
-            popup.setDOMContent(buildFeedbackPopup({ ...fb, lat: e.lngLat.lat, lng: e.lngLat.lng, lang }));
-          } else {
-            popup.setHTML(popupHtml[kind](props));
+      map.on("click", (e) => {
+        const candidateIds = pointLayers.map(([id]) => id).filter((id) => map.getLayer(id));
+        const hits = map.queryRenderedFeatures(e.point, { layers: candidateIds });
+        if (!hits.length) return;
+        let chosen: { kind: keyof typeof popupHtml; props: Record<string, unknown> } | null = null;
+        for (const [layerId, kind] of pointLayers) {
+          const hit = hits.find((h) => h.layer?.id === layerId);
+          if (hit) {
+            chosen = { kind, props: (hit.properties ?? {}) as Record<string, unknown> };
+            break;
           }
-          popup.on("close", () => {
-            if (activePopup === popup) activePopup = null;
-          });
-          popup.addTo(map);
-          activePopup = popup;
+        }
+        if (!chosen) return;
+        const fb = feedbackArgs(chosen.kind, chosen.props);
+        activePopup?.remove();
+        const popup = new maplibregl.Popup({ closeButton: true, offset: 10, maxWidth: "320px" }).setLngLat(e.lngLat);
+        if (fb) {
+          popup.setDOMContent(buildFeedbackPopup({ ...fb, lat: e.lngLat.lat, lng: e.lngLat.lng, lang }));
+        } else {
+          popup.setHTML(popupHtml[chosen.kind](chosen.props));
+        }
+        popup.on("close", () => {
+          if (activePopup === popup) activePopup = null;
         });
+        popup.addTo(map);
+        activePopup = popup;
+      });
+      pointLayers.forEach(([layerId]) => {
         map.on("mouseenter", layerId, () => (map.getCanvas().style.cursor = "pointer"));
         map.on("mouseleave", layerId, () => (map.getCanvas().style.cursor = ""));
       });
@@ -781,10 +798,49 @@ export default function Map({ lang = "es" }: MapProps) {
         {/* Overlay panel: Capas (sobre el mapa) */}
         {view === "capas" && (
           <div className="pointer-events-none absolute top-4 left-4 z-10 max-w-xs md:top-6 md:left-6">
-            <div className="pointer-events-auto rounded-2xl bg-white/95 p-4 shadow-lg backdrop-blur">
-              <p className="font-display text-sm leading-tight font-semibold text-slate-900">{tr.panelTitle}</p>
-              <p className="mt-0.5 text-xs text-slate-500">{tr.panelHelp}</p>
-              <ul className="mt-3 space-y-1.5">
+            <div className="pointer-events-auto rounded-2xl bg-white/95 shadow-lg backdrop-blur">
+              <button
+                type="button"
+                onClick={() => setLayersExpanded((v) => !v)}
+                aria-expanded={layersExpanded}
+                aria-controls="capas-list"
+                className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-2xl px-4 py-3 text-left transition hover:bg-slate-50/60"
+              >
+                <span className="flex items-center gap-2">
+                  {/* Dots de las capas activas */}
+                  <span className="flex -space-x-1.5">
+                    {(Object.keys(layerNames) as LayerKey[])
+                      .filter((k) => active[k])
+                      .slice(0, 4)
+                      .map((k) => (
+                        <span
+                          key={k}
+                          className="h-3 w-3 rounded-full ring-2 ring-white"
+                          style={{ background: LAYER_COLORS[k] }}
+                          aria-hidden
+                        />
+                      ))}
+                  </span>
+                  <span>
+                    <span className="block font-display text-sm leading-tight font-semibold text-slate-900">{tr.panelTitle}</span>
+                    {layersExpanded && <span className="mt-0.5 block text-xs text-slate-500">{tr.panelHelp}</span>}
+                  </span>
+                </span>
+                <svg
+                  className={`h-4 w-4 shrink-0 text-slate-500 transition ${layersExpanded ? "rotate-180" : ""}`}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+              {layersExpanded && (
+              <ul id="capas-list" className="space-y-1.5 px-4 pt-1 pb-4">
                 {(Object.keys(layerNames) as LayerKey[]).map((k) => {
                   const meta = layerNames[k];
                   const count = counts[k];
@@ -814,6 +870,7 @@ export default function Map({ lang = "es" }: MapProps) {
                   );
                 })}
               </ul>
+              )}
             </div>
           </div>
         )}
