@@ -20,6 +20,9 @@ pnpm-debug.log*
 # personal submission paperwork — moved out of the repo (contains personal data)
 paperwork/
 
+# project docs — kept private (strategy + personal data), live outside the repo
+docs/
+
 # macOS-specific files
 .DS_Store
 

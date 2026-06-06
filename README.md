@@ -19,7 +19,7 @@ Y un dato anti-intuitivo que apareció al cruzar los datos:
 
 > **Los barrios oficialmente vulnerables NO son los peor servidos.** El verdadero déficit está en el cinturón de pedanías rurales · Mahuella, El Saler, El Palmar, Borboto, Benifaraig.
 
-Detalles en [`docs/08-exploration-v2.md`](./docs/08-exploration-v2.md).
+Análisis reproducible en [`src/data/scripts/`](./src/data/scripts/).
 
 ## Por qué importa
 
@@ -64,15 +64,6 @@ Toda la cadena es **open source y sin coste operativo** (0 €/año).
 ```
 .
 ├── .github/workflows/      # GitHub Action: refresco semanal de snapshots
-├── docs/                   # documentación completa del proyecto
-│   ├── 00-contest.md       # bases del concurso
-│   ├── 03-datasets.md      # qué datasets y de dónde
-│   ├── 04-plan.md          # calendario día a día
-│   ├── 07-exploration.md   # análisis Día 1
-│   ├── 08-exploration-v2.md # análisis fino (cifras estrella)
-│   ├── 09-narrative.md     # guion narrativo
-│   ├── 10-memoria-resumen.md # documento de presentación
-│   └── 11-manual-envio.md  # cómo presentar a la sede electrónica
 ├── public/
 │   └── data/               # GeoJSONs servidos al cliente
 ├── src/
@@ -112,7 +103,7 @@ python3 src/data/scripts/explore_v2.py   # re-corre el análisis
 - **Brecha 2.000×** entre el barrio más arbolado (Trinitat, 11.273 árboles/km²) y el menos (El Palmar, 5/km²).
 - La cobertura de servicios **NO se correlaciona con vulnerabilidad demográfica**. Los servicios están concentrados en el centro histórico-turístico; el cinturón rural queda fuera.
 
-Detalles, datos y metodología en [`docs/08-exploration-v2.md`](./docs/08-exploration-v2.md).
+Datos y metodología reproducibles en [`src/data/scripts/`](./src/data/scripts/).
 
 ## Roadmap
 
