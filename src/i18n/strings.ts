@@ -115,7 +115,9 @@ export const STRINGS = {
         outOfArea: "Parece que no estás en València. Esta plataforma solo funciona dentro de la ciudad de València.",
         none: "No encontramos nada cerca.",
         viewOnMap: "Ver en el mapa",
-        intro: "Activa tu ubicación y te decimos qué tienes más cerca.",
+        intro: "Activa tu ubicación y, sin salir del mapa, te calculamos al instante lo que tienes más cerca de cada tipo.",
+        introTitle: "Qué te mostramos",
+        privacy: "Tu ubicación no se guarda ni se envía a ningún sitio: el cálculo se hace en tu dispositivo.",
       },
       sidebar: {
         aboutTitle: "Sobre el proyecto",
@@ -382,7 +384,9 @@ export const STRINGS = {
         outOfArea: "Sembla que no estàs a València. Esta plataforma només funciona dins de la ciutat de València.",
         none: "No hem trobat res a prop.",
         viewOnMap: "Veure al mapa",
-        intro: "Activa la teua ubicació i et diem què tens més a prop.",
+        intro: "Activa la teua ubicació i, sense eixir del mapa, et calculem a l'instant el més pròxim de cada tipus.",
+        introTitle: "Què et mostrem",
+        privacy: "La teua ubicació no es guarda ni s'envia a cap lloc: el càlcul es fa al teu dispositiu.",
       },
       sidebar: {
         aboutTitle: "Sobre el projecte",
@@ -649,7 +653,9 @@ export const STRINGS = {
         outOfArea: "Looks like you're not in València. This platform only works within the city of València.",
         none: "Nothing found nearby.",
         viewOnMap: "View on map",
-        intro: "Turn on your location and we'll tell you what's closest.",
+        intro: "Turn on your location and, without leaving the map, we'll instantly work out the closest of each type to you.",
+        introTitle: "What we'll show you",
+        privacy: "Your location is never stored or sent anywhere: the calculation happens on your device.",
       },
       sidebar: {
         aboutTitle: "About the project",

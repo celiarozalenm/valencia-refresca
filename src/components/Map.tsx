@@ -165,6 +165,18 @@ export default function Map({ lang = "es" }: MapProps) {
   const [walkResult, setWalkResult] = useState<ShadowWalkResult | null>(null);
   const [walkOrigin, setWalkOrigin] = useState<[number, number] | null>(null);
 
+  // Persiste la sección activa en el hash de la URL para que, al recargar,
+  // se restaure la misma sección en vez de volver siempre a "Capas".
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const target = view === "capas" ? "" : `#${view}`;
+    if (window.location.hash !== target) {
+      // replaceState para no llenar el historial con cada cambio de sección.
+      const url = target || window.location.pathname + window.location.search;
+      window.history.replaceState(null, "", url);
+    }
+  }, [view]);
+
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
@@ -1191,7 +1203,28 @@ export default function Map({ lang = "es" }: MapProps) {
               {cercaError && <p className="mt-3 text-sm text-red-600">{cercaError}</p>}
 
               {!cercaPending && cercaResults.length === 0 && !cercaError && (
-                <p className="mt-6 text-sm text-(--color-ink-soft)">{cercaT.intro}</p>
+                <div className="mt-6">
+                  <p className="max-w-xl text-sm text-(--color-ink-soft)">{cercaT.intro}</p>
+                  <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.14em] text-(--color-ink-soft)">
+                    {cercaT.introTitle}
+                  </p>
+                  <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+                    {(["fuentes", "urinarios", "duchas", "lavapies"] as const).map((kind) => (
+                      <li
+                        key={kind}
+                        className="flex items-center gap-2.5 rounded-xl border border-(--color-ink)/8 bg-white px-3.5 py-2.5"
+                      >
+                        <span
+                          className="inline-block h-2.5 w-2.5 shrink-0 rounded-full"
+                          style={{ background: LAYER_COLORS[kind] }}
+                          aria-hidden
+                        />
+                        <span className="text-sm font-medium text-(--color-ink)">{layerNames[kind].label}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-4 max-w-xl text-xs text-(--color-ink-soft)">{cercaT.privacy}</p>
+                </div>
               )}
 
               {cercaResults.length > 0 && (
