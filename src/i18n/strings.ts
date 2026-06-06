@@ -21,14 +21,6 @@ export function mapaHref(lang: Lang): string {
   return `${PREFIX[lang]}/mapa/`;
 }
 
-export function participarHref(lang: Lang): string {
-  return `${PREFIX[lang]}/participar/`;
-}
-
-export function recientesHref(lang: Lang): string {
-  return `${PREFIX[lang]}/recientes/`;
-}
-
 export const STRINGS = {
   es: {
     htmlLang: "es",
@@ -108,6 +100,8 @@ export const STRINGS = {
         capas: "Mapa",
         paseo: "Paseo fresco",
         frescos: "Barrios frescos",
+        participa: "Participa",
+        recientes: "En directo",
         acerca: "Acerca de",
       },
       sidebar: {
@@ -250,7 +244,7 @@ export const STRINGS = {
       authorTitle: "Autora",
       authorName: "Celia Rozalén",
       authorRole: "Diseño, análisis de datos y desarrollo.",
-      authorContact: "hello@celiarozalenm.com",
+      authorContact: "celiarozalenm.com",
       licenseTitle: "Licencia y atribución",
       licenseBody:
         "Datos: Ajuntament de València · Portal de Datos Abiertos (CC BY 4.0). Mapas base: CartoDB Positron y MapLibre. Geocoding y rutas peatonales: Nominatim y OSRM. Código: licencia MIT.",
@@ -360,6 +354,8 @@ export const STRINGS = {
         capas: "Mapa",
         paseo: "Passeig fresc",
         frescos: "Barris frescs",
+        participa: "Participa",
+        recientes: "En directe",
         acerca: "Sobre el projecte",
       },
       sidebar: {
@@ -502,7 +498,7 @@ export const STRINGS = {
       authorTitle: "Autora",
       authorName: "Celia Rozalén",
       authorRole: "Disseny, anàlisi de dades i desenvolupament.",
-      authorContact: "hello@celiarozalenm.com",
+      authorContact: "celiarozalenm.com",
       licenseTitle: "Llicència i atribució",
       licenseBody:
         "Dades: Ajuntament de València · Portal de Dades Obertes (CC BY 4.0). Mapes base: CartoDB Positron i MapLibre. Geocoding i rutes peatonals: Nominatim i OSRM. Codi: llicència MIT.",
@@ -612,6 +608,8 @@ export const STRINGS = {
         capas: "Map",
         paseo: "Cool walk",
         frescos: "Cool neighbourhoods",
+        participa: "Get involved",
+        recientes: "Latest",
         acerca: "About",
       },
       sidebar: {
@@ -754,7 +752,7 @@ export const STRINGS = {
       authorTitle: "Author",
       authorName: "Celia Rozalén",
       authorRole: "Design, data analysis and development.",
-      authorContact: "hello@celiarozalenm.com",
+      authorContact: "celiarozalenm.com",
       licenseTitle: "License & attribution",
       licenseBody:
         "Data: València City Council · Open Data Portal (CC BY 4.0). Base maps: CartoDB Positron and MapLibre. Geocoding & pedestrian routing: Nominatim and OSRM. Code: MIT license.",

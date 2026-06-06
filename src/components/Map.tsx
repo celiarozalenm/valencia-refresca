@@ -5,6 +5,8 @@ import { STRINGS, LANGS, homeHref, mapaHref, type Lang } from "../i18n/strings";
 import { geocode } from "../services/nominatim";
 import { generateShadowWalk, googleMapsUrl, routeToGpx, type ShadowWalkResult } from "../services/shadowWalk";
 import FreshestRanking from "./FreshestRanking";
+import Participar from "./Participar";
+import Recientes from "./Recientes";
 import { buildFeedbackPopup } from "./feedbackPopup";
 import type { EntityType } from "../services/comments";
 
@@ -19,7 +21,7 @@ const BRAND = {
 } as const;
 
 type LayerKey = "fuentes" | "urinarios" | "duchas" | "lavapies" | "verdes" | "sombra" | "barrios";
-type View = "capas" | "paseo" | "frescos" | "acerca";
+type View = "capas" | "paseo" | "frescos" | "participa" | "recientes" | "acerca";
 
 const LAYER_COLORS: Record<LayerKey, string> = {
   fuentes: BRAND.agua,
@@ -82,7 +84,14 @@ export default function Map({ lang = "es" }: MapProps) {
   const initialView = ((): View => {
     if (typeof window === "undefined") return "capas";
     const hash = window.location.hash.replace("#", "");
-    if (hash === "paseo" || hash === "frescos" || hash === "acerca") return hash;
+    if (
+      hash === "paseo" ||
+      hash === "frescos" ||
+      hash === "participa" ||
+      hash === "recientes" ||
+      hash === "acerca"
+    )
+      return hash;
     return "capas";
   })();
   const [view, setView] = useState<View>(initialView);
@@ -99,6 +108,7 @@ export default function Map({ lang = "es" }: MapProps) {
   const [counts, setCounts] = useState<Partial<Record<LayerKey, number>>>({});
   const verdesLoadedRef = useRef(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [langMenuOpen, setLangMenuOpen] = useState(false);
 
   // Paseo de la sombra state
   const [address, setAddress] = useState("");
@@ -564,13 +574,20 @@ export default function Map({ lang = "es" }: MapProps) {
       ),
     },
     {
-      key: "acerca",
-      label: sectionsT.acerca,
+      key: "participa",
+      label: sectionsT.participa,
       icon: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-          <circle cx="12" cy="12" r="10" />
-          <line x1="12" y1="16" x2="12" y2="12" />
-          <line x1="12" y1="8" x2="12.01" y2="8" />
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+        </svg>
+      ),
+    },
+    {
+      key: "recientes",
+      label: sectionsT.recientes,
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
         </svg>
       ),
     },
@@ -628,6 +645,31 @@ export default function Map({ lang = "es" }: MapProps) {
           })}
         </ul>
       </nav>
+      {/* Acerca de: abajo, separado de las secciones del mapa */}
+      <div className="px-2 pb-2">
+        <button
+          type="button"
+          onClick={() => {
+            setView("acerca");
+            setMobileNavOpen(false);
+          }}
+          className={`flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition ${
+            view === "acerca"
+              ? "bg-(--color-agua-soft) text-(--color-agua-deep)"
+              : "text-slate-700 hover:bg-slate-100"
+          }`}
+          aria-current={view === "acerca" ? "page" : undefined}
+        >
+          <span className={view === "acerca" ? "text-(--color-agua-deep)" : "text-slate-500"}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+          </span>
+          {sectionsT.acerca}
+        </button>
+      </div>
       <div className="border-t border-slate-100 px-3 py-3">
         <div className="flex items-center justify-between gap-2">
           <a
@@ -641,33 +683,53 @@ export default function Map({ lang = "es" }: MapProps) {
             </svg>
             {sidebarT.homeCta}
           </a>
-          <div className="flex items-center gap-1.5 pr-1" aria-label={langT.aria}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400" aria-hidden>
-              <circle cx="12" cy="12" r="10" />
-              <line x1="2" y1="12" x2="22" y2="12" />
-              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-            </svg>
-            {LANGS.map((l, i) => {
-              const isCurrent = l === lang;
-              const label = langT[l];
-              return (
-                <span key={l} className="flex items-center gap-1.5">
-                  {i > 0 && <span className="text-slate-300" aria-hidden>/</span>}
-                  {isCurrent ? (
-                    <span className="text-xs font-semibold text-(--color-calor-deep)" aria-current="true">
-                      {label}
-                    </span>
-                  ) : (
-                    <a
-                      href={mapaHref(l)}
-                      className="text-xs font-medium text-slate-500 transition hover:text-(--color-ink)"
-                    >
-                      {label}
-                    </a>
-                  )}
-                </span>
-              );
-            })}
+
+          {/* Selector de idioma (desplegable, abre hacia arriba) */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setLangMenuOpen((o) => !o)}
+              aria-haspopup="true"
+              aria-expanded={langMenuOpen}
+              aria-label={langT.aria}
+              className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-600 transition hover:bg-slate-100"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400" aria-hidden>
+                <circle cx="12" cy="12" r="10" />
+                <line x1="2" y1="12" x2="22" y2="12" />
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+              </svg>
+              <span className="text-(--color-calor-deep)">{langT[lang]}</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={`text-slate-400 transition ${langMenuOpen ? "rotate-180" : ""}`} aria-hidden>
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            {langMenuOpen && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={() => setLangMenuOpen(false)} aria-hidden />
+                <div className="absolute right-0 bottom-full z-20 mb-2 w-40 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-lg">
+                  {LANGS.map((l) => {
+                    const isCurrent = l === lang;
+                    const full = l === "es" ? langT.labelEs : l === "va" ? langT.labelVa : langT.labelEn;
+                    return (
+                      <a
+                        key={l}
+                        href={mapaHref(l)}
+                        className={`flex items-center justify-between gap-3 px-3 py-2 text-sm transition ${
+                          isCurrent
+                            ? "bg-(--color-agua-soft) font-semibold text-(--color-agua-deep)"
+                            : "text-slate-700 hover:bg-slate-100"
+                        }`}
+                        aria-current={isCurrent ? "true" : undefined}
+                      >
+                        <span>{full}</span>
+                        <span className="text-[10px] font-semibold tracking-wider text-slate-400">{langT[l]}</span>
+                      </a>
+                    );
+                  })}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -733,7 +795,7 @@ export default function Map({ lang = "es" }: MapProps) {
                           type="checkbox"
                           checked={active[k]}
                           onChange={(e) => setActive((s) => ({ ...s, [k]: e.target.checked }))}
-                          className="mt-0.5 h-4 w-4 accent-slate-900"
+                          className="mt-0.5 h-4 w-4 cursor-pointer accent-slate-900"
                         />
                         <span className="flex-1">
                           <span className="flex items-center gap-2 text-sm font-medium text-slate-900">
@@ -894,7 +956,7 @@ export default function Map({ lang = "es" }: MapProps) {
                     onClick={handleDownloadGpx}
                     className="flex cursor-pointer items-center justify-center gap-1.5 rounded-full border border-slate-300 px-2 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
                   >
-                    GPX
+                    {sw.download}
                   </button>
                 </div>
                 <button
@@ -922,6 +984,18 @@ export default function Map({ lang = "es" }: MapProps) {
           </div>
         )}
 
+        {view === "participa" && (
+          <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone)">
+            <Participar lang={lang} />
+          </div>
+        )}
+
+        {view === "recientes" && (
+          <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone)">
+            <Recientes lang={lang} />
+          </div>
+        )}
+
         {/* Acerca de: ficha del proyecto */}
         {view === "acerca" && (
           <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone)">
@@ -936,15 +1010,9 @@ export default function Map({ lang = "es" }: MapProps) {
                 <ul className="mt-4 grid gap-2 sm:grid-cols-2">
                   {aboutT.datasets.map((d) => (
                     <li key={d.label}>
-                      <a
-                        href={d.url}
-                        target="_blank"
-                        rel="noopener"
-                        className="flex items-center justify-between gap-3 rounded-xl bg-white px-4 py-3 ring-1 ring-(--color-ink)/8 transition hover:ring-(--color-agua-deep)/30"
-                      >
+                      <div className="rounded-xl bg-white px-4 py-3 ring-1 ring-(--color-ink)/8">
                         <span className="text-sm font-medium text-(--color-ink)">{d.label}</span>
-                        <span className="shrink-0 text-xs font-semibold text-(--color-agua-deep)">{d.count}</span>
-                      </a>
+                      </div>
                     </li>
                   ))}
                 </ul>

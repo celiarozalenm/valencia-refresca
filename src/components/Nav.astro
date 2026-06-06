@@ -1,6 +1,6 @@
 ---
 import Logo from './Logo.astro';
-import { t, type Lang, homeHref, mapaHref, participarHref, recientesHref } from '../i18n/strings';
+import { t, type Lang, homeHref, mapaHref } from '../i18n/strings';
 
 interface Props {
   lang?: Lang;
@@ -10,12 +10,8 @@ const { lang = 'es' } = Astro.props;
 const s = t(lang).nav;
 const sw = t(lang).langSwitch;
 const findingsLabel = lang === 'va' ? 'Troballes' : lang === 'en' ? 'Findings' : 'Hallazgos';
-const participarLabel = lang === 'en' ? 'Get involved' : 'Participa';
-const recientesLabel = lang === 'va' ? 'En directe' : lang === 'en' ? 'Latest' : 'En directo';
 const homeUrl = homeHref(lang);
 const mapaUrl = mapaHref(lang);
-const participarUrl = participarHref(lang);
-const recientesUrl = recientesHref(lang);
 const langOptions: Array<{ code: Lang; short: string; label: string }> = [
   { code: 'es', short: sw.es, label: sw.labelEs },
   { code: 'va', short: sw.va, label: sw.labelVa },
@@ -36,9 +32,6 @@ const currentLang = langOptions.find((o) => o.code === lang)!;
     <ul class="hidden items-center gap-8 text-sm font-medium text-(--color-ink-soft) md:flex">
       <li><a href="#inicio" class="text-(--color-agua-deep) transition hover:text-(--color-ink)">{s.inicio}</a></li>
       <li><a href="#capas" class="transition hover:text-(--color-ink)">{s.capas}</a></li>
-      <li><a href={mapaUrl} class="transition hover:text-(--color-ink)">{s.elMapa}</a></li>
-      <li><a href={participarUrl} class="transition hover:text-(--color-ink)">{participarLabel}</a></li>
-      <li><a href={recientesUrl} class="transition hover:text-(--color-ink)">{recientesLabel}</a></li>
       <li><a href="#hallazgos" class="transition hover:text-(--color-ink)">{findingsLabel}</a></li>
       <li><a href="#colabora" class="transition hover:text-(--color-ink)">{s.colabora}</a></li>
       <li><a href="#faq" class="transition hover:text-(--color-ink)">{s.faq}</a></li>
@@ -160,12 +153,6 @@ const currentLang = langOptions.find((o) => o.code === lang)!;
       </li>
       <li>
         <a href={mapaUrl} class="block rounded-xl px-3 py-3 transition hover:bg-(--color-ink)/5">{s.elMapa}</a>
-      </li>
-      <li>
-        <a href={participarUrl} class="block rounded-xl px-3 py-3 transition hover:bg-(--color-ink)/5">{participarLabel}</a>
-      </li>
-      <li>
-        <a href={recientesUrl} class="block rounded-xl px-3 py-3 transition hover:bg-(--color-ink)/5">{recientesLabel}</a>
       </li>
       <li>
         <a href="#colabora" data-mobile-link class="block rounded-xl px-3 py-3 transition hover:bg-(--color-ink)/5">{s.colabora}</a>
