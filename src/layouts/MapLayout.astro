@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import Logo from '../components/Logo.astro';
-import { t, type Lang } from '../i18n/strings';
+import { t, type Lang, mapaHref } from '../i18n/strings';
 
 interface Props {
   lang?: Lang;
@@ -9,11 +9,9 @@ interface Props {
 
 const { lang = 'es' } = Astro.props;
 const s = t(lang);
-const homeHref = lang === 'va' ? '/val/' : '/';
-const backLabel = lang === 'va' ? 'Tornar' : 'Volver';
 
 const siteUrl = 'https://valencia-refresca.vercel.app';
-const canonical = lang === 'va' ? `${siteUrl}/val/mapa/` : `${siteUrl}/mapa/`;
+const canonical = `${siteUrl}${mapaHref(lang)}`;
 ---
 
 <!doctype html>

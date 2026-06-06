@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
-import { t, type Lang } from '../i18n/strings';
+import { t, type Lang, homeHref } from '../i18n/strings';
 
 interface Props {
   lang?: Lang;
@@ -12,10 +12,10 @@ const { lang = 'es' } = Astro.props;
 const s = t(lang);
 
 const siteUrl = 'https://valencia-refresca.vercel.app';
-const canonical = lang === 'va' ? `${siteUrl}/val/` : `${siteUrl}/`;
-const alt = lang === 'va' ? `${siteUrl}/` : `${siteUrl}/val/`;
+const canonical = `${siteUrl}${homeHref(lang)}`;
 const ogImageUrl = `${siteUrl}/og.png`;
-const ogLocale = lang === 'va' ? 'ca_ES' : 'es_ES';
+const ogLocale: Record<Lang, string> = { es: 'es_ES', va: 'ca_ES', en: 'en_US' };
+const hreflangFor: Record<Lang, string> = { es: 'es', va: 'ca-valencia', en: 'en' };
 ---
 
 <!doctype html>
@@ -30,13 +30,15 @@ const ogLocale = lang === 'va' ? 'ca_ES' : 'es_ES';
     <meta name="description" content={s.siteDescription} />
 
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang={lang === 'va' ? 'es' : 'ca-valencia'} href={alt} />
+    {(['es', 'va', 'en'] as Lang[]).filter((l) => l !== lang).map((l) => (
+      <link rel="alternate" hreflang={hreflangFor[l]} href={`${siteUrl}${homeHref(l)}`} />
+    ))}
     <link rel="alternate" hreflang="x-default" href={`${siteUrl}/`} />
 
     <meta property="og:title" content={s.siteTitle} />
     <meta property="og:description" content={s.siteDescription} />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:locale" content={ogLocale[lang]} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content="València Refresca" />
     <meta property="og:image" content={ogImageUrl} />

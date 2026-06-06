@@ -1,9 +1,25 @@
 /**
- * Diccionario de strings para la versión bilingüe (castellano · valencià).
+ * Diccionario de strings para la versión trilingüe (castellano · valencià · english).
  * Cada componente recibe un `lang` prop y selecciona el bloque correspondiente.
  */
 
-export type Lang = "es" | "va";
+export type Lang = "es" | "va" | "en";
+
+export const LANGS: Lang[] = ["es", "va", "en"];
+
+const PREFIX: Record<Lang, string> = {
+  es: "",
+  va: "/val",
+  en: "/en",
+};
+
+export function homeHref(lang: Lang): string {
+  return `${PREFIX[lang]}/`;
+}
+
+export function mapaHref(lang: Lang): string {
+  return `${PREFIX[lang]}/mapa/`;
+}
 
 export const STRINGS = {
   es: {
@@ -75,6 +91,8 @@ export const STRINGS = {
         fuentes: { label: "Fuentes", description: "832 puntos de agua potable" },
         urinarios: { label: "Urinarios", description: "230 baños públicos" },
         duchas: { label: "Duchas de playa", description: "71 puntos · playas urbanas" },
+        lavapies: { label: "Lavapiés de playa", description: "55 puntos · playas y pedanías" },
+        verdes: { label: "Espacios verdes", description: "807 parques y jardines" },
         sombra: { label: "Sombra", description: "Densidad de arbolado por barrio" },
         barrios: { label: "Vulnerabilidad", description: "Tinte por vulnerabilidad demográfica" },
       },
@@ -82,12 +100,13 @@ export const STRINGS = {
         capas: "Mapa",
         paseo: "Paseo fresco",
         frescos: "Barrios frescos",
+        acerca: "Acerca de",
       },
       sidebar: {
         aboutTitle: "Sobre el proyecto",
         aboutBody: "Cartografía sobre datos abiertos del Ajuntament. Código y análisis 100% abiertos.",
         repoCta: "Ver en GitHub",
-        homeCta: "Volver al inicio",
+        homeCta: "Inicio",
       },
       shadowWalk: {
         title: "Paseo fresco",
@@ -220,6 +239,13 @@ export const STRINGS = {
       reproBody: "Los datasets se sincronizan vía un script público (`npm run fetch-data`) cada vez que el Ajuntament publica una nueva versión. El análisis vive entero en el repo.",
       ctaRepo: "Ver código en GitHub",
       ctaPortal: "Portal de Datos Abiertos",
+      authorTitle: "Autora",
+      authorName: "Celia Rozalén",
+      authorRole: "Diseño, análisis de datos y desarrollo.",
+      authorContact: "hello@celiarozalenm.com",
+      licenseTitle: "Licencia y atribución",
+      licenseBody:
+        "Datos: Ajuntament de València · Portal de Datos Abiertos (CC BY 4.0). Mapas base: CartoDB Positron y MapLibre. Geocoding y rutas peatonales: Nominatim y OSRM. Código: licencia MIT.",
     },
     faq: {
       heading: "Preguntas frecuentes",
@@ -245,7 +271,7 @@ export const STRINGS = {
       legalLinks: ["Privacidad", "Contacto"],
       author: "Hecho por",
     },
-    langSwitch: { es: "ES", va: "VAL", aria: "Cambiar idioma" },
+    langSwitch: { es: "ES", va: "VAL", en: "EN", aria: "Cambiar idioma", labelEs: "Español", labelVa: "Valencià", labelEn: "English" },
   },
 
   va: {
@@ -317,6 +343,8 @@ export const STRINGS = {
         fuentes: { label: "Fonts", description: "832 punts d'aigua potable" },
         urinarios: { label: "Urinaris", description: "230 banys públics" },
         duchas: { label: "Dutxes de platja", description: "71 punts · platges urbanes" },
+        lavapies: { label: "Llavapeus de platja", description: "55 punts · platges i pedanies" },
+        verdes: { label: "Espais verds", description: "807 parcs i jardins" },
         sombra: { label: "Ombra", description: "Densitat d'arbratge per barri" },
         barrios: { label: "Vulnerabilitat", description: "Tint per vulnerabilitat demogràfica" },
       },
@@ -324,12 +352,13 @@ export const STRINGS = {
         capas: "Mapa",
         paseo: "Passeig fresc",
         frescos: "Barris frescs",
+        acerca: "Sobre el projecte",
       },
       sidebar: {
         aboutTitle: "Sobre el projecte",
         aboutBody: "Cartografia sobre dades obertes de l'Ajuntament. Codi i anàlisi 100% oberts.",
         repoCta: "Veure en GitHub",
-        homeCta: "Tornar a l'inici",
+        homeCta: "Inici",
       },
       shadowWalk: {
         title: "Passeig fresc",
@@ -462,6 +491,13 @@ export const STRINGS = {
       reproBody: "Els datasets se sincronitzen via un script públic (`npm run fetch-data`) cada vegada que l'Ajuntament publica una nova versió. L'anàlisi viu enter al repo.",
       ctaRepo: "Veure codi a GitHub",
       ctaPortal: "Portal de Dades Obertes",
+      authorTitle: "Autora",
+      authorName: "Celia Rozalén",
+      authorRole: "Disseny, anàlisi de dades i desenvolupament.",
+      authorContact: "hello@celiarozalenm.com",
+      licenseTitle: "Llicència i atribució",
+      licenseBody:
+        "Dades: Ajuntament de València · Portal de Dades Obertes (CC BY 4.0). Mapes base: CartoDB Positron i MapLibre. Geocoding i rutes peatonals: Nominatim i OSRM. Codi: llicència MIT.",
     },
     faq: {
       heading: "Preguntes freqüents",
@@ -487,7 +523,259 @@ export const STRINGS = {
       legalLinks: ["Privacitat", "Contacte"],
       author: "Fet per",
     },
-    langSwitch: { es: "ES", va: "VAL", aria: "Canviar idioma" },
+    langSwitch: { es: "ES", va: "VAL", en: "EN", aria: "Canviar idioma", labelEs: "Espanyol", labelVa: "Valencià", labelEn: "Anglés" },
+  },
+
+  en: {
+    htmlLang: "en",
+    siteTitle: "València Refresca · water, shade and relief from the heat",
+    siteDescription:
+      "The platform that helps you find water, shade and relief from the heat in València. Map of public fountains, urinals and shaded areas.",
+    nav: {
+      inicio: "Home",
+      capas: "The layers",
+      colabora: "Collaborate",
+      faq: "Frequently asked questions",
+      verMapa: "Open the map",
+      abrirMenu: "Open menu",
+      cerrarMenu: "Close menu",
+      elMapa: "The map",
+    },
+    hero: {
+      eyebrow: "Water · Shade · We breathe",
+      titleLine1: "València",
+      titleLine2: "Refresca",
+      claimPre: "The platform that helps you find",
+      claimHighlight: "water, shade and relief",
+      claimPost: "from the heat.",
+      lead: "Cartography and cross-analysis over 12 public datasets from the City Council. Candidate piece for the",
+      leadStrong: "València Open Data Awards 2026",
+      ctaPrimary: "Explore the map",
+      ctaSecondary: "How was it made?",
+    },
+    stats: {
+      fuentes: "Fountains",
+      urinarios: "Urinals",
+      arboles: "Trees",
+      manzanas: "Blocks",
+    },
+    features: {
+      saberMas: "Learn more",
+      fuentes: { title: "Fountains", desc: "Map of public drinking-water fountains." },
+      urinarios: { title: "Urinals", desc: "Public toilet points to freshen up." },
+      sombra: { title: "Shade", desc: "Shaded areas to rest from the sun." },
+    },
+    howItWorks: {
+      heading: "How it works",
+      steps: [
+        { title: "Toggle the layers", desc: "Fountains, urinals and tree cover over a map of València." },
+        { title: "Cross the data", desc: "Add the demographic vulnerability of each neighbourhood from the 2021 census." },
+        { title: "Read the city", desc: "Discover where València takes care of itself, and where there's no water, no shade and no urinals." },
+      ],
+    },
+    banner: {
+      eyebrow: "VALÈNCIA TAKES CARE",
+      titleLine1: "Useful info",
+      titleLine2: "to live",
+      titleLine3: "summer better.",
+    },
+    map: {
+      eyebrow: "The map",
+      heading: "Toggle the layers and see where València takes care of itself, and where it doesn't.",
+      description:
+        "The blue dots are the 832 fountains. The orange ones, the 230 urinals. The tint of each neighbourhood is its demographic vulnerability from the 2021 census.",
+      ctaButton: "Open the map",
+      panelTitle: "Layers",
+      panelHelp: "Toggle whatever you want to see.",
+      openPanel: "Open layer panel",
+      closePanel: "Close layer panel",
+      pillLabel: "Layers",
+      loading: "The map will load as you get closer…",
+      layers: {
+        fuentes: { label: "Fountains", description: "832 drinking-water points" },
+        urinarios: { label: "Urinals", description: "230 public toilets" },
+        duchas: { label: "Beach showers", description: "71 points · urban beaches" },
+        lavapies: { label: "Beach foot-washes", description: "55 points · beaches and outer districts" },
+        verdes: { label: "Green spaces", description: "807 parks and gardens" },
+        sombra: { label: "Shade", description: "Tree density by neighbourhood" },
+        barrios: { label: "Vulnerability", description: "Tint by demographic vulnerability" },
+      },
+      sections: {
+        capas: "Map",
+        paseo: "Cool walk",
+        frescos: "Cool neighbourhoods",
+        acerca: "About",
+      },
+      sidebar: {
+        aboutTitle: "About the project",
+        aboutBody: "Cartography over the City Council's open data. Code and analysis 100% open.",
+        repoCta: "View on GitHub",
+        homeCta: "Back to home",
+      },
+      shadowWalk: {
+        title: "Cool walk",
+        subtitle: "A loop walk through the most shaded areas near you.",
+        howTitle: "How it works",
+        steps: [
+          { title: "1. Tell us where you start", desc: "Your street or a crossing. Nothing is stored." },
+          { title: "2. Pick a duration", desc: "Between 15 and 60 minutes walking." },
+          { title: "3. Get your route", desc: "It goes through neighbourhoods with more tree cover and back home." },
+        ],
+        addressLabel: "Your street",
+        addressPlaceholder: "E.g. Carrer de Russafa, 12",
+        useMyLocation: "Use my location",
+        durationLabel: "Walk duration",
+        durationOptions: [
+          { value: 15, label: "15 min" },
+          { value: 30, label: "30 min" },
+          { value: 45, label: "45 min" },
+          { value: 60, label: "1 h" },
+        ],
+        generate: "Generate walk",
+        generating: "Calculating route…",
+        notFound: "We couldn't find that address. Try to be more specific.",
+        routeFailed: "We couldn't compute the route. Please try again.",
+        resultDistance: "Distance",
+        resultTime: "Time",
+        resultShade: "Under shade",
+        shareTitle: "My cool walk through València",
+        share: "Share",
+        openInMaps: "Open in Google Maps",
+        download: "Download GPX",
+        reset: "New walk",
+      },
+      freshest: {
+        title: "Cool neighbourhoods",
+        subtitle: "How much tree cover each neighbourhood of València has, based on the municipal tree census.",
+        kpiTrees: "Mapped trees",
+        kpiBarrios: "Neighbourhoods",
+        kpiAvg: "Average",
+        kpiHigh: "With high+ shade",
+        unitTree: "trees",
+        unitBarrios: "neighbourhoods",
+        unitAvg: "trees/km²",
+        unitHigh: "% of total",
+        statMost: "Coolest",
+        statLeast: "Least cool",
+        statGap: "Gap",
+        statTotal: "Neighbourhoods analysed",
+        unit: "trees/km²",
+        toggleDensity: "By density",
+        toggleTotal: "By total",
+        topTitle: "Top 10 coolest",
+        bottomTitle: "Top 10 least cool",
+        unitTotal: "trees",
+        distTitle: "Distribution by density",
+        distCaption: "How many neighbourhoods fall in each shade level.",
+        bucket: {
+          muy_alta: "Very high",
+          alta: "High",
+          media: "Medium",
+          baja: "Low",
+          muy_baja: "Very low",
+        },
+        insightsTitle: "In short",
+        insightGap: "The coolest neighbourhood has {gap}× more trees per km² than the least cool.",
+        insightHigh: "Only {high} out of {total} neighbourhoods have high or very high shade.",
+        insightLow: "{low} neighbourhoods have low or very low shade — over a third of the total.",
+        loading: "Loading data…",
+      },
+    },
+    findings: {
+      eyebrow: "Findings",
+      heading: "Three patterns of how València cools down — and where it stays hot.",
+      card1: {
+        eyebrow: "Asymmetry",
+        title: "Water yes, toilets no.",
+        rowFuente: "Blocks with a fountain <5 min away",
+        rowUrinario: "Blocks with a urinal <5 min away",
+        body: "València has <strong>832 fountains</strong> spread with good coverage. But only <strong>230 public urinals</strong>, and many of them are clustered in tourist neighbourhoods.",
+      },
+      card2: {
+        eyebrow: "Geography of neglect",
+        title: "The outer districts are left out.",
+        manzanaLejana: "Furthest block",
+        manzanaLejanaDesc: "In <strong>Mahuella-Tauladella</strong>. Nearly 50 min walking to the closest urinal.",
+        list: ["El Saler", "El Palmar", "Borboto · Benifaraig · Poble Nou"],
+        body: "The <strong>10 blocks furthest</strong> from a public urinal are in outer districts. The dense city is well served.",
+      },
+      card3: {
+        eyebrow: "Shade gap",
+        title: "2,000× between neighbourhoods.",
+        masSombreado: "Most shaded",
+        menosSombreado: "Least shaded",
+        body: "València has <strong>186,820 trees</strong> on record. Concentrated in the centre and the eixample; the outer districts are left in the sun.",
+      },
+      footer: "Full analysis, raw data and methodology in",
+    },
+    colabora: {
+      title1: "A cooler city",
+      title2: "we build together.",
+      body: "Do you know a fountain, a shaded spot or a urinal missing from the data? Write to me and we'll add it. All the code is open at",
+      cta: "Write to me",
+    },
+    about: {
+      eyebrow: "How it's built",
+      title: "Open data from the City Council, open analysis on GitHub.",
+      lede: "València Refresca cross-references eight public datasets from the City Council to map where the city cools down and where it doesn't. All the code and pipelines are reproducible.",
+      stackTitle: "Tech stack",
+      stack: [
+        { name: "Astro + React", desc: "Hybrid static web with interactive islands." },
+        { name: "MapLibre GL", desc: "Vector map with no API keys." },
+        { name: "Python · geopandas", desc: "Dataset analysis and cross-references." },
+        { name: "Nominatim + OSRM", desc: "Open geocoding and pedestrian routing." },
+        { name: "Tailwind CSS", desc: "Color tokens and Fraunces · Inter typography." },
+        { name: "Vercel", desc: "Global static deploy." },
+      ],
+      datasetsTitle: "Datasets used",
+      datasetsCaption: "All from the València City Council Open Data Portal.",
+      datasets: [
+        { label: "Fonts d'aigua pública", count: "832", url: "https://valencia.opendatasoft.com/explore/dataset/fonts-d-aigua-publica-fuentes-de-agua-publica" },
+        { label: "Urinaris públics", count: "230", url: "https://valencia.opendatasoft.com/explore/dataset/urinaris-urinarios" },
+        { label: "Dutxes de platja", count: "71", url: "https://valencia.opendatasoft.com/explore/dataset/dutxes-platja-duchas-playa" },
+        { label: "Llavapeus de platges", count: "—", url: "https://valencia.opendatasoft.com/explore/dataset/llavapeus-platges-lavapies-playas" },
+        { label: "Padró d'arbratge municipal", count: "186,820", url: "https://valencia.opendatasoft.com/explore/dataset/arbratge-arbolado" },
+        { label: "Barris de València", count: "88", url: "https://valencia.opendatasoft.com/explore/dataset/barris-barrios" },
+        { label: "Districtes de València", count: "19", url: "https://valencia.opendatasoft.com/explore/dataset/districtes-distritos" },
+        { label: "Vulnerabilitat demogràfica · Padró 2021", count: "—", url: "https://valencia.opendatasoft.com/explore/dataset/vulnerabilitat-demografica" },
+      ],
+      reproTitle: "Reproducible",
+      reproBody: "The datasets are synced via a public script (`npm run fetch-data`) every time the City Council publishes a new version. The whole analysis lives in the repo.",
+      ctaRepo: "View code on GitHub",
+      ctaPortal: "Open Data Portal",
+      authorTitle: "Author",
+      authorName: "Celia Rozalén",
+      authorRole: "Design, data analysis and development.",
+      authorContact: "hello@celiarozalenm.com",
+      licenseTitle: "License & attribution",
+      licenseBody:
+        "Data: València City Council · Open Data Portal (CC BY 4.0). Base maps: CartoDB Positron and MapLibre. Geocoding & pedestrian routing: Nominatim and OSRM. Code: MIT license.",
+    },
+    faq: {
+      heading: "Frequently asked questions",
+      questions: [
+        { q: "Is it free?", a: "Yes. No ads, no tracking. It runs on open data from the València City Council." },
+        {
+          q: "Where does the data come from?",
+          a: 'From the <a href="https://opendata.vlci.valencia.es" class="underline decoration-(--color-agua-deep) decoration-2 underline-offset-4">València City Council Open Data Portal</a>. It syncs automatically via a public script whenever the City Council publishes a new version.',
+        },
+        {
+          q: "Who's behind it?",
+          a: '<a href="https://celiarozalenm.com" class="underline decoration-(--color-agua-deep) decoration-2 underline-offset-4">Celia Rozalén</a>, as a candidate piece for the València Open Data Awards 2026.',
+        },
+        { q: "Does it work on mobile?", a: "Yes. The map is designed to be used on mobile while walking: geolocation, layers and loop walks work the same as on desktop." },
+      ],
+    },
+    footer: {
+      tagline: "Water. Shade. We breathe.",
+      datos: "Data from the València City Council Open Data Portal",
+      navHeading: "Navigation",
+      socialHeading: "Follow",
+      legal: "Legal",
+      legalLinks: ["Privacy", "Contact"],
+      author: "Built by",
+    },
+    langSwitch: { es: "ES", va: "VAL", en: "EN", aria: "Change language", labelEs: "Spanish", labelVa: "Valencian", labelEn: "English" },
   },
 } as const;
 

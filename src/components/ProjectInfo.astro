@@ -89,5 +89,30 @@ const a = t(lang).about;
         </ul>
       </div>
     </div>
+
+    <!-- Autora + licencia -->
+    <div class="mt-10 grid gap-8 border-t border-(--color-ink)/8 pt-10 md:grid-cols-2">
+      <div>
+        <p class="font-display text-base font-semibold text-(--color-ink)">{a.authorTitle}</p>
+        <p class="mt-2 text-sm text-(--color-ink-soft)">
+          <a
+            href="https://celiarozalenm.com"
+            target="_blank"
+            rel="noopener"
+            class="font-medium text-(--color-ink) underline decoration-(--color-agua-deep) decoration-2 underline-offset-4 transition hover:text-(--color-agua-deep)"
+          >{a.authorName}</a>
+          · {a.authorRole}
+        </p>
+        <a
+          href={`mailto:${a.authorContact}`}
+          class="mt-1 inline-block text-sm text-(--color-agua-deep) transition hover:underline"
+        >{a.authorContact}</a>
+      </div>
+
+      <div>
+        <p class="font-display text-base font-semibold text-(--color-ink)">{a.licenseTitle}</p>
+        <p class="mt-2 text-sm leading-relaxed text-(--color-ink-soft)">{a.licenseBody}</p>
+      </div>
+    </div>
   </div>
 </section>

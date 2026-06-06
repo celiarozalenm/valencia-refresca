@@ -1,6 +1,6 @@
 ---
 import Logo from './Logo.astro';
-import { t, type Lang } from '../i18n/strings';
+import { t, type Lang, homeHref, mapaHref } from '../i18n/strings';
 
 interface Props {
   lang?: Lang;
@@ -9,10 +9,15 @@ interface Props {
 const { lang = 'es' } = Astro.props;
 const s = t(lang).nav;
 const sw = t(lang).langSwitch;
-const homeHref = lang === 'va' ? '/val/' : '/';
-const mapaHref = lang === 'va' ? '/val/mapa/' : '/mapa/';
-const otherHref = lang === 'va' ? '/' : '/val/';
-const otherLabel = lang === 'va' ? sw.es : sw.va;
+const findingsLabel = lang === 'va' ? 'Troballes' : lang === 'en' ? 'Findings' : 'Hallazgos';
+const homeUrl = homeHref(lang);
+const mapaUrl = mapaHref(lang);
+const langOptions: Array<{ code: Lang; short: string; label: string }> = [
+  { code: 'es', short: sw.es, label: sw.labelEs },
+  { code: 'va', short: sw.va, label: sw.labelVa },
+  { code: 'en', short: sw.en, label: sw.labelEn },
+];
+const currentLang = langOptions.find((o) => o.code === lang)!;
 ---
 
 <nav class="sticky top-0 z-50 w-full bg-(--color-bone)/85 backdrop-blur-md">
