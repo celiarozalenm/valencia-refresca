@@ -139,7 +139,7 @@ export const STRINGS = {
         shareTitle: "Mi paseo fresco por València",
         share: "Compartir",
         openInMaps: "Abrir en Google Maps",
-        download: "Descargar GPX",
+        download: "Descargar ruta",
         reset: "Nuevo paseo",
       },
       freshest: {
@@ -209,8 +209,8 @@ export const STRINGS = {
     colabora: {
       title1: "Una ciudad más fresca",
       title2: "la construimos entre todas.",
-      body: "¿Conoces una fuente, una sombra o un urinario que falta en los datos? Escríbeme y lo añadimos. Todo el código está abierto en",
-      cta: "Escríbeme",
+      body: "¿La fuente del barrio funciona? ¿El urinario está abierto y limpio? Valora el estado de los puntos que usas — cada reporte ayuda a que tus vecinas sepan adónde ir cuando aprieta el calor.",
+      cta: "Valorar un punto",
     },
     about: {
       eyebrow: "Cómo está hecho",
@@ -393,7 +393,7 @@ export const STRINGS = {
         shareTitle: "El meu passeig fresc per València",
         share: "Compartir",
         openInMaps: "Obrir en Google Maps",
-        download: "Descarregar GPX",
+        download: "Descarregar ruta",
         reset: "Nou passeig",
       },
       freshest: {
@@ -463,8 +463,8 @@ export const STRINGS = {
     colabora: {
       title1: "Una ciutat més fresca",
       title2: "la construïm entre totes.",
-      body: "Coneixes una font, una ombra o un urinari que falta en les dades? Escriu-me i l'afegim. Tot el codi està obert en",
-      cta: "Escriu-me",
+      body: "La font del barri funciona? L'urinari està obert i net? Valora l'estat dels punts que uses — cada reporte ajuda les teues veïnes a saber on anar quan apreta la calor.",
+      cta: "Valorar un punt",
     },
     about: {
       eyebrow: "Com està fet",
@@ -647,7 +647,7 @@ export const STRINGS = {
         shareTitle: "My cool walk through València",
         share: "Share",
         openInMaps: "Open in Google Maps",
-        download: "Download GPX",
+        download: "Download route",
         reset: "New walk",
       },
       freshest: {
@@ -717,8 +717,8 @@ export const STRINGS = {
     colabora: {
       title1: "A cooler city",
       title2: "we build together.",
-      body: "Do you know a fountain, a shaded spot or a urinal missing from the data? Write to me and we'll add it. All the code is open at",
-      cta: "Write to me",
+      body: "Is the fountain in your neighbourhood working? Is the public toilet open and clean? Rate the points you use — every report helps your neighbours know where to go when the heat hits.",
+      cta: "Rate a spot",
     },
     about: {
       eyebrow: "How it's built",
