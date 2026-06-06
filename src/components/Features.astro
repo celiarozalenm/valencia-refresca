@@ -38,28 +38,15 @@ const features = [
   <div class="mx-auto grid max-w-6xl gap-12 px-6 py-16 md:grid-cols-3 md:px-10 md:py-20">
     {features.map((feat) => (
       <div class="flex flex-col items-center text-center md:items-start md:text-left">
-        <div
-          class="flex h-16 w-16 items-center justify-center rounded-full"
-          style={`background: var(${feat.colorVar});`}
-        >
-          {feat.icon === 'fuente' && (
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="white" aria-hidden="true">
-              <path d="M12 2 C 16 9, 20 13, 20 17 A 8 8 0 0 1 4 17 C 4 13, 8 9, 12 2 Z" />
-            </svg>
-          )}
-          {feat.icon === 'urinario' && (
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="white" aria-hidden="true">
-              <rect x="6" y="3" width="12" height="14" rx="2" />
-              <rect x="10" y="17" width="4" height="4" />
-              <circle cx="12" cy="10" r="2.4" fill="currentColor" style={`color: var(${feat.colorVar});`} />
-            </svg>
-          )}
-          {feat.icon === 'sombra' && (
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="white" aria-hidden="true">
-              <path d="M12 2 C 7 5, 4 9, 4 13 A 8 8 0 0 0 11 21 L 11 22 L 13 22 L 13 21 A 8 8 0 0 0 20 13 C 20 9, 17 5, 12 2 Z" />
-            </svg>
-          )}
-        </div>
+        {feat.icon === 'fuente' && (
+          <img src="/icons/gota.svg" alt="" class="h-16 w-16" aria-hidden="true" />
+        )}
+        {feat.icon === 'urinario' && (
+          <img src="/icons/urinario.svg" alt="" class="h-16 w-16" aria-hidden="true" />
+        )}
+        {feat.icon === 'sombra' && (
+          <img src="/icons/arbol.svg" alt="" class="h-16 w-16" aria-hidden="true" />
+        )}
 
         <h3 class="mt-5 font-display text-2xl font-semibold text-(--color-ink)">{feat.title}</h3>
         <p class="mt-1.5 max-w-[18rem] text-sm text-(--color-ink-soft)">{feat.desc}</p>
