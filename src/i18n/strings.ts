@@ -21,6 +21,14 @@ export function mapaHref(lang: Lang): string {
   return `${PREFIX[lang]}/mapa/`;
 }
 
+export function participarHref(lang: Lang): string {
+  return `${PREFIX[lang]}/participar/`;
+}
+
+export function recientesHref(lang: Lang): string {
+  return `${PREFIX[lang]}/recientes/`;
+}
+
 export const STRINGS = {
   es: {
     htmlLang: "es",

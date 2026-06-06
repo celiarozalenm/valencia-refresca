@@ -5,6 +5,8 @@ import { STRINGS, LANGS, homeHref, mapaHref, type Lang } from "../i18n/strings";
 import { geocode } from "../services/nominatim";
 import { generateShadowWalk, googleMapsUrl, routeToGpx, type ShadowWalkResult } from "../services/shadowWalk";
 import FreshestRanking from "./FreshestRanking";
+import { buildFeedbackPopup } from "./feedbackPopup";
+import type { EntityType } from "../services/comments";
 
 const VALENCIA_CENTER: LngLatLike = [-0.376, 39.467];
 
@@ -74,6 +76,8 @@ export default function Map({ lang = "es" }: MapProps) {
   const layerNames = tr.layers;
   const sectionsT = tr.sections;
   const freshestT = tr.freshest;
+  const aboutT = STRINGS[lang].about;
+  const langT = STRINGS[lang].langSwitch;
 
   const initialView = ((): View => {
     if (typeof window === "undefined") return "capas";
@@ -168,8 +172,15 @@ export default function Map({ lang = "es" }: MapProps) {
         paint: { "line-color": BRAND.ink, "line-width": 0.4, "line-opacity": 0.35 },
       });
 
-      const fuentesRes = await fetch("/data/fonts-daigua-publica-fuentes-de-agua-publica.geojson");
-      map.addSource("fuentes", { type: "geojson", data: await fuentesRes.json() });
+      const loadedCounts: Partial<Record<LayerKey, number>> = {};
+      const featureCount = (d: unknown): number =>
+        d && typeof d === "object" && Array.isArray((d as { features?: unknown[] }).features)
+          ? (d as { features: unknown[] }).features.length
+          : 0;
+
+      const fuentesData = await (await fetch("/data/fonts-daigua-publica-fuentes-de-agua-publica.geojson")).json();
+      loadedCounts.fuentes = featureCount(fuentesData);
+      map.addSource("fuentes", { type: "geojson", data: fuentesData });
       map.addLayer({
         id: "fuentes-dot",
         type: "circle",
@@ -183,8 +194,9 @@ export default function Map({ lang = "es" }: MapProps) {
         },
       });
 
-      const uriRes = await fetch("/data/urinaris-urinarios.geojson");
-      map.addSource("urinarios", { type: "geojson", data: await uriRes.json() });
+      const uriData = await (await fetch("/data/urinaris-urinarios.geojson")).json();
+      loadedCounts.urinarios = featureCount(uriData);
+      map.addSource("urinarios", { type: "geojson", data: uriData });
       map.addLayer({
         id: "urinarios-dot",
         type: "circle",
@@ -197,8 +209,9 @@ export default function Map({ lang = "es" }: MapProps) {
         },
       });
 
-      const duchasRes = await fetch("/data/dutxes-platja-duchas-playa.geojson");
-      map.addSource("duchas", { type: "geojson", data: await duchasRes.json() });
+      const duchasData = await (await fetch("/data/dutxes-platja-duchas-playa.geojson")).json();
+      loadedCounts.duchas = featureCount(duchasData);
+      map.addSource("duchas", { type: "geojson", data: duchasData });
       map.addLayer({
         id: "duchas-dot",
         type: "circle",
@@ -211,6 +224,24 @@ export default function Map({ lang = "es" }: MapProps) {
         },
         layout: { visibility: "none" },
       });
+
+      const lavapiesData = await (await fetch("/data/llavapeus-platges-lavapies-playas.geojson")).json();
+      loadedCounts.lavapies = featureCount(lavapiesData);
+      map.addSource("lavapies", { type: "geojson", data: lavapiesData });
+      map.addLayer({
+        id: "lavapies-dot",
+        type: "circle",
+        source: "lavapies",
+        paint: {
+          "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 14, 6, 17, 9],
+          "circle-color": LAYER_COLORS.lavapies,
+          "circle-stroke-color": "#ffffff",
+          "circle-stroke-width": 1.5,
+        },
+        layout: { visibility: "none" },
+      });
+
+      setCounts((c) => ({ ...c, ...loadedCounts }));
 
       map.addSource("walk-route", {
         type: "geojson",
@@ -234,27 +265,70 @@ export default function Map({ lang = "es" }: MapProps) {
         urinarios: (p: Record<string, unknown>) =>
           `<strong>Urinario</strong><br/>${p.direccion ?? "Sin dirección"}<br/><span style="color:#6b7280">${p.cabina_nor ?? 0} cabinas · ${p.cabina_min ?? 0} reducida movilidad</span>`,
         duchas: () => `<strong>Ducha de playa</strong>`,
+        lavapies: (p: Record<string, unknown>) =>
+          `<strong>Lavapiés de playa</strong><br/>${p.calle ?? "Playa"}`,
+        verdes: (p: Record<string, unknown>) =>
+          `<strong>${p.nombre ?? "Espacio verde"}</strong><br/>${p.tipologia ?? ""}<br/><span style="color:#6b7280">${Number(p.sup_total ?? 0).toLocaleString("es-ES")} m²${p.barrio ? ` · ${p.barrio}` : ""}</span>`,
         sombra: (p: Record<string, unknown>) =>
           `<strong>${p.nombre ?? ""}</strong><br/>${Number(p.arboles ?? 0).toLocaleString("es-ES")} árboles<br/><span style="color:#6b7280">${p.arboles_per_km2 ?? "?"} árboles/km²</span>`,
         vulnerabilidad: (p: Record<string, unknown>) =>
           `<strong>${p.nombre ?? ""}</strong><br/>${p.vul_global ?? ""}<br/><span style="color:#6b7280">Índice global ${p.ind_global ?? "?"}</span>`,
       } as const;
 
+      // Reportable amenities open an interactive feedback popup (👍/👎 + comment);
+      // returns null for non-reportable kinds so they fall back to plain HTML.
+      const feedbackArgs = (
+        kind: keyof typeof popupHtml,
+        p: Record<string, unknown>,
+      ): { entityType: EntityType; entityId: string; title: string; address: string; extra: string } | null => {
+        if (kind === "fuentes") {
+          const id = String(p.codigo ?? p.objectid ?? "").trim();
+          if (!id) return null;
+          return { entityType: "fuente", entityId: id, title: "Fuente de agua", address: String(p.calle ?? "Sin dirección"), extra: p.codigo ? `Código ${p.codigo}` : "" };
+        }
+        if (kind === "urinarios") {
+          const id = String(p.objectid ?? "").trim();
+          if (!id) return null;
+          return { entityType: "urinario", entityId: id, title: "Urinario", address: String(p.direccion ?? "Sin dirección"), extra: `${p.cabina_nor ?? 0} cabina(s) · ${p.cabina_min ?? 0} movilidad reducida` };
+        }
+        if (kind === "duchas") {
+          const id = String(p.codigo ?? p.objectid ?? "").trim();
+          if (!id) return null;
+          return { entityType: "ducha", entityId: id, title: "Ducha de playa", address: String(p.calle ?? "Sin dirección"), extra: p.codigo ? `Código ${p.codigo}` : "" };
+        }
+        return null;
+      };
+
       const pointLayers: Array<[string, keyof typeof popupHtml]> = [
         ["fuentes-dot", "fuentes"],
         ["urinarios-dot", "urinarios"],
         ["duchas-dot", "duchas"],
+        ["lavapies-dot", "lavapies"],
+        ["verdes-fill", "verdes"],
         ["sombra-fill", "sombra"],
         ["vulnerabilidad-fill", "vulnerabilidad"],
       ];
+      // A single shared popup so clicking another marker replaces the open one
+      // instead of stacking overlapping cards.
+      let activePopup: maplibregl.Popup | null = null;
       pointLayers.forEach(([layerId, kind]) => {
         map.on("click", layerId, (e) => {
           const f = e.features?.[0];
           if (!f) return;
-          new maplibregl.Popup({ closeButton: true, offset: 10 })
-            .setLngLat(e.lngLat)
-            .setHTML(popupHtml[kind](f.properties ?? {}))
-            .addTo(map);
+          const props = f.properties ?? {};
+          const fb = feedbackArgs(kind, props);
+          activePopup?.remove();
+          const popup = new maplibregl.Popup({ closeButton: true, offset: 10, maxWidth: "320px" }).setLngLat(e.lngLat);
+          if (fb) {
+            popup.setDOMContent(buildFeedbackPopup({ ...fb, lat: e.lngLat.lat, lng: e.lngLat.lng, lang }));
+          } else {
+            popup.setHTML(popupHtml[kind](props));
+          }
+          popup.on("close", () => {
+            if (activePopup === popup) activePopup = null;
+          });
+          popup.addTo(map);
+          activePopup = popup;
         });
         map.on("mouseenter", layerId, () => (map.getCanvas().style.cursor = "pointer"));
         map.on("mouseleave", layerId, () => (map.getCanvas().style.cursor = ""));
@@ -279,11 +353,57 @@ export default function Map({ lang = "es" }: MapProps) {
     apply("fuentes-dot", active.fuentes);
     apply("urinarios-dot", active.urinarios);
     apply("duchas-dot", active.duchas);
+    apply("lavapies-dot", active.lavapies);
+    apply("verdes-fill", active.verdes);
+    apply("verdes-line", active.verdes);
     apply("sombra-fill", active.sombra);
     apply("sombra-line", active.sombra);
     apply("vulnerabilidad-fill", active.barrios);
     apply("vulnerabilidad-line", active.barrios);
   }, [active, loaded]);
+
+  // Espacios verdes: 6 MB de polígonos. Se cargan sólo la primera vez que se activan.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !loaded || !active.verdes || verdesLoadedRef.current) return;
+    verdesLoadedRef.current = true;
+    let cancelled = false;
+    (async () => {
+      try {
+        const data = await (await fetch("/data/espais-verds-espacios-verdes.geojson")).json();
+        if (cancelled || !mapRef.current) return;
+        if (!map.getSource("verdes")) {
+          const beforeId = map.getLayer("fuentes-dot") ? "fuentes-dot" : undefined;
+          map.addSource("verdes", { type: "geojson", data });
+          map.addLayer(
+            {
+              id: "verdes-fill",
+              type: "fill",
+              source: "verdes",
+              paint: { "fill-color": LAYER_COLORS.verdes, "fill-opacity": 0.55 },
+            },
+            beforeId,
+          );
+          map.addLayer(
+            {
+              id: "verdes-line",
+              type: "line",
+              source: "verdes",
+              paint: { "line-color": "#166534", "line-width": 1.2, "line-opacity": 0.9 },
+            },
+            beforeId,
+          );
+        }
+        setCounts((c) => ({ ...c, verdes: Array.isArray(data.features) ? data.features.length : 0 }));
+      } catch {
+        // Permitir reintento al volver a activar la capa.
+        verdesLoadedRef.current = false;
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [active.verdes, loaded]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -443,6 +563,17 @@ export default function Map({ lang = "es" }: MapProps) {
         </svg>
       ),
     },
+    {
+      key: "acerca",
+      label: sectionsT.acerca,
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="16" x2="12" y2="12" />
+          <line x1="12" y1="8" x2="12.01" y2="8" />
+        </svg>
+      ),
+    },
   ];
 
   const SidebarNav = (
@@ -497,35 +628,48 @@ export default function Map({ lang = "es" }: MapProps) {
           })}
         </ul>
       </nav>
-      <div className="border-t border-slate-100 px-5 py-4">
-        <p className="font-display text-xs font-semibold tracking-wider uppercase text-slate-500">
-          {sidebarT.aboutTitle}
-        </p>
-        <p className="mt-2 text-xs leading-relaxed text-slate-600">
-          {sidebarT.aboutBody}
-        </p>
-        <a
-          href="https://github.com/celiarozalenm/valencia-refresca"
-          target="_blank"
-          rel="noopener"
-          className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-(--color-agua-deep) transition hover:text-(--color-ink)"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-            <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2.16c-3.2.7-3.88-1.36-3.88-1.36-.52-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.18a10.92 10.92 0 0 1 5.74 0c2.18-1.49 3.14-1.18 3.14-1.18.62 1.58.23 2.75.11 3.04.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.4-5.25 5.69.41.36.78 1.06.78 2.15v3.18c0 .31.21.67.8.56C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z" />
-          </svg>
-          {sidebarT.repoCta}
-        </a>
-        <a
-          href={homeUrl}
-          onClick={() => setMobileNavOpen(false)}
-          className="mt-3 flex items-center gap-1.5 text-xs font-medium text-slate-600 transition hover:text-(--color-ink)"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-            <line x1="19" y1="12" x2="5" y2="12" />
-            <polyline points="12 19 5 12 12 5" />
-          </svg>
-          {sidebarT.homeCta}
-        </a>
+      <div className="border-t border-slate-100 px-3 py-3">
+        <div className="flex items-center justify-between gap-2">
+          <a
+            href={homeUrl}
+            onClick={() => setMobileNavOpen(false)}
+            className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-(--color-ink)"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <line x1="19" y1="12" x2="5" y2="12" />
+              <polyline points="12 19 5 12 12 5" />
+            </svg>
+            {sidebarT.homeCta}
+          </a>
+          <div className="flex items-center gap-1.5 pr-1" aria-label={langT.aria}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400" aria-hidden>
+              <circle cx="12" cy="12" r="10" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+            </svg>
+            {LANGS.map((l, i) => {
+              const isCurrent = l === lang;
+              const label = langT[l];
+              return (
+                <span key={l} className="flex items-center gap-1.5">
+                  {i > 0 && <span className="text-slate-300" aria-hidden>/</span>}
+                  {isCurrent ? (
+                    <span className="text-xs font-semibold text-(--color-calor-deep)" aria-current="true">
+                      {label}
+                    </span>
+                  ) : (
+                    <a
+                      href={mapaHref(l)}
+                      className="text-xs font-medium text-slate-500 transition hover:text-(--color-ink)"
+                    >
+                      {label}
+                    </a>
+                  )}
+                </span>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </>
   );
@@ -581,6 +725,7 @@ export default function Map({ lang = "es" }: MapProps) {
               <ul className="mt-3 space-y-1.5">
                 {(Object.keys(layerNames) as LayerKey[]).map((k) => {
                   const meta = layerNames[k];
+                  const count = counts[k];
                   return (
                     <li key={k}>
                       <label className="flex cursor-pointer items-start gap-2.5 rounded-lg px-1.5 py-1 transition hover:bg-slate-50">
@@ -597,6 +742,11 @@ export default function Map({ lang = "es" }: MapProps) {
                           </span>
                           <span className="text-xs text-slate-500">{meta.description}</span>
                         </span>
+                        {count != null && (
+                          <span className="mt-0.5 shrink-0 rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-slate-500">
+                            {count.toLocaleString("es-ES")}
+                          </span>
+                        )}
                       </label>
                     </li>
                   );
@@ -767,6 +917,90 @@ export default function Map({ lang = "es" }: MapProps) {
               <p className="mt-3 max-w-2xl text-(--color-ink-soft) md:text-lg">{freshestT.subtitle}</p>
               <div className="mt-10">
                 <FreshestRanking lang={lang} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Acerca de: ficha del proyecto */}
+        {view === "acerca" && (
+          <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone)">
+            <div className="mx-auto max-w-3xl px-6 pt-4 pb-12 md:px-10 md:pt-6 md:pb-16">
+              <p className="font-display text-xs font-semibold tracking-wider uppercase text-(--color-calor-deep)">{aboutT.eyebrow}</p>
+              <h1 className="mt-2 font-display text-4xl leading-tight text-(--color-agua-deep) md:text-5xl">{aboutT.title}</h1>
+              <p className="mt-4 max-w-2xl text-(--color-ink-soft) md:text-lg">{aboutT.lede}</p>
+
+              <div className="mt-10">
+                <h2 className="font-display text-lg font-semibold text-(--color-ink)">{aboutT.datasetsTitle}</h2>
+                <p className="mt-1 text-sm text-(--color-ink-soft)">{aboutT.datasetsCaption}</p>
+                <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+                  {aboutT.datasets.map((d) => (
+                    <li key={d.label}>
+                      <a
+                        href={d.url}
+                        target="_blank"
+                        rel="noopener"
+                        className="flex items-center justify-between gap-3 rounded-xl bg-white px-4 py-3 ring-1 ring-(--color-ink)/8 transition hover:ring-(--color-agua-deep)/30"
+                      >
+                        <span className="text-sm font-medium text-(--color-ink)">{d.label}</span>
+                        <span className="shrink-0 text-xs font-semibold text-(--color-agua-deep)">{d.count}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="mt-10">
+                <h2 className="font-display text-lg font-semibold text-(--color-ink)">{aboutT.stackTitle}</h2>
+                <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                  {aboutT.stack.map((s) => (
+                    <li key={s.name} className="rounded-xl bg-white p-4 ring-1 ring-(--color-ink)/8">
+                      <p className="text-sm font-semibold text-(--color-ink)">{s.name}</p>
+                      <p className="mt-0.5 text-xs text-(--color-ink-soft)">{s.desc}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="mt-10 rounded-2xl bg-white p-6 ring-1 ring-(--color-ink)/8">
+                <h2 className="font-display text-lg font-semibold text-(--color-ink)">{aboutT.reproTitle}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-(--color-ink-soft)">{aboutT.reproBody}</p>
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <a
+                    href="https://github.com/celiarozalenm/valencia-refresca"
+                    target="_blank"
+                    rel="noopener"
+                    className="inline-flex items-center gap-2 rounded-full bg-(--color-agua-deep) px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-900"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                      <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2.16c-3.2.7-3.88-1.36-3.88-1.36-.52-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.18a10.92 10.92 0 0 1 5.74 0c2.18-1.49 3.14-1.18 3.14-1.18.62 1.58.23 2.75.11 3.04.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.4-5.25 5.69.41.36.78 1.06.78 2.15v3.18c0 .31.21.67.8.56C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z" />
+                    </svg>
+                    {aboutT.ctaRepo}
+                  </a>
+                  <a
+                    href="https://valencia.opendatasoft.com"
+                    target="_blank"
+                    rel="noopener"
+                    className="inline-flex items-center gap-2 rounded-full border border-slate-300 px-5 py-2.5 text-sm font-semibold text-(--color-ink) transition hover:bg-slate-50"
+                  >
+                    {aboutT.ctaPortal}
+                  </a>
+                </div>
+              </div>
+
+              <div className="mt-10 grid gap-6 sm:grid-cols-2">
+                <div>
+                  <h2 className="font-display text-sm font-semibold tracking-wider uppercase text-slate-500">{aboutT.authorTitle}</h2>
+                  <p className="mt-2 text-sm font-medium text-(--color-ink)">{aboutT.authorName}</p>
+                  <p className="mt-0.5 text-sm text-(--color-ink-soft)">{aboutT.authorRole}</p>
+                  <a href={`mailto:${aboutT.authorContact}`} className="mt-1 inline-block text-sm font-medium text-(--color-agua-deep) hover:underline">
+                    {aboutT.authorContact}
+                  </a>
+                </div>
+                <div>
+                  <h2 className="font-display text-sm font-semibold tracking-wider uppercase text-slate-500">{aboutT.licenseTitle}</h2>
+                  <p className="mt-2 text-sm leading-relaxed text-(--color-ink-soft)">{aboutT.licenseBody}</p>
+                </div>
               </div>
             </div>
           </div>

@@ -1,0 +1,12 @@
+---
+import Base from '../../layouts/Base.astro';
+import Participar from '../../components/Participar.tsx';
+
+const lang = 'va';
+---
+
+<Base lang={lang}>
+  <main class="pt-20">
+    <Participar client:only="react" lang={lang} />
+  </main>
+</Base>

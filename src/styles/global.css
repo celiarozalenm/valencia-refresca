@@ -41,3 +41,121 @@
     color: var(--color-ink);
   }
 }
+
+/* ---- Interactive map feedback popup (fuente · urinario · ducha) ---- */
+.maplibregl-popup-content:has(.vr-popup) {
+  padding: 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.vr-popup {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  width: 250px;
+  box-sizing: border-box;
+}
+.vr-popup-entity { width: 290px; box-sizing: border-box; }
+.vr-popup-bar { height: 4px; }
+.vr-popup-body { padding: 12px 14px 14px; }
+.vr-popup-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+  padding-right: 24px;
+  color: #1a1a1a;
+}
+.vr-popup-row { font-size: 0.82rem; line-height: 1.35; color: #4b5563; margin-top: 2px; }
+.vr-popup-meta { color: #6b7280; font-size: 0.75rem; }
+.vr-popup-actions { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.vr-popup-btn,
+.vr-popup-link {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+.vr-popup-btn { background: #1d4ed8; color: #fff; }
+.vr-popup-btn:hover { background: #1742b8; }
+.vr-popup-link { background: #f3f4f6; color: #1a1a1a; }
+.vr-popup-link:hover { background: #e5e7eb; }
+
+.vr-popup-reports { margin-top: 14px; padding-top: 12px; border-top: 1px solid #f3f4f6; }
+.vr-popup-reports-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+.vr-popup-empty { font-size: 0.78rem; color: #9ca3af; font-style: italic; }
+.vr-popup-comments-list {
+  max-height: 180px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.vr-popup-comment { padding: 7px 10px; border-radius: 8px; background: #f9fafb; border-left: 3px solid #d1d5db; }
+.vr-popup-comment.vr-r-yes { border-left-color: #15803d; background: #dcfce7; }
+.vr-popup-comment.vr-r-no { border-left-color: #b8431b; background: #fbe7dd; }
+.vr-popup-comment-head { display: flex; align-items: center; gap: 6px; font-size: 0.7rem; color: #6b7280; margin-bottom: 2px; }
+.vr-popup-comment-icon { font-size: 0.85rem; }
+.vr-popup-comment-rel { font-weight: 500; }
+.vr-popup-comment-text { font-size: 0.78rem; color: #1f2937; line-height: 1.35; }
+
+.vr-popup-comment-form { margin-top: 12px; padding-top: 12px; border-top: 1px solid #f3f4f6; }
+.vr-popup-vote { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.vr-popup-vote button {
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 7px 8px;
+  border-radius: 8px;
+  border: 1.5px solid;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.15s;
+  box-sizing: border-box;
+  min-width: 0;
+}
+.vr-popup-vote .vr-vote-yes { border-color: #15803d; color: #15803d; }
+.vr-popup-vote .vr-vote-yes[aria-pressed="true"],
+.vr-popup-vote .vr-vote-yes:hover:not(:disabled) { background: #dcfce7; }
+.vr-popup-vote .vr-vote-no { border-color: #b8431b; color: #b8431b; }
+.vr-popup-vote .vr-vote-no[aria-pressed="true"],
+.vr-popup-vote .vr-vote-no:hover:not(:disabled) { background: #fbe7dd; }
+.vr-popup-vote button:disabled { opacity: 0.5; cursor: not-allowed; }
+.vr-popup-textarea {
+  width: 100%;
+  margin-top: 8px;
+  padding: 6px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-family: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+}
+.vr-popup-textarea:focus { outline: 2px solid var(--color-agua-soft); border-color: var(--color-agua); }
+.vr-popup-submit {
+  margin-top: 6px;
+  width: 100%;
+  padding: 7px 10px;
+  background: #1d4ed8;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+.vr-popup-submit:hover:not(:disabled) { background: #1742b8; }
+.vr-popup-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+.vr-popup-flash { font-size: 0.75rem; margin-top: 8px; text-align: center; min-height: 1em; }
+.vr-popup-flash.ok { color: #15803d; }
+.vr-popup-flash.error { color: #b8431b; }
