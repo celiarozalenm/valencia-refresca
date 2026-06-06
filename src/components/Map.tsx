@@ -68,6 +68,7 @@ export default function Map({ lang = "es" }: MapProps) {
   const mapRef = useRef<MapLibre | null>(null);
   const tr = STRINGS[lang].map;
   const sw = tr.shadowWalk;
+  const sidebarT = tr.sidebar;
   const layerNames = tr.layers;
   const sectionsT = tr.sections;
   const freshestT = tr.freshest;
@@ -490,6 +491,36 @@ export default function Map({ lang = "es" }: MapProps) {
           })}
         </ul>
       </nav>
+      <div className="border-t border-slate-100 px-5 py-4">
+        <p className="font-display text-xs font-semibold tracking-wider uppercase text-slate-500">
+          {sidebarT.aboutTitle}
+        </p>
+        <p className="mt-2 text-xs leading-relaxed text-slate-600">
+          {sidebarT.aboutBody}
+        </p>
+        <a
+          href="https://github.com/celiarozalenm/valencia-refresca"
+          target="_blank"
+          rel="noopener"
+          className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-(--color-agua-deep) transition hover:text-(--color-ink)"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+            <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2.16c-3.2.7-3.88-1.36-3.88-1.36-.52-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.18a10.92 10.92 0 0 1 5.74 0c2.18-1.49 3.14-1.18 3.14-1.18.62 1.58.23 2.75.11 3.04.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.4-5.25 5.69.41.36.78 1.06.78 2.15v3.18c0 .31.21.67.8.56C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z" />
+          </svg>
+          {sidebarT.repoCta}
+        </a>
+        <a
+          href={homeHref}
+          onClick={() => setMobileNavOpen(false)}
+          className="mt-3 flex items-center gap-1.5 text-xs font-medium text-slate-600 transition hover:text-(--color-ink)"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <line x1="19" y1="12" x2="5" y2="12" />
+            <polyline points="12 19 5 12 12 5" />
+          </svg>
+          {sidebarT.homeCta}
+        </a>
+      </div>
     </>
   );
 
@@ -525,7 +556,7 @@ export default function Map({ lang = "es" }: MapProps) {
         <button
           type="button"
           onClick={() => setMobileNavOpen(true)}
-          className="absolute top-3 left-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-slate-900 shadow-md backdrop-blur md:hidden"
+          className="absolute top-3 left-3 z-10 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/95 text-slate-900 shadow-md backdrop-blur md:hidden"
           aria-label="Abrir navegación"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
@@ -603,7 +634,7 @@ export default function Map({ lang = "es" }: MapProps) {
                   <button
                     type="button"
                     onClick={handleUseMyLocation}
-                    className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-(--color-agua-deep) hover:underline"
+                    className="mt-2 inline-flex cursor-pointer items-center gap-1.5 text-xs font-medium text-(--color-agua-deep) hover:underline"
                     disabled={walkPending}
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -627,7 +658,7 @@ export default function Map({ lang = "es" }: MapProps) {
                           key={opt.value}
                           type="button"
                           onClick={() => setDuration(opt.value)}
-                          className={`rounded-lg px-2 py-2.5 text-sm font-medium transition ${
+                          className={`cursor-pointer rounded-lg px-2 py-2.5 text-sm font-medium transition ${
                             isActive
                               ? "bg-(--color-agua-deep) text-white"
                               : "bg-slate-100 text-slate-700 hover:bg-slate-200"
@@ -643,7 +674,7 @@ export default function Map({ lang = "es" }: MapProps) {
                 <button
                   type="submit"
                   disabled={walkPending || !address.trim()}
-                  className="w-full rounded-full bg-(--color-agua-deep) px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full cursor-pointer rounded-full bg-(--color-agua-deep) px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {walkPending ? sw.generating : sw.generate}
                 </button>
@@ -686,7 +717,7 @@ export default function Map({ lang = "es" }: MapProps) {
                 <button
                   type="button"
                   onClick={handleOpenInGoogleMaps}
-                  className="flex w-full items-center justify-center gap-2 rounded-full bg-(--color-agua-deep) px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-900"
+                  className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-(--color-agua-deep) px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-900"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
@@ -698,14 +729,14 @@ export default function Map({ lang = "es" }: MapProps) {
                   <button
                     type="button"
                     onClick={handleShare}
-                    className="flex items-center justify-center gap-1.5 rounded-full border border-slate-300 px-2 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+                    className="flex cursor-pointer items-center justify-center gap-1.5 rounded-full border border-slate-300 px-2 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
                   >
                     {sw.share}
                   </button>
                   <button
                     type="button"
                     onClick={handleDownloadGpx}
-                    className="flex items-center justify-center gap-1.5 rounded-full border border-slate-300 px-2 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+                    className="flex cursor-pointer items-center justify-center gap-1.5 rounded-full border border-slate-300 px-2 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
                   >
                     GPX
                   </button>
@@ -713,7 +744,7 @@ export default function Map({ lang = "es" }: MapProps) {
                 <button
                   type="button"
                   onClick={handleResetWalk}
-                  className="w-full text-center text-xs font-medium text-slate-500 transition hover:text-slate-900"
+                  className="w-full cursor-pointer text-center text-xs font-medium text-slate-500 transition hover:text-slate-900"
                 >
                   {sw.reset}
                 </button>

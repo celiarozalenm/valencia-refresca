@@ -83,6 +83,12 @@ export const STRINGS = {
         paseo: "Paseo fresco",
         frescos: "Barrios frescos",
       },
+      sidebar: {
+        aboutTitle: "Sobre el proyecto",
+        aboutBody: "Cartografía sobre datos abiertos del Ajuntament. Código y análisis 100% abiertos.",
+        repoCta: "Ver en GitHub",
+        homeCta: "Volver al inicio",
+      },
       shadowWalk: {
         title: "Paseo fresco",
         subtitle: "Un paseo en bucle por las zonas más sombreadas cerca de ti.",
@@ -318,6 +324,12 @@ export const STRINGS = {
         capas: "Mapa",
         paseo: "Passeig fresc",
         frescos: "Barris frescs",
+      },
+      sidebar: {
+        aboutTitle: "Sobre el projecte",
+        aboutBody: "Cartografia sobre dades obertes de l'Ajuntament. Codi i anàlisi 100% oberts.",
+        repoCta: "Veure en GitHub",
+        homeCta: "Tornar a l'inici",
       },
       shadowWalk: {
         title: "Passeig fresc",

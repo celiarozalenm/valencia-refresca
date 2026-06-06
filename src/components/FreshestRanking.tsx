@@ -137,7 +137,7 @@ export default function FreshestRanking({ lang = "es" }: Props) {
             <button
               type="button"
               onClick={() => setSortMode("density")}
-              className={`rounded-full px-3 py-1.5 transition ${
+              className={`cursor-pointer rounded-full px-3 py-1.5 transition ${
                 sortMode === "density" ? "bg-white text-slate-900 shadow-sm" : "text-slate-600"
               }`}
             >
@@ -146,7 +146,7 @@ export default function FreshestRanking({ lang = "es" }: Props) {
             <button
               type="button"
               onClick={() => setSortMode("total")}
-              className={`rounded-full px-3 py-1.5 transition ${
+              className={`cursor-pointer rounded-full px-3 py-1.5 transition ${
                 sortMode === "total" ? "bg-white text-slate-900 shadow-sm" : "text-slate-600"
               }`}
             >
