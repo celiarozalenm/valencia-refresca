@@ -17,15 +17,12 @@ interface Copy {
   lede: string;
   refresh: string;
   autorefresh: string;
-  autorefreshPaused: string;
   loading: string;
   empty: string;
   error: string;
-  prev: string;
-  next: string;
+  more: string;
   unknownPlace: string;
   kind: Record<EntityType, string>;
-  pageInfo: (p: number, t: number) => string;
 }
 
 const COPY: Record<Lang, Copy> = {
@@ -35,15 +32,12 @@ const COPY: Record<Lang, Copy> = {
     lede: "Comentarios sobre fuentes, urinarios y duchas que vecinos como tú han enviado en los últimos días. Se actualiza solo.",
     refresh: "Actualizar ahora",
     autorefresh: "Refresco automático cada 30 s",
-    autorefreshPaused: "Refresco en pausa (vuelve a la página 1)",
     loading: "Cargando…",
     empty: "Todavía no hay comentarios. ¡Sé el primero desde el mapa o en Participa!",
     error: "No se pudo cargar el hilo. Inténtalo de nuevo.",
-    prev: "Anteriores",
-    next: "Siguientes",
+    more: "Ver más",
     unknownPlace: "Punto sin nombre",
     kind: { fuente: "Fuente", urinario: "Urinario", ducha: "Ducha de playa" },
-    pageInfo: (p, t) => `Página ${p} de ${t}`,
   },
   va: {
     tag: "En directe",
@@ -51,15 +45,12 @@ const COPY: Record<Lang, Copy> = {
     lede: "Comentaris sobre fonts, urinaris i dutxes que veïns com tu han enviat els últims dies. S’actualitza sol.",
     refresh: "Actualitzar ara",
     autorefresh: "Refresc automàtic cada 30 s",
-    autorefreshPaused: "Refresc en pausa (torna a la pàgina 1)",
     loading: "Carregant…",
     empty: "Encara no hi ha comentaris. Sigues el primer des del mapa o a Participa!",
     error: "No s’ha pogut carregar el fil. Torna-ho a provar.",
-    prev: "Anteriors",
-    next: "Següents",
+    more: "Veure’n més",
     unknownPlace: "Punt sense nom",
     kind: { fuente: "Font", urinario: "Urinari", ducha: "Dutxa de platja" },
-    pageInfo: (p, t) => `Pàgina ${p} de ${t}`,
   },
   en: {
     tag: "Live",
@@ -67,15 +58,12 @@ const COPY: Record<Lang, Copy> = {
     lede: "Comments on fountains, public toilets and showers that residents like you have sent over the last few days. Auto-updates.",
     refresh: "Refresh now",
     autorefresh: "Auto-refresh every 30 s",
-    autorefreshPaused: "Refresh paused (back to page 1)",
     loading: "Loading…",
     empty: "No comments yet. Be the first from the map or in Get involved!",
     error: "Couldn’t load the feed. Try again.",
-    prev: "Previous",
-    next: "Next",
+    more: "See more",
     unknownPlace: "Unnamed point",
     kind: { fuente: "Fountain", urinario: "Toilet", ducha: "Beach shower" },
-    pageInfo: (p, t) => `Page ${p} of ${t}`,
   },
 };
 
@@ -83,15 +71,15 @@ export default function Recientes({ lang = "es" }: Props) {
   const tr = COPY[lang];
   const [entries, setEntries] = useState<FeedEntry[] | null>(null);
   const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(0);
+  const [limit, setLimit] = useState(PAGE_SIZE);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const headerRef = useRef<HTMLDivElement>(null);
 
-  async function load(targetPage = page) {
+  async function load(targetLimit = limit) {
     setRefreshing(true);
     try {
-      const res = await fetchFeed(PAGE_SIZE, targetPage * PAGE_SIZE);
+      const res = await fetchFeed(targetLimit, 0);
       setEntries(res.entries);
       setTotal(res.total);
       setError(null);
@@ -103,28 +91,18 @@ export default function Recientes({ lang = "es" }: Props) {
   }
 
   useEffect(() => {
-    load(page);
+    load(limit);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+  }, [limit]);
 
-  // Auto-refresh only on the first page so older pages don't shift under the user.
+  // Always fetch from the top so new comments appear and the visible list keeps its length.
   useEffect(() => {
-    if (page !== 0) return;
-    const id = setInterval(() => load(0), POLL_INTERVAL_MS);
+    const id = setInterval(() => load(limit), POLL_INTERVAL_MS);
     return () => clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+  }, [limit]);
 
-  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-  const canPrev = page > 0;
-  const canNext = page < totalPages - 1;
-
-  function goTo(next: number) {
-    const clamped = Math.max(0, Math.min(totalPages - 1, next));
-    if (clamped === page) return;
-    setPage(clamped);
-    headerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
+  const canShowMore = entries !== null && entries.length < total;
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
@@ -145,7 +123,7 @@ export default function Recientes({ lang = "es" }: Props) {
           >
             ↻ {tr.refresh}
           </button>
-          <span>{page === 0 ? tr.autorefresh : tr.autorefreshPaused}</span>
+          <span>{tr.autorefresh}</span>
         </div>
       </header>
 
@@ -169,26 +147,17 @@ export default function Recientes({ lang = "es" }: Props) {
             ))}
           </ul>
 
-          {totalPages > 1 && (
-            <nav className="mt-6 flex items-center justify-between gap-3" aria-label="Pagination">
+          {canShowMore && (
+            <div className="mt-6 flex justify-center">
               <button
                 type="button"
-                onClick={() => goTo(page - 1)}
-                disabled={!canPrev || refreshing}
-                className="px-3 py-1.5 rounded-full border border-stone-200 bg-white text-sm text-stone-700 hover:bg-stone-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                onClick={() => setLimit((l) => l + PAGE_SIZE)}
+                disabled={refreshing}
+                className="px-4 py-1.5 rounded-full border border-stone-200 bg-white text-sm text-stone-700 hover:bg-stone-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
               >
-                ← {tr.prev}
+                {tr.more}
               </button>
-              <span className="text-xs text-stone-500">{tr.pageInfo(page + 1, totalPages)}</span>
-              <button
-                type="button"
-                onClick={() => goTo(page + 1)}
-                disabled={!canNext || refreshing}
-                className="px-3 py-1.5 rounded-full border border-stone-200 bg-white text-sm text-stone-700 hover:bg-stone-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
-              >
-                {tr.next} →
-              </button>
-            </nav>
+            </div>
           )}
         </>
       )}

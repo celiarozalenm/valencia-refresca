@@ -646,7 +646,18 @@ export default function Map({ lang = "es" }: MapProps) {
     // se cuelga o falla en muchos navegadores móviles.
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setCercaResults(findNearest(pos.coords.longitude, pos.coords.latitude));
+        const { longitude, latitude } = pos.coords;
+        // Geocerco: si el usuario está a más de 50 km del centro de València,
+        // no tiene sentido mostrar puntos a miles de km. Avisamos y salimos.
+        const VALENCIA_C = VALENCIA_CENTER as [number, number];
+        const distToCity = haversineMeters(longitude, latitude, VALENCIA_C[0], VALENCIA_C[1]);
+        if (distToCity > 50_000) {
+          setCercaResults([]);
+          setCercaError(cercaT.outOfArea);
+          setCercaPending(false);
+          return;
+        }
+        setCercaResults(findNearest(longitude, latitude));
         setCercaPending(false);
       },
       (err) => {
