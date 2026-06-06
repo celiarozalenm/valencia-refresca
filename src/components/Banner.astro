@@ -1,6 +1,8 @@
 ---
 // "Información útil para vivir el verano mejor": banner editorial.
-// Ilustración de fondo pendiente — placeholder gris hasta que llegue la imagen final.
+// Imagen de fondo pendiente — placeholder de momento.
+// Cuando llegue la imagen final, sustituir el <div placeholder> por:
+//   <img src="/banner.jpg" alt="" class="absolute inset-0 h-full w-full object-cover" />
 import { t, type Lang } from '../i18n/strings';
 
 interface Props {
@@ -12,29 +14,31 @@ const s = t(lang).banner;
 ---
 
 <section class="mx-auto max-w-6xl px-6 md:px-10">
-  <div class="relative overflow-hidden rounded-2xl bg-(--color-agua-soft)/60 ring-1 ring-(--color-ink)/8">
-    <!-- Placeholder de la ilustración -->
+  <div class="relative isolate overflow-hidden rounded-2xl ring-1 ring-(--color-ink)/8">
+    <!-- Placeholder de la imagen de fondo (sustituir por <img> cuando llegue la final) -->
     <div
-      class="absolute inset-0 flex items-center justify-end p-8 md:p-12"
+      class="absolute inset-0 flex items-center justify-center bg-(--color-agua) text-white/50"
       aria-hidden="true"
     >
-      <div class="h-full w-full max-w-md rounded-2xl border-2 border-dashed border-(--color-ink)/15 bg-white/40 flex items-center justify-center">
-        <span class="font-mono text-[11px] tracking-wider uppercase text-(--color-ink)/40">
-          Ilustración pendiente
-        </span>
-      </div>
+      <span class="font-mono text-xs tracking-wider uppercase">Imagen pendiente</span>
     </div>
+
+    <!-- Degradado para legibilidad del texto (izquierda) -->
+    <div
+      class="absolute inset-0 bg-gradient-to-r from-(--color-ink)/65 via-(--color-ink)/25 to-transparent"
+      aria-hidden="true"
+    ></div>
 
     <!-- Texto encima -->
     <div class="relative z-10 max-w-md p-8 sm:p-10 md:p-12">
-      <p class="text-[11px] font-semibold tracking-[0.2em] uppercase text-(--color-agua-deep)">{s.eyebrow}</p>
-      <h2 class="mt-4 font-display text-3xl leading-tight font-medium text-(--color-ink) sm:text-4xl md:text-5xl">
+      <p class="text-[11px] font-semibold tracking-[0.2em] uppercase text-white/85">{s.eyebrow}</p>
+      <h2 class="mt-4 font-display text-2xl leading-tight font-medium text-white sm:text-3xl md:text-[2rem]">
         {s.titleLine1}<br />{s.titleLine2}<br />{s.titleLine3}
       </h2>
       <div class="mt-5 h-[3px] w-16 bg-(--color-calor)"></div>
     </div>
 
     <!-- Altura mínima del bloque -->
-    <div class="relative h-[320px] w-full sm:h-[360px] md:h-[400px]"></div>
+    <div class="relative h-[280px] w-full sm:h-[320px] md:h-[360px]"></div>
   </div>
 </section>
