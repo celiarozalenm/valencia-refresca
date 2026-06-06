@@ -68,9 +68,18 @@ function sanitiseText(raw: string): string {
   return raw.replace(/\s+/g, ' ').trim().slice(0, MAX_TEXT_LENGTH)
 }
 
-function parseEntry(raw: string): CommentEntry | null {
+function parseEntry(raw: unknown): CommentEntry | null {
   try {
-    const obj = JSON.parse(raw) as Partial<CommentEntry>
+    // The Upstash client auto-deserialises JSON members, so a value stored as
+    // JSON.stringify(...) usually comes back already parsed as an object; we
+    // still accept a raw JSON string for safety.
+    let obj: Partial<CommentEntry> | null = null
+    if (typeof raw === 'string') {
+      obj = JSON.parse(raw) as Partial<CommentEntry>
+    } else if (raw && typeof raw === 'object') {
+      obj = raw as Partial<CommentEntry>
+    }
+    if (!obj) return null
     if (obj.sentiment !== 'good' && obj.sentiment !== 'bad') return null
     return {
       sentiment: obj.sentiment,
@@ -103,10 +112,10 @@ export default async function handler(req: Request) {
       })
     }
     const key = `${NS}comment:${entityType}:${entityId}`
-    const raw = await redis.zrange<string[]>(key, 0, COMMENTS_RETURNED - 1, { rev: true })
+    const raw = (await redis.zrange(key, 0, COMMENTS_RETURNED - 1, { rev: true })) as unknown[]
     const comments: CommentEntry[] = []
     for (const r of raw) {
-      const e = parseEntry(String(r))
+      const e = parseEntry(r)
       if (e) comments.push(e)
     }
     return new Response(
