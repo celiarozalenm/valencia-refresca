@@ -17,6 +17,9 @@ pnpm-debug.log*
 .env
 .env.production
 
+# personal submission paperwork — moved out of the repo (contains personal data)
+paperwork/
+
 # macOS-specific files
 .DS_Store
 
