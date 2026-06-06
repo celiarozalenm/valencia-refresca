@@ -1,5 +1,5 @@
 ---
-import { t, type Lang } from '../i18n/strings';
+import { t, type Lang, mapaHref } from '../i18n/strings';
 
 interface Props {
   lang?: Lang;
@@ -7,7 +7,7 @@ interface Props {
 
 const { lang = 'es' } = Astro.props;
 const f = t(lang).features;
-const mapaHref = lang === 'va' ? '/val/mapa/' : '/mapa/';
+const mapaUrl = mapaHref(lang);
 
 const features = [
   {
@@ -65,7 +65,7 @@ const features = [
         <p class="mt-1.5 max-w-[18rem] text-sm text-(--color-ink-soft)">{feat.desc}</p>
 
         <a
-          href={mapaHref}
+          href={mapaUrl}
           class="mt-4 inline-flex items-center gap-1.5 text-sm font-medium transition hover:opacity-70"
           style={`color: var(${feat.deepVar});`}
         >

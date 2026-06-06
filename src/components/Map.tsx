@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import maplibregl, { type Map as MapLibre, type StyleSpecification, type LngLatLike } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { STRINGS, type Lang } from "../i18n/strings";
+import { STRINGS, LANGS, homeHref, mapaHref, type Lang } from "../i18n/strings";
 import { geocode } from "../services/nominatim";
 import { generateShadowWalk, googleMapsUrl, routeToGpx, type ShadowWalkResult } from "../services/shadowWalk";
 import FreshestRanking from "./FreshestRanking";
@@ -16,13 +16,15 @@ const BRAND = {
   ink: "#1f2937",
 } as const;
 
-type LayerKey = "fuentes" | "urinarios" | "duchas" | "sombra" | "barrios";
-type View = "capas" | "paseo" | "frescos";
+type LayerKey = "fuentes" | "urinarios" | "duchas" | "lavapies" | "verdes" | "sombra" | "barrios";
+type View = "capas" | "paseo" | "frescos" | "acerca";
 
 const LAYER_COLORS: Record<LayerKey, string> = {
   fuentes: BRAND.agua,
   urinarios: BRAND.calor,
   duchas: "#0ea5e9",
+  lavapies: "#06b6d4",
+  verdes: "#16a34a",
   sombra: BRAND.sombra,
   barrios: BRAND.ink,
 };
@@ -76,7 +78,7 @@ export default function Map({ lang = "es" }: MapProps) {
   const initialView = ((): View => {
     if (typeof window === "undefined") return "capas";
     const hash = window.location.hash.replace("#", "");
-    if (hash === "paseo" || hash === "frescos") return hash;
+    if (hash === "paseo" || hash === "frescos" || hash === "acerca") return hash;
     return "capas";
   })();
   const [view, setView] = useState<View>(initialView);
@@ -84,10 +86,14 @@ export default function Map({ lang = "es" }: MapProps) {
     fuentes: true,
     urinarios: true,
     duchas: false,
+    lavapies: false,
+    verdes: false,
     sombra: false,
     barrios: true,
   });
   const [loaded, setLoaded] = useState(false);
+  const [counts, setCounts] = useState<Partial<Record<LayerKey, number>>>({});
+  const verdesLoadedRef = useRef(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   // Paseo de la sombra state
@@ -400,7 +406,7 @@ export default function Map({ lang = "es" }: MapProps) {
     setWalkOrigin(null);
   }
 
-  const homeHref = lang === "va" ? "/val/" : "/";
+  const homeUrl = homeHref(lang);
 
   const tabs: Array<{ key: View; label: string; icon: React.ReactNode }> = [
     {
@@ -442,7 +448,7 @@ export default function Map({ lang = "es" }: MapProps) {
   const SidebarNav = (
     <>
       <div className="border-b border-slate-100 px-5 py-4">
-        <a href={homeHref} className="flex items-center gap-2.5 text-(--color-ink) transition hover:opacity-80" onClick={() => setMobileNavOpen(false)}>
+        <a href={homeUrl} className="flex items-center gap-2.5 text-(--color-ink) transition hover:opacity-80" onClick={() => setMobileNavOpen(false)}>
           <svg width="32" height="32" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden>
             <g transform="translate(48 30)">
               <g fill="#f97316">
@@ -510,7 +516,7 @@ export default function Map({ lang = "es" }: MapProps) {
           {sidebarT.repoCta}
         </a>
         <a
-          href={homeHref}
+          href={homeUrl}
           onClick={() => setMobileNavOpen(false)}
           className="mt-3 flex items-center gap-1.5 text-xs font-medium text-slate-600 transition hover:text-(--color-ink)"
         >

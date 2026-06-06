@@ -1,0 +1,10 @@
+---
+import MapLayout from '../../layouts/MapLayout.astro';
+import MapLazy from '../../components/MapLazy.tsx';
+
+const lang = 'en';
+---
+
+<MapLayout lang={lang}>
+  <MapLazy client:only="react" lang={lang} />
+</MapLayout>

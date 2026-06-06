@@ -35,7 +35,10 @@ function capitalize(str: string): string {
 
 export default function FreshestRanking({ lang = "es" }: Props) {
   const tr = STRINGS[lang].map.freshest;
-  const numFmt = useMemo(() => new Intl.NumberFormat(lang === "va" ? "ca" : "es-ES"), [lang]);
+  const numFmt = useMemo(
+    () => new Intl.NumberFormat(lang === "va" ? "ca" : lang === "en" ? "en-GB" : "es-ES"),
+    [lang],
+  );
 
   const [barrios, setBarrios] = useState<BarrioProps[] | null>(null);
   const [sortMode, setSortMode] = useState<SortMode>("density");

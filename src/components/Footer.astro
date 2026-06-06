@@ -1,6 +1,6 @@
 ---
 import Logo from './Logo.astro';
-import { t, type Lang } from '../i18n/strings';
+import { t, type Lang, homeHref } from '../i18n/strings';
 
 interface Props {
   lang?: Lang;
@@ -8,14 +8,14 @@ interface Props {
 
 const { lang = 'es' } = Astro.props;
 const ft = t(lang).footer;
-const homeHref = lang === 'va' ? '/val/' : '/';
+const homeUrl = homeHref(lang);
 const year = new Date().getFullYear();
 ---
 
 <footer class="border-t border-(--color-ink)/10">
   <div class="mx-auto grid max-w-7xl gap-10 px-6 py-12 sm:grid-cols-2 md:grid-cols-3 md:px-10">
     <div>
-      <a href={homeHref} class="flex items-center gap-2.5 text-(--color-ink)">
+      <a href={homeUrl} class="flex items-center gap-2.5 text-(--color-ink)">
         <Logo size={32} />
         <span class="font-display text-lg leading-none font-semibold">
           València<br /><span class="font-medium">Refresca</span>

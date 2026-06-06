@@ -1,5 +1,5 @@
 ---
-import { t, type Lang } from '../i18n/strings';
+import { t, type Lang, mapaHref } from '../i18n/strings';
 
 interface Props {
   lang?: Lang;
@@ -7,14 +7,30 @@ interface Props {
 
 const { lang = 'es' } = Astro.props;
 const m = t(lang).map;
-const baseHref = lang === 'va' ? '/val/mapa/' : '/mapa/';
+const baseHref = mapaHref(lang);
+
+const pick = <T,>(values: Record<Lang, T>): T => values[lang];
+
+const heroEyebrow = pick({ es: 'La herramienta', va: "L'eina", en: 'The tool' });
+const heroTitle = pick({
+  es: 'Tres formas de leer la ciudad.',
+  va: 'Tres formes de llegir la ciutat.',
+  en: 'Three ways to read the city.',
+});
+const heroBody = pick({
+  es: 'Capas, paseos en bucle por la sombra y ranking de barrios frescos. Todo dentro del mapa.',
+  va: 'Capes, paseos en bucle per la sombra i rànquing de barris frescos. Tot dins del mapa.',
+  en: 'Layers, loop walks through the shade and a ranking of cool neighbourhoods. All inside the map.',
+});
 
 const features = [
   {
     eyebrow: m.sections.capas,
-    title: lang === 'va'
-      ? 'Activa les capes i navega per València.'
-      : 'Activa las capas y navega por València.',
+    title: pick({
+      es: 'Activa las capas y navega por València.',
+      va: 'Activa les capes i navega per València.',
+      en: 'Toggle the layers and explore València.',
+    }),
     desc: m.description,
     href: `${baseHref}#capas`,
     cta: m.ctaButton,
@@ -27,7 +43,7 @@ const features = [
     title: m.shadowWalk.title,
     desc: m.shadowWalk.subtitle,
     href: `${baseHref}#paseo`,
-    cta: lang === 'va' ? 'Generar paseo' : 'Generar paseo',
+    cta: m.shadowWalk.generate,
     accentVar: '--color-sombra-deep',
     bgVar: '--color-sombra-soft',
     icon: 'walk',
@@ -37,7 +53,7 @@ const features = [
     title: m.freshest.title,
     desc: m.freshest.subtitle,
     href: `${baseHref}#frescos`,
-    cta: lang === 'va' ? 'Veure rànquing' : 'Ver ranking',
+    cta: pick({ es: 'Ver ranking', va: 'Veure rànquing', en: 'See ranking' }),
     accentVar: '--color-calor-deep',
     bgVar: '--color-calor-soft',
     icon: 'chart',
@@ -49,15 +65,13 @@ const features = [
   <div class="mx-auto max-w-7xl px-6 py-20 md:px-10 md:py-24">
     <div class="max-w-3xl">
       <p class="font-sans text-sm font-medium tracking-[0.18em] uppercase text-(--color-agua-deep)">
-        {lang === 'va' ? 'L\'eina' : 'La herramienta'}
+        {heroEyebrow}
       </p>
       <h2 class="mt-3 font-display text-3xl leading-tight text-(--color-ink) md:text-5xl">
-        {lang === 'va' ? 'Tres formes de llegir la ciutat.' : 'Tres formas de leer la ciudad.'}
+        {heroTitle}
       </h2>
       <p class="mt-4 max-w-2xl text-(--color-ink-soft) md:text-lg">
-        {lang === 'va'
-          ? 'Capes, paseos en bucle per la sombra i rànquing de barris frescos. Tot dins del mapa.'
-          : 'Capas, paseos en bucle por la sombra y ranking de barrios frescos. Todo dentro del mapa.'}
+        {heroBody}
       </p>
     </div>
 
