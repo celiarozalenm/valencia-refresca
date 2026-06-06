@@ -31,12 +31,15 @@ const steps = tr.steps.map((step, i) => ({
       <>
         <div class="flex flex-col items-center text-center">
           <div
-            class="relative aspect-square w-full max-w-[220px] overflow-hidden rounded-2xl"
+            class:list={[
+              'relative w-full max-w-[220px] overflow-hidden rounded-2xl',
+              step.n === 1 ? 'aspect-[267/233]' : 'aspect-square',
+            ]}
             style={step.n === 1 ? '' : `background: var(${step.bgVar});`}
             aria-hidden="true"
           >
             {step.n === 1 ? (
-              <img src="/illustrations/illus-1.svg" alt="" class="h-full w-full object-cover" />
+              <img src="/illustrations/illus-1.svg" alt="" class="h-full w-full object-contain" />
             ) : (
               <div class="flex h-full w-full items-center justify-center border-2 border-dashed border-(--color-ink)/15">
                 <span class="font-mono text-[11px] tracking-wider uppercase text-(--color-ink)/40">
