@@ -31,13 +31,19 @@ const steps = tr.steps.map((step, i) => ({
       <>
         <div class="flex flex-col items-center text-center">
           <div
-            class="relative flex aspect-square w-full max-w-[220px] items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-(--color-ink)/15"
-            style={`background: var(${step.bgVar});`}
+            class="relative aspect-square w-full max-w-[220px] overflow-hidden rounded-2xl"
+            style={step.n === 1 ? '' : `background: var(${step.bgVar});`}
             aria-hidden="true"
           >
-            <span class="font-mono text-[11px] tracking-wider uppercase text-(--color-ink)/40">
-              Ilustración {step.n}
-            </span>
+            {step.n === 1 ? (
+              <img src="/illustrations/illus-1.svg" alt="" class="h-full w-full object-cover" />
+            ) : (
+              <div class="flex h-full w-full items-center justify-center border-2 border-dashed border-(--color-ink)/15">
+                <span class="font-mono text-[11px] tracking-wider uppercase text-(--color-ink)/40">
+                  Ilustración {step.n}
+                </span>
+              </div>
+            )}
           </div>
 
           <div class="mt-5 flex items-center gap-2">
