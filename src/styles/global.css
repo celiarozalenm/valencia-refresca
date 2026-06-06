@@ -40,6 +40,19 @@
     background: var(--color-agua-soft);
     color: var(--color-ink);
   }
+
+  /* Every interactive button shows a pointer on hover; disabled ones don't. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  label:has(> input[type="checkbox"]),
+  summary {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  [role="button"][aria-disabled="true"] {
+    cursor: not-allowed;
+  }
 }
 
 /* ---- Interactive map feedback popup (fuente · urinario · ducha) ---- */

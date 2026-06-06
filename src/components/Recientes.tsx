@@ -105,7 +105,7 @@ export default function Recientes({ lang = "es" }: Props) {
   const canShowMore = entries !== null && entries.length < total;
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <div className="mx-auto max-w-3xl px-4 pt-16 pb-12 sm:px-6 md:pt-6 md:pb-16">
       <header ref={headerRef} className="mb-5 sm:mb-7 scroll-mt-24">
         <span className="uppercase tracking-[0.18em] text-[11px] font-bold text-[var(--color-agua-deep)]">
           {tr.tag}
