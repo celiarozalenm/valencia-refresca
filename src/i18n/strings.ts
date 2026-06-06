@@ -227,7 +227,7 @@ export const STRINGS = {
     about: {
       eyebrow: "Cómo está hecho",
       title: "Datos abiertos del Ajuntament, análisis abierto en GitHub.",
-      lede: "València Refresca cruza ocho datasets públicos del Ajuntament para mapear dónde la ciudad refresca y dónde no. Todo el código y los pipelines son reproducibles.",
+      lede: "València Refresca cruza doce datasets públicos del Ajuntament para mapear dónde la ciudad refresca y dónde no. Todo el código y los pipelines son reproducibles.",
       stackTitle: "Stack técnico",
       stack: [
         { name: "Astro + React", desc: "Web estática híbrida con islas interactivas." },
@@ -493,7 +493,7 @@ export const STRINGS = {
     about: {
       eyebrow: "Com està fet",
       title: "Dades obertes de l'Ajuntament, anàlisi obert a GitHub.",
-      lede: "València Refresca creua huit datasets públics de l'Ajuntament per cartografiar on la ciutat refresca i on no. Tot el codi i els pipelines són reproduïbles.",
+      lede: "València Refresca creua dotze datasets públics de l'Ajuntament per cartografiar on la ciutat refresca i on no. Tot el codi i els pipelines són reproduïbles.",
       stackTitle: "Stack tècnic",
       stack: [
         { name: "Astro + React", desc: "Web estàtica híbrida amb illes interactives." },
@@ -759,7 +759,7 @@ export const STRINGS = {
     about: {
       eyebrow: "How it's built",
       title: "Open data from the City Council, open analysis on GitHub.",
-      lede: "València Refresca cross-references eight public datasets from the City Council to map where the city cools down and where it doesn't. All the code and pipelines are reproducible.",
+      lede: "València Refresca cross-references twelve public datasets from the City Council to map where the city cools down and where it doesn't. All the code and pipelines are reproducible.",
       stackTitle: "Tech stack",
       stack: [
         { name: "Astro + React", desc: "Hybrid static web with interactive islands." },
