@@ -797,7 +797,7 @@ export default function Map({ lang = "es" }: MapProps) {
 
         {/* Overlay panel: Capas (sobre el mapa) */}
         {view === "capas" && (
-          <div className="pointer-events-none absolute top-4 left-4 z-10 max-w-xs md:top-6 md:left-6">
+          <div className="pointer-events-none absolute top-16 left-3 z-10 max-w-xs md:top-6 md:left-6">
             <div className="pointer-events-auto rounded-2xl bg-white/95 shadow-lg backdrop-blur">
               <button
                 type="button"

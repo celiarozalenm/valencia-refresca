@@ -12,10 +12,10 @@ const baseHref = mapaHref(lang);
 const pick = <T,>(values: Record<Lang, T>): T => values[lang];
 
 const heroEyebrow = pick({ es: 'La herramienta', va: "L'eina", en: 'The tool' });
-const heroTitle = pick({
-  es: 'Tres formas de leer la ciudad.',
-  va: 'Tres formes de llegir la ciutat.',
-  en: 'Three ways to read the city.',
+const heroTitleParts = pick({
+  es: { pre: 'Tres formas de leer', post: 'la ciudad.' },
+  va: { pre: 'Tres formes de llegir', post: 'la ciutat.' },
+  en: { pre: 'Three ways to read', post: 'the city.' },
 });
 const heroBody = pick({
   es: 'Capas, paseos en bucle por la sombra y ranking de barrios frescos. Todo dentro del mapa.',
@@ -68,7 +68,7 @@ const features = [
         {heroEyebrow}
       </p>
       <h2 class="mt-3 font-display text-3xl leading-tight text-(--color-ink) md:text-5xl">
-        {heroTitle}
+        {heroTitleParts.pre}<br class="md:hidden" /> {heroTitleParts.post}
       </h2>
       <p class="mt-4 max-w-2xl text-(--color-ink-soft) md:text-lg">
         {heroBody}

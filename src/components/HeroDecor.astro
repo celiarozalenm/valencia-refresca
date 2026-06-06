@@ -14,27 +14,29 @@ type Item = {
   opacity: number; // 0..1
 };
 
-// Iconos invadiendo el espacio del móvil: lados a left 8-12% (izq) y 38-44% (dcha),
-// arriba/abajo solapando el chasis. El móvil va al z-10, los iconos quedan detrás.
+// Coordenadas relativas al MÓVIL (no a la columna), así funcionan igual
+// en móvil (centrado) y desktop (justify-start). left 0 = borde izq del
+// móvil, left 100 = borde derecho. Negativos / >100 = fuera del móvil.
 const items: Item[] = [
-  // Arriba (asomando por detrás del notch / status bar)
-  { kind: 'sun', top: 4, left: 12, size: 130, rotate: -12, opacity: 0.6 },
-  { kind: 'drop', top: 6, left: 42, size: 100, rotate: 18, opacity: 0.6 },
-  { kind: 'sun', top: 18, left: 28, size: 56, rotate: 25, opacity: 0.45 },
-  // Lado izquierdo (overlap con borde del móvil)
-  { kind: 'drop', top: 26, left: 8, size: 130, rotate: -22, opacity: 0.6 },
-  { kind: 'sun', top: 52, left: 6, size: 110, rotate: 18, opacity: 0.55 },
-  { kind: 'drop', top: 78, left: 8, size: 95, rotate: -10, opacity: 0.55 },
-  // Lado derecho (overlap con borde del móvil)
-  { kind: 'sun', top: 30, left: 40, size: 100, rotate: -18, opacity: 0.55 },
-  { kind: 'drop', top: 56, left: 42, size: 120, rotate: 14, opacity: 0.55 },
-  { kind: 'sun', top: 82, left: 40, size: 100, rotate: 22, opacity: 0.55 },
-  // Abajo (asomando por debajo del home indicator)
-  { kind: 'drop', top: 100, left: 16, size: 100, rotate: 12, opacity: 0.55 },
-  { kind: 'sun', top: 102, left: 28, size: 80, rotate: -20, opacity: 0.5 },
-  { kind: 'drop', top: 100, left: 42, size: 90, rotate: 20, opacity: 0.55 },
-  // Pequeño extra
-  { kind: 'sun', top: 90, left: 24, size: 38, rotate: 30, opacity: 0.4 },
+  // Lado izquierdo (asomando fuera del borde)
+  { kind: 'sun', top: 8, left: -22, size: 110, rotate: -12, opacity: 0.6 },
+  { kind: 'drop', top: 32, left: -18, size: 120, rotate: -22, opacity: 0.6 },
+  { kind: 'sun', top: 58, left: -20, size: 95, rotate: 18, opacity: 0.55 },
+  { kind: 'drop', top: 82, left: -16, size: 85, rotate: -8, opacity: 0.55 },
+  // Lado derecho (asomando fuera del borde)
+  { kind: 'drop', top: 10, left: 100, size: 110, rotate: 18, opacity: 0.6 },
+  { kind: 'sun', top: 34, left: 105, size: 100, rotate: -18, opacity: 0.55 },
+  { kind: 'drop', top: 60, left: 102, size: 120, rotate: 14, opacity: 0.6 },
+  { kind: 'sun', top: 84, left: 102, size: 90, rotate: 22, opacity: 0.55 },
+  // Arriba (encima del móvil)
+  { kind: 'drop', top: -6, left: 30, size: 70, rotate: 25, opacity: 0.5 },
+  { kind: 'sun', top: -2, left: 70, size: 80, rotate: -15, opacity: 0.55 },
+  // Abajo (debajo del móvil)
+  { kind: 'sun', top: 102, left: 28, size: 80, rotate: -22, opacity: 0.55 },
+  { kind: 'drop', top: 104, left: 64, size: 75, rotate: 18, opacity: 0.55 },
+  // Pequeños cerca de las esquinas
+  { kind: 'sun', top: 22, left: 92, size: 38, rotate: 30, opacity: 0.35 },
+  { kind: 'drop', top: 78, left: 6, size: 32, rotate: -10, opacity: 0.35 },
 ];
 ---
 
