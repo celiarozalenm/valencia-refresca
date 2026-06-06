@@ -1170,8 +1170,12 @@ export default function Map({ lang = "es" }: MapProps) {
                 <button
                   type="button"
                   onClick={handleResetWalk}
-                  className="w-full cursor-pointer text-center text-xs font-medium text-slate-500 transition hover:text-slate-900"
+                  className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
                 >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                    <polyline points="23 4 23 10 17 10" />
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                  </svg>
                   {sw.reset}
                 </button>
               </div>
@@ -1182,9 +1186,10 @@ export default function Map({ lang = "es" }: MapProps) {
         {/* Cerca de ti: geolocaliza y lista lo más cercano */}
         {view === "cerca" && (
           <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone)">
-            <div className="mx-auto max-w-2xl px-6 pt-16 pb-12 md:px-10 md:pt-6 md:pb-16">
-              <h1 className="font-display text-4xl leading-[1.1] text-(--color-agua-deep) md:text-5xl">{cercaT.title}</h1>
-              <p className="mt-3 max-w-xl text-(--color-ink-soft) md:text-lg">{cercaT.subtitle}</p>
+            <div className="mx-auto max-w-3xl px-4 pt-16 pb-12 sm:px-6 md:pt-6 md:pb-16">
+              <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-(--color-agua-deep)">{cercaT.tag}</span>
+              <h1 className="mt-1 text-3xl font-bold text-(--color-ink) sm:text-4xl" style={{ fontFamily: "var(--font-display)" }}>{cercaT.title}</h1>
+              <p className="mt-2 max-w-xl text-sm text-(--color-ink-soft) sm:text-base">{cercaT.subtitle}</p>
 
               <button
                 type="button"
@@ -1262,10 +1267,11 @@ export default function Map({ lang = "es" }: MapProps) {
         {/* Barrios frescos: pantalla de contenido */}
         {view === "frescos" && (
           <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone)">
-            <div className="mx-auto max-w-5xl px-6 pt-16 pb-12 md:px-10 md:pt-6 md:pb-16">
-              <h1 className="font-display text-4xl leading-tight text-(--color-agua-deep) md:text-5xl">{freshestT.title}</h1>
-              <p className="mt-3 max-w-2xl text-(--color-ink-soft) md:text-lg">{freshestT.subtitle}</p>
-              <div className="mt-10">
+            <div className="mx-auto max-w-3xl px-4 pt-16 pb-12 sm:px-6 md:pt-6 md:pb-16">
+              <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-(--color-agua-deep)">{freshestT.tag}</span>
+              <h1 className="mt-1 text-3xl font-bold text-(--color-ink) sm:text-4xl" style={{ fontFamily: "var(--font-display)" }}>{freshestT.title}</h1>
+              <p className="mt-2 max-w-xl text-sm text-(--color-ink-soft) sm:text-base">{freshestT.subtitle}</p>
+              <div className="mt-8">
                 <FreshestRanking lang={lang} />
               </div>
             </div>

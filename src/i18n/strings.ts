@@ -106,6 +106,7 @@ export const STRINGS = {
         acerca: "Acerca de",
       },
       cerca: {
+        tag: "Ahora mismo",
         title: "Cerca de ti",
         subtitle: "Lo más cercano a tu ubicación ahora mismo.",
         locate: "Usar mi ubicación",
@@ -158,6 +159,7 @@ export const STRINGS = {
         reset: "Nuevo paseo",
       },
       freshest: {
+        tag: "Ranking verde",
         title: "Barrios frescos",
         subtitle: "Cuánto arbolado tiene cada barrio de València, sobre datos del padrón municipal de arbolado.",
         kpiTrees: "Árboles cartografiados",
@@ -375,6 +377,7 @@ export const STRINGS = {
         acerca: "Sobre el projecte",
       },
       cerca: {
+        tag: "Ara mateix",
         title: "Prop de tu",
         subtitle: "El més pròxim a la teua ubicació ara mateix.",
         locate: "Usar la meua ubicació",
@@ -427,6 +430,7 @@ export const STRINGS = {
         reset: "Nou passeig",
       },
       freshest: {
+        tag: "Rànquing verd",
         title: "Barris frescs",
         subtitle: "Quant arbratge té cada barri de València, sobre dades del padró municipal d'arbratge.",
         kpiTrees: "Arbres cartografiats",
@@ -644,6 +648,7 @@ export const STRINGS = {
         acerca: "About",
       },
       cerca: {
+        tag: "Right now",
         title: "Near you",
         subtitle: "The closest to your location right now.",
         locate: "Use my location",
@@ -696,6 +701,7 @@ export const STRINGS = {
         reset: "New walk",
       },
       freshest: {
+        tag: "Green ranking",
         title: "Cool neighbourhoods",
         subtitle: "How much tree cover each neighbourhood of València has, based on the municipal tree census.",
         kpiTrees: "Mapped trees",
