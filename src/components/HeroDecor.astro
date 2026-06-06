@@ -17,27 +17,28 @@ type Item = {
 // Coordenadas relativas al MÓVIL (no a la columna), así funcionan igual
 // en móvil (centrado) y desktop (justify-start). left 0 = borde izq del
 // móvil, left 100 = borde derecho. Negativos / >100 = fuera del móvil.
+// Tamaños homogéneos (130-160px) y opacidades muy bajas (0.08-0.12).
 const items: Item[] = [
-  // Lado izquierdo (asomando fuera del borde)
-  { kind: 'sun', top: 8, left: -12, size: 110, rotate: -12, opacity: 0.18 },
-  { kind: 'drop', top: 32, left: -8, size: 120, rotate: 22, opacity: 0.18 },
-  { kind: 'sun', top: 58, left: -10, size: 95, rotate: 18, opacity: 0.15 },
-  { kind: 'drop', top: 82, left: -6, size: 85, rotate: -8, opacity: 0.15 },
-  // Lado derecho (más metidos hacia dentro, sino se recortan en móvil)
-  { kind: 'drop', top: 10, left: 95, size: 110, rotate: 18, opacity: 0.18 },
-  { kind: 'sun', top: 36, left: 102, size: 95, rotate: -18, opacity: 0.15 },
-  { kind: 'drop', top: 60, left: 96, size: 120, rotate: 14, opacity: 0.18 },
-  { kind: 'sun', top: 84, left: 100, size: 95, rotate: 22, opacity: 0.15 },
-  { kind: 'drop', top: 48, left: 108, size: 60, rotate: -12, opacity: 0.14 },
-  // Arriba (encima del móvil)
-  { kind: 'drop', top: -6, left: 30, size: 70, rotate: 25, opacity: 0.14 },
-  { kind: 'sun', top: -2, left: 70, size: 80, rotate: -15, opacity: 0.15 },
-  // Abajo (debajo del móvil)
-  { kind: 'sun', top: 102, left: 28, size: 80, rotate: -22, opacity: 0.15 },
-  { kind: 'drop', top: 104, left: 64, size: 75, rotate: 18, opacity: 0.15 },
-  // Pequeños extra cerca de esquinas
-  { kind: 'sun', top: 22, left: 88, size: 38, rotate: 30, opacity: 0.1 },
-  { kind: 'drop', top: 78, left: 6, size: 32, rotate: -10, opacity: 0.1 },
+  // Lado izquierdo
+  { kind: 'sun', top: 8, left: -12, size: 150, rotate: -12, opacity: 0.1 },
+  { kind: 'drop', top: 32, left: -8, size: 160, rotate: 22, opacity: 0.1 },
+  { kind: 'sun', top: 58, left: -10, size: 145, rotate: 18, opacity: 0.1 },
+  { kind: 'drop', top: 82, left: -6, size: 140, rotate: -8, opacity: 0.1 },
+  // Lado derecho
+  { kind: 'drop', top: 10, left: 95, size: 150, rotate: 18, opacity: 0.1 },
+  { kind: 'sun', top: 36, left: 102, size: 145, rotate: -18, opacity: 0.1 },
+  { kind: 'drop', top: 60, left: 96, size: 160, rotate: 14, opacity: 0.1 },
+  { kind: 'sun', top: 84, left: 100, size: 145, rotate: 22, opacity: 0.1 },
+  { kind: 'drop', top: 48, left: 108, size: 130, rotate: -12, opacity: 0.08 },
+  // Arriba
+  { kind: 'drop', top: -6, left: 30, size: 135, rotate: 25, opacity: 0.08 },
+  { kind: 'sun', top: -2, left: 70, size: 140, rotate: -15, opacity: 0.09 },
+  // Abajo
+  { kind: 'sun', top: 102, left: 28, size: 140, rotate: -22, opacity: 0.09 },
+  { kind: 'drop', top: 104, left: 64, size: 135, rotate: 18, opacity: 0.09 },
+  // Pequeños extra (un poco más pequeños para variar pero no tanto)
+  { kind: 'sun', top: 22, left: 88, size: 110, rotate: 30, opacity: 0.07 },
+  { kind: 'drop', top: 78, left: 6, size: 105, rotate: -10, opacity: 0.07 },
 ];
 ---
 

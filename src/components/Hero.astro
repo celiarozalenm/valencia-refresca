@@ -1,6 +1,5 @@
 ---
 import PhoneMockup from './PhoneMockup.astro';
-import HeroDecor from './HeroDecor.astro';
 import { t, type Lang } from '../i18n/strings';
 
 interface Props {
@@ -12,7 +11,7 @@ const s = t(lang).hero;
 ---
 
 <section id="inicio" class="relative isolate overflow-hidden">
-  <div class="mx-auto grid max-w-7xl items-center gap-12 px-6 pt-4 pb-20 md:grid-cols-2 md:gap-8 md:px-10 md:pt-8 md:pb-28">
+  <div class="mx-auto grid max-w-7xl items-center gap-12 px-6 pt-4 pb-20 md:grid-cols-[3fr_2fr] md:gap-6 md:pr-10 md:pl-16 md:pt-8 md:pb-28 lg:pl-24">
     <div class="flex flex-col gap-8">
       <p class="font-sans text-sm font-semibold tracking-[0.18em] uppercase text-(--color-agua-deep)">
         {s.eyebrow}
@@ -22,7 +21,7 @@ const s = t(lang).hero;
         {s.titleLine1}<br />{s.titleLine2}
       </h1>
 
-      <p class="font-display max-w-md text-2xl leading-tight text-(--color-ink) sm:text-3xl">
+      <p class="font-display max-w-lg text-2xl leading-tight text-(--color-ink) sm:text-3xl md:text-4xl">
         {s.claimPre} <span class="text-(--color-calor-deep) font-medium">{s.claimHighlight}</span> {s.claimPost}
       </p>
 
@@ -49,9 +48,19 @@ const s = t(lang).hero;
       </div>
     </div>
 
-    <div class="flex justify-center md:justify-start md:pl-8 lg:pl-16">
+    <div class="flex justify-center md:justify-start">
       <div class="relative">
-        <HeroDecor />
+        <!-- Halo radial detrás del móvil: blob azul + blob naranja, muy difusos, sin bordes visibles -->
+        <div
+          class="pointer-events-none absolute inset-0 -z-10 scale-[2.2] blur-3xl"
+          aria-hidden="true"
+          style="
+            background:
+              radial-gradient(circle at 35% 40%, var(--color-agua) 0%, color-mix(in srgb, var(--color-agua) 30%, transparent) 20%, transparent 48%),
+              radial-gradient(circle at 70% 65%, var(--color-calor) 0%, color-mix(in srgb, var(--color-calor) 25%, transparent) 18%, transparent 45%);
+            opacity: 0.55;
+          "
+        ></div>
         <div class="relative z-10">
           <PhoneMockup />
         </div>
