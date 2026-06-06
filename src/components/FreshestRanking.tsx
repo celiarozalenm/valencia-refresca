@@ -228,9 +228,9 @@ interface KpiCardProps {
 
 function KpiCard({ label, value, unit }: KpiCardProps) {
   return (
-    <div className="rounded-2xl bg-white p-4 ring-1 ring-(--color-ink)/8 md:p-5">
+    <div className="overflow-hidden rounded-2xl bg-white p-4 ring-1 ring-(--color-ink)/8 md:p-5">
       <p className="text-[10px] font-semibold tracking-wider uppercase text-(--color-ink-soft)">{label}</p>
-      <p className="mt-1.5 font-display text-3xl leading-none font-semibold text-(--color-ink)">{value}</p>
+      <p className="mt-1.5 font-display text-2xl leading-none font-semibold tabular-nums break-words text-(--color-ink) md:text-3xl">{value}</p>
       <p className="mt-1.5 text-xs text-(--color-ink-soft)">{unit}</p>
     </div>
   );
@@ -251,12 +251,12 @@ function SpotlightCard({ label, name, sub, accent }: SpotlightCardProps) {
   } as const;
   const c = map[accent];
   return (
-    <div className="rounded-2xl bg-white p-4 ring-1 ring-(--color-ink)/8 md:p-5">
+    <div className="overflow-hidden rounded-2xl bg-white p-4 ring-1 ring-(--color-ink)/8 md:p-5">
       <p className="text-[10px] font-semibold tracking-wider uppercase text-(--color-ink-soft)">{label}</p>
-      <p className="mt-1.5 font-display text-2xl leading-tight font-semibold" style={{ color: c.fg }}>
+      <p className="mt-1.5 font-display text-xl leading-tight font-semibold break-words md:text-2xl" style={{ color: c.fg }}>
         {name}
       </p>
-      <p className="mt-2 inline-block rounded-full px-2 py-0.5 text-xs font-medium" style={{ background: c.bg, color: c.fg }}>
+      <p className="mt-2 inline-block max-w-full truncate rounded-full px-2 py-0.5 text-xs font-medium" style={{ background: c.bg, color: c.fg }}>
         {sub}
       </p>
     </div>

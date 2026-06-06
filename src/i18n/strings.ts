@@ -56,7 +56,7 @@ export const STRINGS = {
       manzanas: "Manzanas",
     },
     features: {
-      saberMas: "Saber más",
+      saberMas: "Ver en mapa",
       fuentes: { title: "Fuentes", desc: "Mapa de fuentes públicas de agua potable." },
       urinarios: { title: "Urinarios", desc: "Puntos de alivio para refrescarte." },
       sombra: { title: "Sombra", desc: "Zonas de sombra para descansar del sol." },
@@ -310,7 +310,7 @@ export const STRINGS = {
       manzanas: "Illes de cases",
     },
     features: {
-      saberMas: "Saber més",
+      saberMas: "Veure al mapa",
       fuentes: { title: "Fonts", desc: "Mapa de fonts públiques d'aigua potable." },
       urinarios: { title: "Urinaris", desc: "Punts d'alleujament per a refrescar-te." },
       sombra: { title: "Ombra", desc: "Zones d'ombra per a descansar del sol." },
@@ -564,7 +564,7 @@ export const STRINGS = {
       manzanas: "Blocks",
     },
     features: {
-      saberMas: "Learn more",
+      saberMas: "See on map",
       fuentes: { title: "Fountains", desc: "Map of public drinking-water fountains." },
       urinarios: { title: "Urinals", desc: "Public toilet points to freshen up." },
       sombra: { title: "Shade", desc: "Shaded areas to rest from the sun." },
