@@ -177,3 +177,14 @@
 .vr-popup-flash { font-size: 0.75rem; margin-top: 8px; text-align: center; min-height: 1em; }
 .vr-popup-flash.ok { color: #15803d; }
 .vr-popup-flash.error { color: #b8431b; }
+
+/* iOS Safari auto-zooms (and breaks the layout) when focusing a form field
+   whose font-size is < 16px. Force every input to 16px on phones to stop it.
+   !important is needed to beat Tailwind text-sm/text-xs utilities. */
+@media (max-width: 767px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}

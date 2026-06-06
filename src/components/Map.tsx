@@ -181,7 +181,7 @@ export default function Map({ lang = "es" }: MapProps) {
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
     map.addControl(
       new maplibregl.GeolocateControl({
-        positionOptions: { enableHighAccuracy: true },
+        positionOptions: { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 },
         trackUserLocation: false,
         showUserLocation: true,
       }),
@@ -574,7 +574,7 @@ export default function Map({ lang = "es" }: MapProps) {
       () => {
         setWalkPending(false);
       },
-      { enableHighAccuracy: true },
+      { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 },
     );
   }
 
@@ -634,40 +634,27 @@ export default function Map({ lang = "es" }: MapProps) {
     return out;
   }
 
-  async function handleLocateNearby() {
+  function handleLocateNearby() {
     if (!navigator.geolocation) {
       setCercaError(cercaT.denied);
       return;
     }
     setCercaPending(true);
     setCercaError(null);
-
-    const locate = (highAccuracy: boolean, timeout: number) =>
-      new Promise<GeolocationPosition>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject, {
-          enableHighAccuracy: highAccuracy,
-          timeout,
-          maximumAge: 60000, // acepta una posición reciente cacheada (más rápido en móvil)
-        });
-      });
-
-    try {
-      let pos: GeolocationPosition;
-      try {
-        // 1º intento: GPS de alta precisión, espera corta.
-        pos = await locate(true, 8000);
-      } catch (err) {
-        // code 1 = PERMISSION_DENIED: si el usuario denegó el permiso, no insistimos.
-        if ((err as { code?: number } | undefined)?.code === 1) throw err;
-        // Si el GPS falla o tarda, reintento por red (más rápido y fiable).
-        pos = await locate(false, 12000);
-      }
-      setCercaResults(findNearest(pos.coords.longitude, pos.coords.latitude));
-    } catch {
-      setCercaError(cercaT.denied);
-    } finally {
-      setCercaPending(false);
-    }
+    // Config probada en móvil (igual que madroño-perruno): SIN alta precisión —
+    // la ubicación por red/wifi es rápida y fiable; el GPS de alta precisión
+    // se cuelga o falla en muchos navegadores móviles.
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setCercaResults(findNearest(pos.coords.longitude, pos.coords.latitude));
+        setCercaPending(false);
+      },
+      () => {
+        setCercaError(cercaT.denied);
+        setCercaPending(false);
+      },
+      { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 },
+    );
   }
 
   // Lleva el resultado al mapa: enciende su capa, vuela y abre su ficha.
