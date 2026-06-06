@@ -11,7 +11,8 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN ?? process.env.UPSTASH_REDIS_REST_TOKEN ?? '',
 })
 
-const FEED_KEY = 'feed:global'
+// Shares its Upstash database with madroño-perruno; keys are namespaced "vr:".
+const FEED_KEY = 'vr:feed:global'
 const DEFAULT_LIMIT = 30
 const MAX_LIMIT = 100
 const ALLOWED_ORIGINS = [

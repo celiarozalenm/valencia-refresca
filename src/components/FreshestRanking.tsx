@@ -113,14 +113,14 @@ export default function FreshestRanking({ lang = "es" }: Props) {
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
         <SpotlightCard
           label={tr.statMost}
-          name={capitalize(top.sort((a, b) => b.arboles_per_km2 - a.arboles_per_km2)[0]?.nombre ?? "—")}
+          name={capitalize(top.sort((a, b) => b.arboles_per_km2 - a.arboles_per_km2)[0]?.nombre ?? "")}
           sub={`${numFmt.format(Math.round(maxDensity))} ${tr.unit}`}
           accent="sombra"
         />
         <SpotlightCard
           label={tr.statLeast}
           name={capitalize(
-            [...barrios].sort((a, b) => a.arboles_per_km2 - b.arboles_per_km2)[0]?.nombre ?? "—",
+            [...barrios].sort((a, b) => a.arboles_per_km2 - b.arboles_per_km2)[0]?.nombre ?? "",
           )}
           sub={`${numFmt.format(Math.round(minDensity))} ${tr.unit}`}
           accent="calor"

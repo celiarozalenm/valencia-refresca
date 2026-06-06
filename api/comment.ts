@@ -28,7 +28,10 @@ const COMMENT_TTL_SECONDS = 60 * 60 * 24 * 60 // 60 days
 const RATE_LIMIT_PER_HOUR = 12
 const MAX_TEXT_LENGTH = 140
 const ALLOWED_TYPES = new Set(['fuente', 'urinario', 'ducha'])
-const FEED_KEY = 'feed:global'
+// Key prefix: this app shares its Upstash database with madroño-perruno, so
+// every key is namespaced under "vr:" to keep the two datasets fully separate.
+const NS = 'vr:'
+const FEED_KEY = `${NS}feed:global`
 const FEED_MAX_ENTRIES = 200
 const FEED_TTL_SECONDS = 60 * 60 * 24 * 60 // 60 days
 const ALLOWED_ORIGINS = [
@@ -99,7 +102,7 @@ export default async function handler(req: Request) {
         headers: { ...cors, 'Content-Type': 'application/json' },
       })
     }
-    const key = `comment:${entityType}:${entityId}`
+    const key = `${NS}comment:${entityType}:${entityId}`
     const raw = await redis.zrange<string[]>(key, 0, COMMENTS_RETURNED - 1, { rev: true })
     const comments: CommentEntry[] = []
     for (const r of raw) {
@@ -165,7 +168,7 @@ export default async function handler(req: Request) {
       'unknown'
     const ipHash = await hashIp(ip)
 
-    const rlKey = `rlc:${ipHash}`
+    const rlKey = `${NS}rlc:${ipHash}`
     const count = await redis.incr(rlKey)
     if (count === 1) await redis.expire(rlKey, 3600)
     if (count > RATE_LIMIT_PER_HOUR) {
@@ -178,7 +181,7 @@ export default async function handler(req: Request) {
     const ts = Date.now()
     const rand = Math.random().toString(36).slice(2, 8)
     const entry: CommentEntry & { rand: string } = { sentiment, text, ipHash, ts, rand }
-    const key = `comment:${entityType}:${entityId}`
+    const key = `${NS}comment:${entityType}:${entityId}`
     await redis.zadd(key, { score: ts, member: JSON.stringify(entry) })
     const total = await redis.zcard(key)
     if (total > MAX_COMMENTS_PER_ENTITY) {
