@@ -1,5 +1,6 @@
 ---
 import PhoneMockup from './PhoneMockup.astro';
+import HeroDecor from './HeroDecor.astro';
 import { t, type Lang } from '../i18n/strings';
 
 interface Props {
@@ -48,8 +49,11 @@ const s = t(lang).hero;
       </div>
     </div>
 
-    <div class="flex justify-center md:justify-start md:pl-8 lg:pl-16">
-      <PhoneMockup />
+    <div class="relative flex justify-center md:justify-start md:pl-8 lg:pl-16">
+      <HeroDecor />
+      <div class="relative z-10">
+        <PhoneMockup />
+      </div>
     </div>
   </div>
 </section>

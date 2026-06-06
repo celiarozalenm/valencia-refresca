@@ -1,0 +1,70 @@
+---
+// Decoración detrás del móvil del hero: gotas y soles del logo
+// con tamaños / rotaciones / opacidades variados.
+// Valores hardcoded para que el render sea estable entre SSR e hidratación.
+
+type Item = {
+  kind: 'drop' | 'sun';
+  // posición en % relativo al contenedor
+  top: number;
+  left: number;
+  // tamaño en px
+  size: number;
+  rotate: number; // grados
+  opacity: number; // 0..1
+};
+
+const items: Item[] = [
+  { kind: 'sun', top: 8, left: 6, size: 110, rotate: -8, opacity: 0.5 },
+  { kind: 'drop', top: 24, left: 84, size: 68, rotate: 14, opacity: 0.35 },
+  { kind: 'drop', top: 56, left: -6, size: 96, rotate: -22, opacity: 0.4 },
+  { kind: 'sun', top: 68, left: 78, size: 80, rotate: 18, opacity: 0.45 },
+  { kind: 'sun', top: 38, left: 2, size: 46, rotate: 25, opacity: 0.3 },
+  { kind: 'drop', top: 78, left: 30, size: 52, rotate: -10, opacity: 0.35 },
+  { kind: 'sun', top: 82, left: 60, size: 38, rotate: -18, opacity: 0.35 },
+  { kind: 'drop', top: 6, left: 56, size: 42, rotate: 32, opacity: 0.3 },
+  { kind: 'drop', top: 42, left: 92, size: 58, rotate: -5, opacity: 0.4 },
+  { kind: 'sun', top: 22, left: 30, size: 34, rotate: 12, opacity: 0.25 },
+  { kind: 'drop', top: 90, left: 6, size: 36, rotate: 22, opacity: 0.3 },
+  { kind: 'sun', top: 50, left: 50, size: 28, rotate: -30, opacity: 0.2 },
+];
+---
+
+<div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+  {items.map((it) => (
+    <div
+      class="absolute"
+      style={`
+        top: ${it.top}%;
+        left: ${it.left}%;
+        width: ${it.size}px;
+        height: ${it.size}px;
+        transform: translate(-50%, -50%) rotate(${it.rotate}deg);
+        opacity: ${it.opacity};
+      `}
+    >
+      {it.kind === 'drop' ? (
+        <svg viewBox="0 0 80 80" class="h-full w-full">
+          <path
+            d="M30 12 C 38 26, 48 38, 48 50 C 48 60, 40 67, 30 67 C 20 67, 12 60, 12 50 C 12 38, 22 26, 30 12 Z"
+            fill="#3b82f6"
+          />
+        </svg>
+      ) : (
+        <svg viewBox="0 0 80 80" class="h-full w-full">
+          <g transform="translate(40 40)" fill="#f97316">
+            <circle cx="0" cy="0" r="14" />
+            <rect x="-1.5" y="-24" width="3" height="6" rx="1.5" />
+            <rect x="-1.5" y="18" width="3" height="6" rx="1.5" />
+            <rect x="18" y="-1.5" width="6" height="3" rx="1.5" />
+            <rect x="-24" y="-1.5" width="6" height="3" rx="1.5" />
+            <rect x="-1.5" y="-24" width="3" height="6" rx="1.5" transform="rotate(45)" />
+            <rect x="-1.5" y="-24" width="3" height="6" rx="1.5" transform="rotate(135)" />
+            <rect x="-1.5" y="-24" width="3" height="6" rx="1.5" transform="rotate(-45)" />
+            <rect x="-1.5" y="-24" width="3" height="6" rx="1.5" transform="rotate(-135)" />
+          </g>
+        </svg>
+      )}
+    </div>
+  ))}
+</div>
