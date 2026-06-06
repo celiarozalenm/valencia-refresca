@@ -1058,7 +1058,7 @@ export default function Map({ lang = "es" }: MapProps) {
           <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone)">
             <div className="mx-auto max-w-3xl px-6 pt-4 pb-12 md:px-10 md:pt-6 md:pb-16">
               <p className="font-display text-xs font-semibold tracking-wider uppercase text-(--color-calor-deep)">{aboutT.eyebrow}</p>
-              <h1 className="mt-2 font-display text-4xl leading-tight text-(--color-agua-deep) md:text-5xl">{aboutT.title}</h1>
+              <h1 className="mt-2 font-display text-4xl leading-[1.1] text-(--color-agua-deep) md:text-5xl">{aboutT.title}</h1>
               <p className="mt-4 max-w-2xl text-(--color-ink-soft) md:text-lg">{aboutT.lede}</p>
 
               <div className="mt-10">

@@ -14,19 +14,27 @@ type Item = {
   opacity: number; // 0..1
 };
 
+// Iconos invadiendo el espacio del móvil: lados a left 8-12% (izq) y 38-44% (dcha),
+// arriba/abajo solapando el chasis. El móvil va al z-10, los iconos quedan detrás.
 const items: Item[] = [
-  { kind: 'sun', top: 8, left: 6, size: 110, rotate: -8, opacity: 0.5 },
-  { kind: 'drop', top: 24, left: 84, size: 68, rotate: 14, opacity: 0.35 },
-  { kind: 'drop', top: 56, left: -6, size: 96, rotate: -22, opacity: 0.4 },
-  { kind: 'sun', top: 68, left: 78, size: 80, rotate: 18, opacity: 0.45 },
-  { kind: 'sun', top: 38, left: 2, size: 46, rotate: 25, opacity: 0.3 },
-  { kind: 'drop', top: 78, left: 30, size: 52, rotate: -10, opacity: 0.35 },
-  { kind: 'sun', top: 82, left: 60, size: 38, rotate: -18, opacity: 0.35 },
-  { kind: 'drop', top: 6, left: 56, size: 42, rotate: 32, opacity: 0.3 },
-  { kind: 'drop', top: 42, left: 92, size: 58, rotate: -5, opacity: 0.4 },
-  { kind: 'sun', top: 22, left: 30, size: 34, rotate: 12, opacity: 0.25 },
-  { kind: 'drop', top: 90, left: 6, size: 36, rotate: 22, opacity: 0.3 },
-  { kind: 'sun', top: 50, left: 50, size: 28, rotate: -30, opacity: 0.2 },
+  // Arriba (asomando por detrás del notch / status bar)
+  { kind: 'sun', top: 4, left: 12, size: 130, rotate: -12, opacity: 0.6 },
+  { kind: 'drop', top: 6, left: 42, size: 100, rotate: 18, opacity: 0.6 },
+  { kind: 'sun', top: 18, left: 28, size: 56, rotate: 25, opacity: 0.45 },
+  // Lado izquierdo (overlap con borde del móvil)
+  { kind: 'drop', top: 26, left: 8, size: 130, rotate: -22, opacity: 0.6 },
+  { kind: 'sun', top: 52, left: 6, size: 110, rotate: 18, opacity: 0.55 },
+  { kind: 'drop', top: 78, left: 8, size: 95, rotate: -10, opacity: 0.55 },
+  // Lado derecho (overlap con borde del móvil)
+  { kind: 'sun', top: 30, left: 40, size: 100, rotate: -18, opacity: 0.55 },
+  { kind: 'drop', top: 56, left: 42, size: 120, rotate: 14, opacity: 0.55 },
+  { kind: 'sun', top: 82, left: 40, size: 100, rotate: 22, opacity: 0.55 },
+  // Abajo (asomando por debajo del home indicator)
+  { kind: 'drop', top: 100, left: 16, size: 100, rotate: 12, opacity: 0.55 },
+  { kind: 'sun', top: 102, left: 28, size: 80, rotate: -20, opacity: 0.5 },
+  { kind: 'drop', top: 100, left: 42, size: 90, rotate: 20, opacity: 0.55 },
+  // Pequeño extra
+  { kind: 'sun', top: 90, left: 24, size: 38, rotate: 30, opacity: 0.4 },
 ];
 ---
 
