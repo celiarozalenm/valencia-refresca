@@ -634,24 +634,40 @@ export default function Map({ lang = "es" }: MapProps) {
     return out;
   }
 
-  function handleLocateNearby() {
+  async function handleLocateNearby() {
     if (!navigator.geolocation) {
       setCercaError(cercaT.denied);
       return;
     }
     setCercaPending(true);
     setCercaError(null);
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setCercaResults(findNearest(pos.coords.longitude, pos.coords.latitude));
-        setCercaPending(false);
-      },
-      () => {
-        setCercaError(cercaT.denied);
-        setCercaPending(false);
-      },
-      { enableHighAccuracy: true, timeout: 10000 },
-    );
+
+    const locate = (highAccuracy: boolean, timeout: number) =>
+      new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: highAccuracy,
+          timeout,
+          maximumAge: 60000, // acepta una posición reciente cacheada (más rápido en móvil)
+        });
+      });
+
+    try {
+      let pos: GeolocationPosition;
+      try {
+        // 1º intento: GPS de alta precisión, espera corta.
+        pos = await locate(true, 8000);
+      } catch (err) {
+        // code 1 = PERMISSION_DENIED: si el usuario denegó el permiso, no insistimos.
+        if ((err as { code?: number } | undefined)?.code === 1) throw err;
+        // Si el GPS falla o tarda, reintento por red (más rápido y fiable).
+        pos = await locate(false, 12000);
+      }
+      setCercaResults(findNearest(pos.coords.longitude, pos.coords.latitude));
+    } catch {
+      setCercaError(cercaT.denied);
+    } finally {
+      setCercaPending(false);
+    }
   }
 
   // Lleva el resultado al mapa: enciende su capa, vuela y abre su ficha.
@@ -1184,11 +1200,11 @@ export default function Map({ lang = "es" }: MapProps) {
                   {cercaResults.map((r) => {
                     const addr = String(r.props.calle ?? r.props.direccion ?? r.props.nombre ?? "");
                     return (
-                      <li key={r.kind}>
+                      <li key={r.kind} className="min-w-0">
                         <button
                           type="button"
                           onClick={() => focusAmenity(r)}
-                          className="flex w-full cursor-pointer items-center gap-3 rounded-2xl bg-white p-4 text-left ring-1 ring-(--color-ink)/8 transition hover:ring-(--color-agua-deep)/30"
+                          className="flex w-full cursor-pointer items-center gap-3 overflow-hidden rounded-2xl bg-white p-4 text-left ring-1 ring-(--color-ink)/8 transition hover:ring-(--color-agua-deep)/30"
                         >
                           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full" style={{ background: `${LAYER_COLORS[r.kind]}1f` }} aria-hidden>
                             <span className="h-3 w-3 rounded-full" style={{ background: LAYER_COLORS[r.kind] }} />
