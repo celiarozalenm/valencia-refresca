@@ -73,7 +73,7 @@ export const STRINGS = {
       eyebrow: "VALÈNCIA SE CUIDA",
       titleLine1: "Información útil",
       titleLine2: "para vivir el",
-      titleLine3: "verano mejor.",
+      titleLine3: "verano mejor",
     },
     map: {
       eyebrow: "El mapa",
@@ -342,7 +342,7 @@ export const STRINGS = {
       eyebrow: "VALÈNCIA ES CUIDA",
       titleLine1: "Informació útil",
       titleLine2: "per a viure",
-      titleLine3: "millor l'estiu.",
+      titleLine3: "millor l'estiu",
     },
     map: {
       eyebrow: "El mapa",
@@ -611,7 +611,7 @@ export const STRINGS = {
       eyebrow: "VALÈNCIA TAKES CARE",
       titleLine1: "Useful info",
       titleLine2: "to live",
-      titleLine3: "summer better.",
+      titleLine3: "summer better",
     },
     map: {
       eyebrow: "The map",
