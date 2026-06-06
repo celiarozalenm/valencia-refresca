@@ -21,7 +21,35 @@ const BRAND = {
 } as const;
 
 type LayerKey = "fuentes" | "urinarios" | "duchas" | "lavapies" | "verdes" | "sombra" | "barrios";
-type View = "capas" | "paseo" | "frescos" | "participa" | "recientes" | "acerca";
+type View = "capas" | "cerca" | "paseo" | "frescos" | "participa" | "recientes" | "acerca";
+// Tipos de punto "reportable" para los que tiene sentido buscar el más cercano.
+type AmenityKind = "fuentes" | "urinarios" | "duchas" | "lavapies";
+type PopupKind = AmenityKind | "verdes" | "sombra" | "vulnerabilidad";
+interface AmenityPoint {
+  lng: number;
+  lat: number;
+  props: Record<string, unknown>;
+}
+interface NearestResult extends AmenityPoint {
+  kind: AmenityKind;
+  dist: number;
+}
+
+// Distancia haversine en metros entre dos coordenadas [lng/lat].
+function haversineMeters(aLng: number, aLat: number, bLng: number, bLat: number): number {
+  const R = 6371000;
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(bLat - aLat);
+  const dLng = toRad(bLng - aLng);
+  const lat1 = toRad(aLat);
+  const lat2 = toRad(bLat);
+  const h = Math.sin(dLat / 2) ** 2 + Math.sin(dLng / 2) ** 2 * Math.cos(lat1) * Math.cos(lat2);
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+function formatDistance(m: number): string {
+  return m < 1000 ? `${Math.round(m)} m` : `${(m / 1000).toFixed(1)} km`;
+}
 
 const LAYER_COLORS: Record<LayerKey, string> = {
   fuentes: BRAND.agua,
@@ -80,11 +108,13 @@ export default function Map({ lang = "es" }: MapProps) {
   const freshestT = tr.freshest;
   const aboutT = STRINGS[lang].about;
   const langT = STRINGS[lang].langSwitch;
+  const cercaT = tr.cerca;
 
   const initialView = ((): View => {
     if (typeof window === "undefined") return "capas";
     const hash = window.location.hash.replace("#", "");
     if (
+      hash === "cerca" ||
       hash === "paseo" ||
       hash === "frescos" ||
       hash === "participa" ||
@@ -109,6 +139,18 @@ export default function Map({ lang = "es" }: MapProps) {
   const verdesLoadedRef = useRef(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
+
+  // "Cerca de ti": puntos cargados + opener de popup (asignados al cargar el mapa)
+  const amenitiesRef = useRef<Record<AmenityKind, AmenityPoint[]>>({
+    fuentes: [],
+    urinarios: [],
+    duchas: [],
+    lavapies: [],
+  });
+  const openPopupRef = useRef<((kind: PopupKind, props: Record<string, unknown>, lng: number, lat: number) => void) | null>(null);
+  const [cercaPending, setCercaPending] = useState(false);
+  const [cercaError, setCercaError] = useState<string | null>(null);
+  const [cercaResults, setCercaResults] = useState<NearestResult[]>([]);
   // Capas overlay panel: empieza expandido en escritorio, plegado en móvil
   const [layersExpanded, setLayersExpanded] = useState<boolean>(() => {
     if (typeof window === "undefined") return true;
@@ -258,6 +300,21 @@ export default function Map({ lang = "es" }: MapProps) {
 
       setCounts((c) => ({ ...c, ...loadedCounts }));
 
+      // Guarda los puntos (lng/lat + props) para la búsqueda "Cerca de ti".
+      const toPoints = (data: unknown): AmenityPoint[] => {
+        const feats = (data as { features?: Array<{ geometry?: { type?: string; coordinates?: number[] }; properties?: Record<string, unknown> }> }).features;
+        if (!Array.isArray(feats)) return [];
+        return feats
+          .filter((f) => f.geometry?.type === "Point" && Array.isArray(f.geometry.coordinates))
+          .map((f) => ({ lng: f.geometry!.coordinates![0], lat: f.geometry!.coordinates![1], props: f.properties ?? {} }));
+      };
+      amenitiesRef.current = {
+        fuentes: toPoints(fuentesData),
+        urinarios: toPoints(uriData),
+        duchas: toPoints(duchasData),
+        lavapies: toPoints(lavapiesData),
+      };
+
       map.addSource("walk-route", {
         type: "geojson",
         data: { type: "FeatureCollection", features: [] },
@@ -329,6 +386,22 @@ export default function Map({ lang = "es" }: MapProps) {
       ];
       // Un único popup compartido: clicar otro punto reemplaza el abierto.
       let activePopup: maplibregl.Popup | null = null;
+      const openPopup = (kind: PopupKind, props: Record<string, unknown>, lng: number, lat: number) => {
+        const fb = feedbackArgs(kind, props);
+        activePopup?.remove();
+        const popup = new maplibregl.Popup({ closeButton: true, offset: 10, maxWidth: "320px" }).setLngLat([lng, lat]);
+        if (fb) {
+          popup.setDOMContent(buildFeedbackPopup({ ...fb, lat, lng, lang }));
+        } else {
+          popup.setHTML(popupHtml[kind](props));
+        }
+        popup.on("close", () => {
+          if (activePopup === popup) activePopup = null;
+        });
+        popup.addTo(map);
+        activePopup = popup;
+      };
+      openPopupRef.current = openPopup;
       map.on("click", (e) => {
         const candidateIds = pointLayers.map(([id]) => id).filter((id) => map.getLayer(id));
         const hits = map.queryRenderedFeatures(e.point, { layers: candidateIds });
@@ -342,19 +415,7 @@ export default function Map({ lang = "es" }: MapProps) {
           }
         }
         if (!chosen) return;
-        const fb = feedbackArgs(chosen.kind, chosen.props);
-        activePopup?.remove();
-        const popup = new maplibregl.Popup({ closeButton: true, offset: 10, maxWidth: "320px" }).setLngLat(e.lngLat);
-        if (fb) {
-          popup.setDOMContent(buildFeedbackPopup({ ...fb, lat: e.lngLat.lat, lng: e.lngLat.lng, lang }));
-        } else {
-          popup.setHTML(popupHtml[chosen.kind](chosen.props));
-        }
-        popup.on("close", () => {
-          if (activePopup === popup) activePopup = null;
-        });
-        popup.addTo(map);
-        activePopup = popup;
+        openPopup(chosen.kind, chosen.props, e.lngLat.lng, e.lngLat.lat);
       });
       pointLayers.forEach(([layerId]) => {
         map.on("mouseenter", layerId, () => (map.getCanvas().style.cursor = "pointer"));
@@ -553,6 +614,59 @@ export default function Map({ lang = "es" }: MapProps) {
     setWalkOrigin(null);
   }
 
+  // "Cerca de ti": calcula el punto más cercano de cada tipo a una ubicación.
+  function findNearest(lng: number, lat: number): NearestResult[] {
+    const kinds: AmenityKind[] = ["fuentes", "urinarios", "duchas", "lavapies"];
+    const out: NearestResult[] = [];
+    for (const kind of kinds) {
+      let best: AmenityPoint | null = null;
+      let bestD = Infinity;
+      for (const pt of amenitiesRef.current[kind]) {
+        const d = haversineMeters(lng, lat, pt.lng, pt.lat);
+        if (d < bestD) {
+          bestD = d;
+          best = pt;
+        }
+      }
+      if (best) out.push({ ...best, kind, dist: bestD });
+    }
+    out.sort((a, b) => a.dist - b.dist);
+    return out;
+  }
+
+  function handleLocateNearby() {
+    if (!navigator.geolocation) {
+      setCercaError(cercaT.denied);
+      return;
+    }
+    setCercaPending(true);
+    setCercaError(null);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setCercaResults(findNearest(pos.coords.longitude, pos.coords.latitude));
+        setCercaPending(false);
+      },
+      () => {
+        setCercaError(cercaT.denied);
+        setCercaPending(false);
+      },
+      { enableHighAccuracy: true, timeout: 10000 },
+    );
+  }
+
+  // Lleva el resultado al mapa: enciende su capa, vuela y abre su ficha.
+  function focusAmenity(r: NearestResult) {
+    setActive((s) => ({ ...s, [r.kind]: true }));
+    setView("capas");
+    setMobileNavOpen(false);
+    setTimeout(() => {
+      const map = mapRef.current;
+      if (!map) return;
+      map.flyTo({ center: [r.lng, r.lat], zoom: 16, duration: 800 });
+      map.once("moveend", () => openPopupRef.current?.(r.kind, r.props, r.lng, r.lat));
+    }, 420);
+  }
+
   const homeUrl = homeHref(lang);
 
   const tabs: Array<{ key: View; label: string; icon: React.ReactNode }> = [
@@ -564,6 +678,16 @@ export default function Map({ lang = "es" }: MapProps) {
           <polygon points="12 2 2 7 12 12 22 7 12 2" />
           <polyline points="2 17 12 22 22 17" />
           <polyline points="2 12 12 17 22 12" />
+        </svg>
+      ),
+    },
+    {
+      key: "cerca",
+      label: sectionsT.cerca,
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+          <circle cx="12" cy="10" r="3" />
         </svg>
       ),
     },
@@ -781,11 +905,11 @@ export default function Map({ lang = "es" }: MapProps) {
           className={showMap ? "block" : "invisible"}
         />
 
-        {/* Botón de menú móvil */}
+        {/* Botón de menú móvil — z alto para que siempre quede por encima de las secciones */}
         <button
           type="button"
           onClick={() => setMobileNavOpen(true)}
-          className="absolute top-3 left-3 z-10 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/95 text-slate-900 shadow-md backdrop-blur md:hidden"
+          className="absolute top-3 left-3 z-30 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/95 text-slate-900 shadow-md backdrop-blur md:hidden"
           aria-label="Abrir navegación"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
@@ -878,7 +1002,7 @@ export default function Map({ lang = "es" }: MapProps) {
         {/* Paseo fresco: pantalla form (cuando NO hay resultado) */}
         {view === "paseo" && !walkResult && (
           <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone)">
-            <div className="mx-auto max-w-3xl px-6 pt-4 pb-12 md:px-10 md:pt-6 md:pb-16">
+            <div className="mx-auto max-w-3xl px-6 pt-16 pb-12 md:px-10 md:pt-6 md:pb-16">
               <h1 className="font-display text-4xl leading-tight text-(--color-agua-deep) md:text-5xl">
                 {sw.title}
               </h1>
@@ -1028,10 +1152,69 @@ export default function Map({ lang = "es" }: MapProps) {
           </div>
         )}
 
+        {/* Cerca de ti: geolocaliza y lista lo más cercano */}
+        {view === "cerca" && (
+          <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone)">
+            <div className="mx-auto max-w-2xl px-6 pt-16 pb-12 md:px-10 md:pt-6 md:pb-16">
+              <h1 className="font-display text-4xl leading-[1.1] text-(--color-agua-deep) md:text-5xl">{cercaT.title}</h1>
+              <p className="mt-3 max-w-xl text-(--color-ink-soft) md:text-lg">{cercaT.subtitle}</p>
+
+              <button
+                type="button"
+                onClick={handleLocateNearby}
+                disabled={cercaPending}
+                className="mt-8 inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-(--color-agua-deep) px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-slate-900 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
+                  <circle cx="12" cy="12" r="9" />
+                </svg>
+                {cercaPending ? cercaT.locating : cercaT.locate}
+              </button>
+
+              {cercaError && <p className="mt-3 text-sm text-red-600">{cercaError}</p>}
+
+              {!cercaPending && cercaResults.length === 0 && !cercaError && (
+                <p className="mt-6 text-sm text-(--color-ink-soft)">{cercaT.intro}</p>
+              )}
+
+              {cercaResults.length > 0 && (
+                <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+                  {cercaResults.map((r) => {
+                    const addr = String(r.props.calle ?? r.props.direccion ?? r.props.nombre ?? "");
+                    return (
+                      <li key={r.kind}>
+                        <button
+                          type="button"
+                          onClick={() => focusAmenity(r)}
+                          className="flex w-full cursor-pointer items-center gap-3 rounded-2xl bg-white p-4 text-left ring-1 ring-(--color-ink)/8 transition hover:ring-(--color-agua-deep)/30"
+                        >
+                          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full" style={{ background: `${LAYER_COLORS[r.kind]}1f` }} aria-hidden>
+                            <span className="h-3 w-3 rounded-full" style={{ background: LAYER_COLORS[r.kind] }} />
+                          </span>
+                          <span className="min-w-0 flex-1">
+                            <span className="block text-sm font-semibold text-(--color-ink)">{layerNames[r.kind].label}</span>
+                            {addr && <span className="block truncate text-xs text-(--color-ink-soft)">{addr}</span>}
+                          </span>
+                          <span className="shrink-0 text-right">
+                            <span className="block font-display text-base font-semibold text-(--color-agua-deep)">{formatDistance(r.dist)}</span>
+                            <span className="block text-[10px] text-slate-400">{cercaT.viewOnMap}</span>
+                          </span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Barrios frescos: pantalla de contenido */}
         {view === "frescos" && (
           <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone)">
-            <div className="mx-auto max-w-5xl px-6 pt-4 pb-12 md:px-10 md:pt-6 md:pb-16">
+            <div className="mx-auto max-w-5xl px-6 pt-16 pb-12 md:px-10 md:pt-6 md:pb-16">
               <h1 className="font-display text-4xl leading-tight text-(--color-agua-deep) md:text-5xl">{freshestT.title}</h1>
               <p className="mt-3 max-w-2xl text-(--color-ink-soft) md:text-lg">{freshestT.subtitle}</p>
               <div className="mt-10">
@@ -1042,13 +1225,13 @@ export default function Map({ lang = "es" }: MapProps) {
         )}
 
         {view === "participa" && (
-          <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone)">
+          <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone) pt-12 md:pt-0">
             <Participar lang={lang} />
           </div>
         )}
 
         {view === "recientes" && (
-          <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone)">
+          <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone) pt-12 md:pt-0">
             <Recientes lang={lang} />
           </div>
         )}
@@ -1056,7 +1239,7 @@ export default function Map({ lang = "es" }: MapProps) {
         {/* Acerca de: ficha del proyecto */}
         {view === "acerca" && (
           <div className="absolute inset-0 z-10 overflow-y-auto bg-(--color-bone)">
-            <div className="mx-auto max-w-3xl px-6 pt-4 pb-12 md:px-10 md:pt-6 md:pb-16">
+            <div className="mx-auto max-w-3xl px-6 pt-16 pb-12 md:px-10 md:pt-6 md:pb-16">
               <p className="font-display text-xs font-semibold tracking-wider uppercase text-(--color-calor-deep)">{aboutT.eyebrow}</p>
               <h1 className="mt-2 font-display text-4xl leading-[1.1] text-(--color-agua-deep) md:text-5xl">{aboutT.title}</h1>
               <p className="mt-4 max-w-2xl text-(--color-ink-soft) md:text-lg">{aboutT.lede}</p>
