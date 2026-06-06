@@ -649,8 +649,9 @@ export default function Map({ lang = "es" }: MapProps) {
         setCercaResults(findNearest(pos.coords.longitude, pos.coords.latitude));
         setCercaPending(false);
       },
-      () => {
-        setCercaError(cercaT.denied);
+      (err) => {
+        // code 1 = PERMISSION_DENIED → mensaje específico; resto → genérico.
+        setCercaError(err.code === 1 ? cercaT.denied : cercaT.failed);
         setCercaPending(false);
       },
       { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 },
