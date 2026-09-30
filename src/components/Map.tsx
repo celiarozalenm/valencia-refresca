@@ -69,15 +69,20 @@ const SOMBRA_COLORS: Record<string, string> = {
   muy_baja: "#fef3c7",
 };
 
+// CARTO basemaps now require an API key (without it every tile is an
+// "API KEY REQUIRED" watermark). It travels in each tile URL and ends up in
+// the browser anyway, so it lives here instead of in a Vercel env var.
+const CARTO_KEY = "cb1_44sw_1_c7ee392c47ad7988661dfc04";
+
 const STYLE: StyleSpecification = {
   version: 8,
   sources: {
     "carto-light": {
       type: "raster",
       tiles: [
-        "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
-        "https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
-        "https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
+        `https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png?key=${CARTO_KEY}`,
+        `https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png?key=${CARTO_KEY}`,
+        `https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png?key=${CARTO_KEY}`,
       ],
       tileSize: 256,
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · © <a href="https://carto.com/attributions">CARTO</a>',
